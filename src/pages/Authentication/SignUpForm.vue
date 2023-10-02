@@ -41,6 +41,10 @@ const submitForm = async () => {
 </script>
 
 <template>
+     <div style="display: flex; justify-content: center; margin: 5rem;">
+    <img src="/src/assets/IMG_0918.JPG" alt="" style="width: 300px; height: 300px;">
+    </div>
+
     <v-card class="mx-auto" style="max-width: 500px;">
       <v-toolbar color="black" cards dark flat>
         <v-btn icon>

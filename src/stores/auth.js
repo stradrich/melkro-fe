@@ -89,32 +89,37 @@ export const useAuthStores = defineStore({
                     headers: { 'Content-Type': 'application/json'},
                     body: JSON.stringify({email, password})
                 }
-
+        
                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/auth/login', options)
-                const data = await response.json()
-
-                const accessToken = data.accessToken
-                this.accessToken = accessToken
-                console.log('Login - Access Token', accessToken)
-                
-                // Save access token to local storage
-                localStorage.setItem('access_token', accessToken)
-                console.log('Local storage access token', accessToken)
-                
-                // Fetch current user
-                this.currentUser = await this.getCurrentUser()
-                console.log('Login - Current User', this.currentUser, 'by 🍍🍍🍍')
-
-                if(this.currentUser) {
-                    this.userLoggedIn = true
-                    return this.currentUser.id
+                const response = await fetch('http://localhost:8080/auth/login', options);
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    const accessToken = data.accessToken;
+                    this.accessToken = accessToken;
+                    console.log('Login - Access Token', accessToken);
+                    
+                    // Save access token to local storage
+                    localStorage.setItem('access_token', accessToken);
+                    console.log('Local storage access token', accessToken);
+                    
+                    // Fetch current user
+                    this.currentUser = await this.getCurrentUser();
+                    console.log('Login - Current User', this.currentUser, 'by 🍍🍍🍍')
+        
+                    if(this.currentUser) {
+                        this.userLoggedIn = true;
+                        return this.currentUser.id;
+                    }
+                } else {
+                    const errorData = await response.json();
+                    console.error('Login error:', errorData);
                 }
-                
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         },
+        
 
         async forgotPassword(email) {
             try {

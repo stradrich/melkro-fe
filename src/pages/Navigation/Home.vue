@@ -2,6 +2,8 @@
 // import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
+import DropdownMenu from '../../components/DropdownMenu.vue'
+import DropdownMenu2 from '../../components/DropdownMenu2.vue'
 
 // import LoginForm from '../Authentication/LoginForm.vue';
 
@@ -52,7 +54,12 @@ const goToSignUp = () => {
   <div>
     <!-- Header Section -->
     <!-- :user-logged-in="isLoggedIn" -->
-    <Navbar/>
+    <div>
+      <Navbar/>
+    <!-- <DropdownMenu/> -->
+      <DropdownMenu2/>
+    </div>
+  
 
     <!-- Main Section -->
     <div>

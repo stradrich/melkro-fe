@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, computed, provide, inject } from 'vue';
-import { useUserStores } from '../stores/users';
-import { useAuthStores } from '../stores/auth';
+// import { useUserStores } from '../stores/users';
+// import { useAuthStores } from '../stores/auth';
 import { useRoute, useRouter } from 'vue-router';
 
 // import { UserCircleIcon } from '@heroicons/vue/24/outline'
@@ -20,8 +20,8 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const authStore = useAuthStores()
-const userStore = useUserStores()
+// const authStore = useAuthStores()
+// const userStore = useUserStores()
 
 const name = ref(null)
 const email = ref(null)

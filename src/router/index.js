@@ -18,6 +18,46 @@ const routes = [
         },
         component: () => import('@/pages/Navigation/About.vue')
     },
+    {
+        path: '/company',
+        name: 'Company',
+        meta: {
+            title: 'Company'
+        },
+        component: () => import('../pages/Navigation/Company.vue')
+    },
+    {
+        path: '/about',
+        name: 'About',
+        meta: {
+            title: 'About'
+        },
+        component: () => import('../pages/Navigation/About.vue')
+    },
+    {
+        path: '/underconstruction',
+        name: 'Underconstruction',
+        meta: {
+            title: 'Underconstruction'
+        },
+        component: () => import('../pages/Navigation/Underconstruction.vue')
+    },
+    {
+        path: '/dummyListing',
+        name: 'Dummy Listing',
+        meta: {
+            title: 'Dummy Listing'
+        },
+        component: () => import('../pages/Navigation/DummyListing.vue')
+    },
+    {
+        path: '/learnMore',
+        name: 'Learn More',
+        meta: {
+            title: 'Learn More'
+        },
+        component: () => import('../pages/Navigation/LearnMore.vue')
+    },
      // AUTHENTICATIONS (signup > login > forgot password > reset password > change password > )
     {
         path: '/signup',

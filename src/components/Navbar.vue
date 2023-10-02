@@ -1,10 +1,15 @@
 <script setup>
 import Logo from './Logo.vue'
-import NavMenu from './Navbar.vue'
-import Button from './Button.vue';
+// import NavMenu from './Navbar.vue'
+// import Button from './Button.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 
 import { useAuthStores } from '../stores/auth';
 import { useUserStores } from '../stores/user'
+
+const useAuthStore = useAuthStores();
 
 // const getUserData = async () => {
 //     const user = await authStore.getCurrentUser()
@@ -24,12 +29,19 @@ import { useUserStores } from '../stores/user'
             </div>
             
         
-                <v-toolbar-title>
-                    <span class="font-weight-light ml-5 mr-5">Melkro's</span>
-                </v-toolbar-title>
+            <v-toolbar-title>
+             <v-btn class="font-weight-light ml-5 mr-5" :to="'/'">
+                  Melkro's
+             </v-btn>
+            </v-toolbar-title>
 
-                <p class="mx-5">Company</p>
-                <p class="mx-10">About</p>
+                <v-btn class="mx-5" to="/company">
+                    <p >Company</p>
+                </v-btn>
+
+                <v-btn class="mx-10" to="/about">
+                    <p >About</p>
+                </v-btn>
 
                 <v-btn class='bg-white text-black mr-5' variant="outlined" to="/login">Sign In</v-btn>
                 
@@ -39,7 +51,7 @@ import { useUserStores } from '../stores/user'
 
     <!-- TEMPLATE 1: Logged in: Admin -->
      <!-- :user="getUserData()" -->
-    <!-- <template> -->
+    <!-- <template v-if="useAuthStore.currentUser.role === 'owner'"> -->
          <!-- <v-toolbar class=" bg-black justify-between">  -->
         <!-- <div class="mx-5"> -->
             <!-- <Logo/> -->
@@ -61,7 +73,7 @@ import { useUserStores } from '../stores/user'
 
     <!-- TEMPLATE 2: Logged in: Provider -->
      <!-- :user="getUserData()" -->
-    <!-- <template> -->
+    <!-- <template v-else-if="useAuthStore.currentUser.role === 'provider'"> -->
         <!-- <v-toolbar class=" bg-black justify-between">  -->
             <!-- <div class="mx-5"> -->
                 <!-- <Logo/> -->
@@ -86,7 +98,7 @@ import { useUserStores } from '../stores/user'
     
     <!-- TEMPLATE 3: Logged in: Musician -->
      <!-- :user="getUserData()" -->
-    <!-- <template> -->
+    <!-- <template v-else> -->
         <!-- <v-toolbar class=" bg-black justify-between">  -->
             <!-- <div class="mx-5"> -->
                 <!-- <Logo/> -->
