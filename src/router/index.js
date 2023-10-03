@@ -58,6 +58,14 @@ const routes = [
         },
         component: () => import('../pages/Navigation/LearnMore.vue')
     },
+    {
+        path: '/contactForm',
+        name: 'Contact Form',
+        meta: {
+            title: 'Contact Form'
+        },
+        component: () => import('../pages/Navigation/ContactForm.vue')
+    },
      // AUTHENTICATIONS (signup > login > forgot password > reset password > change password > )
     {
         path: '/signup',
@@ -75,6 +83,7 @@ const routes = [
         },
         component: () => import('../pages/Authentication/LoginForm.vue')
     },
+ 
     // {
     //     path: '/forgotPassword',
     //     name: 'Forgot Password',
@@ -99,6 +108,33 @@ const routes = [
     //     },
     //     component: () => import('@/pages/ChangePassword.vue')
     // },
+    // DASHBOARD (Admin)
+    {
+        path: '/adminDashboard',
+        name: 'Admin Dashboard',
+        meta: {
+            title: 'Admin Dashboard'
+        },
+        component: () => import('../pages/Dashboard/AdminDashboard.vue')
+    },
+    // DASHBOARD (Provider)
+    {
+         path: '/providerDashboard',
+        name: 'Provider Dashboard',
+        meta: {
+            title: 'Provider Dashboard'
+        },
+        component: () => import('../pages/Dashboard/ProviderDashboard.vue')
+    },
+    // DASHBOARD (Musician)
+    {
+        path: '/musicianDashboard',
+        name: 'Musician Dashboard',
+        meta: {
+                title: 'Musician Dashboard'
+        },
+        component: () => import('../pages/Dashboard/MusicianDashboard.vue')
+        },
     // // USERS
     // {
     //     path: '/profile/:id',

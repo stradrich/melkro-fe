@@ -5,6 +5,9 @@ import { useAuthStores } from '../stores/auth';
 // import { computed } from 'vue';
 import { RouterLink } from 'vue-router'; // Import RouterLink from vue-router
 
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 const authStore = useAuthStores();
 // const userLoggedIn = ref(true); // Your condition to check if the user is logged in
 const userLoggedIn = computed(() => !!authStore.getCurrentUser);
@@ -12,29 +15,67 @@ const currentUser = computed(() => authStore.currentUser);
 const isLoggedIn = computed(() => authStore.userLoggedIn);
 
 const logout = () => {
+    console.log('Logging out');
     authStore.logout(); // Call the logout action from your authentication store
-    // Optionally, you can also perform a route change or any other logic here
+   // Optionally, you can also perform a route change or any other logic here
+   router.push('/about'); // Redirect to the home page
 };
 
 
 const isDropdownHidden = ref(true);
+
 const toggleDropdown = async () => {
-  await authStore.login(currentUser.email, currentUser.password); // Assuming you have email and password defined
-  console.log('CurrentUser:', authStore.currentUser);
-  isDropdownHidden.value = !isDropdownHidden.value;
+  try {
+    await authStore.getCurrentUser();
+    console.log('CurrentUser:', authStore.currentUser);
+    isDropdownHidden.value = !isDropdownHidden.value;
+  } catch (error) {
+    // Handle the error, e.g., show an error message to the user
+    console.error('Login error in component:', error);
+  }
 };
 
 
-const profileLink = computed(() => {
-  if (currentUser.value && currentUser.value.role === 'provider') {
-    return `/profile/spaceProvider/${currentUser.value.id}`;
-  } else if (currentUser.value && currentUser.value.role === 'customer') {
-    return `/profile/spaceUser/${currentUser.value.id}`;
-  } else {
-    // Handle other cases if needed, or provide a default route
-    return '/';
+
+
+
+// const profileLink = computed(() => {
+//   if (currentUser.value && currentUser.value.role === 'provider') {
+//     return `/profile/spaceProvider/${currentUser.value.id}`;
+//   } else if (currentUser.value && currentUser.value.role === 'customer') {
+//     return `/profile/spaceUser/${currentUser.value.id}`;
+//   } else {
+//     // Handle other cases if needed, or provide a default route
+//     return '/';
+//   }
+// }); 
+
+
+const profileLink = ref('');
+
+const goToProfile = () => {
+  const userRole = authStore.currentUser.role; // Replace with your actual getter to get the user's role
+
+  switch (userRole) {
+    case 'admin':
+      profileLink.value = '/adminDashboard';
+      break;
+    case 'provider':
+      profileLink.value = '/providerDashboard';
+      break;
+    case 'musician':
+      profileLink.value = '/musicianDashboard';
+      break;
+    default:
+      profileLink.value = '/profile';
+      break;
   }
-}); 
+
+  // Now navigate to the profileLink
+  router.push(profileLink.value);
+};
+
+
 
 
 const getBookingLink = () => {
@@ -54,14 +95,22 @@ const goToLoginPage = () => {
 };
 
 
-onMounted(() => {
-      console.log('DropdownMenu component is mounted.');
-      // You can also check the currentUser data here
-      console.log('CurrentUser:', authStore.currentUser);
-      return {
-      authStore,
-    };
-    });
+
+
+onMounted(async () => {
+  console.log('DropdownMenu component is mounted.');
+
+  try {
+    // Fetch user data and wait for it to complete
+    await authStore.getCurrentUser();
+
+    // Now, log the user data
+    console.log('CurrentUser:', authStore.currentUser);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+});
+
 
     
   
@@ -105,7 +154,7 @@ onMounted(() => {
     >
        <!-- REDIRECT TO OWN PAGE BASED ON ROLE -->
        <li class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-        <RouterLink :to="profileLink">Profile</RouterLink>
+        <RouterLink :to="profileLink" @click="goToProfile">Profile</RouterLink>
       </li>
       <!-- Add debugging info -->
       <!-- <div v-else>
