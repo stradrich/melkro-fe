@@ -67,8 +67,8 @@ export const useAuthStores = defineStore({
                 this.currentUser = {
                   id: user.id,
                   username: user.username,
-                  password: user.password,
                   email: user.email,
+                  password: user.password,
                   role: user.role,
                 };
       

@@ -73,7 +73,7 @@ const goToSignUp = () => {
 
           <v-card class="flex-shrink-0 mr-2">
             <!-- Card content goes here -->
-            <h1 class="text-lg font-semibold mt-10 ml-5">Get a space and craft your voice</h1>
+            <h1 class="text-lg font-semibold mt-10 ml-5">Get a space & craft your voice</h1>
             <p class="text-gray-600  ml-5 mr-5">
               A platform for musicians and artists alike.
               <br /> Be inspired by our space for music and art.

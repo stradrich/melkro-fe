@@ -30,12 +30,12 @@ const useAuthStore = useAuthStores();
             
         
             <v-toolbar-title>
-             <v-btn class="font-weight-light ml-5 mr-5" :to="'/'">
+             <v-btn class="font-weight-light ml-5 mr-10" :to="'/'">
                   Melkro's
              </v-btn>
             </v-toolbar-title>
 
-                <v-btn class="mx-5" to="/company">
+                <v-btn class="mx-5 ml-15" to="/company">
                     <p >Company</p>
                 </v-btn>
 
