@@ -15,15 +15,43 @@ const formData = ref({
 
 const showPassword = ref(false);
 
+// const login = async () => {
+//   try {
+//     await authStore.login(formData.value.email, formData.value.password);
+//     // Redirect or perform other actions upon successful login
+//   } catch (error) {
+//     console.error('Login error:', error);
+//     // Optionally, you can display an error message to the user
+//   }
+// };
+
 const login = async () => {
   try {
     await authStore.login(formData.value.email, formData.value.password);
-    // Redirect or perform other actions upon successful login
+
+    // Check the user's role after a successful login
+    const currentUser = authStore.currentUser;
+
+    if (currentUser.role === 'admin') {
+      // Redirect to the admin page
+      router.push('/adminDashboard');
+    } else if (currentUser.role === 'provider') {
+      // Redirect to the provider page
+      router.push('/providerDashboard');
+    } else if (currentUser.role === 'musician') {
+      // Redirect to the musician page
+      router.push('/musicianDashboard');
+    } else {
+      // Redirect to a default page if the role is unknown
+      router.push('/dashboard');
+    }
+
   } catch (error) {
     console.error('Login error:', error);
     // Optionally, you can display an error message to the user
   }
 };
+
 
 const forgotPassword = () => {
   // Add logic for handling forgot password
@@ -47,7 +75,7 @@ onMounted(async () => {
     <img src="/src/assets/IMG_0917.PNG" alt="" style="width: 300px; height: 300px;">
   </div>
   <v-row align="center" justify="center">
-    <v-col cols="12" sm="8" md="4">
+    <v-col cols="12" sm="8" md="10">
       <v-card class="mx-5">
         <v-row justify="center">
           <h1 class="mt-10" style="font-size: 3rem" >Login</h1>

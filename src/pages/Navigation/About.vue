@@ -45,7 +45,7 @@ import Footer from '../../components/Footer.vue';
     </div>
 
     <div class="mb-5">
-    <RouterLink to="/contact-form">More...</RouterLink>
+    <RouterLink to="/contactForm">More...</RouterLink>
     </div>
 
     <Footer/>

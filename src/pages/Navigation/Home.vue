@@ -5,6 +5,7 @@ const router = useRouter();
 import DropdownMenu from '../../components/DropdownMenu.vue'
 import DropdownMenu2 from '../../components/DropdownMenu2.vue'
 
+
 // import LoginForm from '../Authentication/LoginForm.vue';
 
 import Footer from '../../components/Footer.vue';
@@ -51,6 +52,8 @@ const goToSignUp = () => {
 </script>
 
 <template>
+  
+
   <div>
     <!-- Header Section -->
     <!-- :user-logged-in="isLoggedIn" -->
@@ -72,8 +75,8 @@ const goToSignUp = () => {
             <!-- Card content goes here -->
             <h1 class="text-lg font-semibold mt-10 ml-5">Get a space and craft your voice</h1>
             <p class="text-gray-600  ml-5 mr-5">
-              A platform for musicians and artists alike,
-              <br /> and be inspired by our art space
+              A platform for musicians and artists alike.
+              <br /> Be inspired by our space for music and art.
             </p>
 
            
@@ -85,7 +88,7 @@ const goToSignUp = () => {
              <Button text="Sign up" class="mt-5  ml-5 mb-5" @click="goToSignUp" />
 
             <div class=" ml-5">
-              <RouterLink to="/learnmore">Learn more about hosting your space</RouterLink>
+              <RouterLink to="/learnMore">Learn more about hosting your space</RouterLink>
             </div>
           </v-card>
 
