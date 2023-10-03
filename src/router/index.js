@@ -8,7 +8,7 @@ const routes = [
         meta: {
             title: 'Home'
         },
-        component: () => import('@/pages/Navigation/Home.vue')
+        component: () => import('../pages/Navigation/Home.vue')
     },
     {
         path: '/about',
@@ -16,7 +16,7 @@ const routes = [
         meta: {
             title: 'About'
         },
-        component: () => import('@/pages/Navigation/About.vue')
+        component: () => import('../../src/pages/Navigation/About.vue')
     },
     {
         path: '/company',
@@ -115,7 +115,7 @@ const routes = [
         meta: {
             title: 'Admin Dashboard'
         },
-        component: () => import('../pages/Dashboard/AdminDashboard.vue')
+        component: () => import('../pages/Admin/AdminDashboard.vue')
     },
     // DASHBOARD (Provider)
     {
@@ -124,7 +124,7 @@ const routes = [
         meta: {
             title: 'Provider Dashboard'
         },
-        component: () => import('../pages/Dashboard/ProviderDashboard.vue')
+        component: () => import('../pages/Provider/ProviderDashboard.vue')
     },
     // DASHBOARD (Musician)
     {
@@ -133,7 +133,7 @@ const routes = [
         meta: {
                 title: 'Musician Dashboard'
         },
-        component: () => import('../pages/Dashboard/MusicianDashboard.vue')
+        component: () => import('../pages/Musician/MusicianDashboard.vue')
         },
     // // USERS
     // {

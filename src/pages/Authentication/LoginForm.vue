@@ -72,7 +72,7 @@ onMounted(async () => {
 <template>
   <Navbar/>
   <div style="display: flex; justify-content: center; margin: 5rem;">
-    <img src="/src/assets/IMG_0917.PNG" alt="" style="width: 300px; height: 300px;">
+    <img src="/src/assets/IMG_0917.PNG" alt="">
   </div>
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="10">

@@ -1,8 +1,13 @@
 <script setup>
+import Navbar from '../../components/Navbar.vue';
+import Footer from '../../components/Footer.vue';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../../../music-space-frontend/music-space-frontend/src/stores/auth';
 
 const authStore = useAuthStore();
+
+const router = useRouter();
 
 const form = ref(null); // Add this line to define the form ref
 const roles = ['admin', 'provider', 'musician']; // Define the available roles
@@ -34,6 +39,7 @@ const submitForm = async () => {
   try {
     // Call your registerUser function from the pinia store
     await authStore.registerUser(username.value, email.value, password.value, selectedRole.value);
+    router.push('/login')
   } catch (error) {
     console.error(error);
   }
@@ -41,6 +47,7 @@ const submitForm = async () => {
 </script>
 
 <template>
+  <Navbar/>
      <div style="display: flex; justify-content: center; margin: 5rem;">
     <img src="/src/assets/IMG_0918.JPG" alt="" style="width: 300px; height: 300px;">
     </div>
@@ -109,5 +116,7 @@ const submitForm = async () => {
         </v-btn>
       </v-card-actions>
     </v-card>
+
+    <Footer/>
   </template>
   
