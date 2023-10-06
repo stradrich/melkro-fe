@@ -1,5 +1,5 @@
 <script setup>
-import Logo from './Logo.vue'
+import Logo from '../components/Logo.vue'
 // import NavMenu from './Navbar.vue'
 // import Button from './Button.vue';
 import { useRouter } from 'vue-router';

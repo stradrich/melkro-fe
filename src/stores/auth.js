@@ -26,6 +26,7 @@ export const useAuthStores = defineStore({
     // It is typically used for quick access to user details without the need for an API call. 
         async getCurrentUser() {
             try {
+              console.log('Fetching current user... ');
               const accessToken = localStorage.getItem('access_token');
               console.log(accessToken, 'by 🍍🍍🍍');
               
@@ -44,6 +45,7 @@ export const useAuthStores = defineStore({
               };
               
               this.currentUser = userDetails; // Set the currentUser state
+              
               return userDetails; // Return user details without navigation
             } catch (error) {
               console.log(error);
