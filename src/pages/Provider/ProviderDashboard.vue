@@ -4,8 +4,12 @@ import { ref, watch } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import Button from '../../components/Button.vue';
+// import CreateListingForm from '../../pages/Provider/CreateListingForm.vue'
 // import UserIcon from '../../components/icons/UserIcon'
 import { useAuthStores } from '../../stores/auth';
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const authStore = useAuthStores();
 
@@ -92,7 +96,7 @@ const currentUserEmail = ref('');
             </div>
             
             <div style="flex: 1; display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 5px;">
-            <RouterLink to="/" style="text-decoration: none;">
+            <RouterLink to="/createListingForm" style="text-decoration: none;">
                 <Button text="Create Listings" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
             </RouterLink>
             </div>

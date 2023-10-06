@@ -154,8 +154,16 @@ const routes = [
     // },
 
     // LISTINGS > BOOKING > PAYMENT
-    // SPACE PROVIDER DASHBOARD
-    // MUSICIAN DASHBOARD
+
+    // LISTING
+    {
+        path: '/createListingForm',
+        name: 'Create Listing Form',
+        meta: {
+            title: 'Create Listing Form'
+        },
+        component: () => import('../../src/pages/Provider/CreateListingForm.vue')
+    }, 
 ]
 
 const router = createRouter({

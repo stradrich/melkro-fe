@@ -1,11 +1,14 @@
 import { defineStore } from "pinia";
+import { useAuthStore } from "../../../music-space-frontend/music-space-frontend/src/stores/auth";
+
+const authStore = useAuthStore();
 
 export const useListingStores = defineStore({
     id: 'listings',
 
     state: () => {
         return {
-            listings: {
+            currentListings: {
                 listing_id: null,
                 user_id: null,
                 stripeProductId: null,
@@ -18,7 +21,8 @@ export const useListingStores = defineStore({
                 capacity: null,
                 listings: [],
                 bookings: [],
-            }
+            },
+            ownerID: null, // Add this line
         }
     },
 
@@ -82,52 +86,103 @@ export const useListingStores = defineStore({
             }
         },
 
-        async createListing(stripeProductId, price_per_hour, address_link, pictures, availability, name, description, capacity) {
+        // user_id, stripeProductId, price_per_hour, address_link, pictures, availability, name, description, capacity
+        async createListing(listingData) {
             try {
-                console.log('Create Listing:', JSON.stringify({
-                    stripeProductId,
-                    price_per_hour,
-                    address_link,
-                    pictures,
-                    availability,
-                    name,
-                    description,
-                    capacity,
-                    ownerID
-                }))
+                
                 // Retrieve access token from local storage
                 const accessToken = localStorage.getItem('access_token')
+               
+                // Use getCurrentUser to get the user object
+                //  const user = this.getCurrentUser();
+                // const user = authStore.getCurrentUser();
+                // console.log(user);
 
+                // Extract user ID from the user object
+                //  const userID = user.id;
+                //  console.log(userID);
+                
+        
                 const options = {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        // Provider Token?
                         Authorization: accessToken
                     },
+                    // body: JSON.stringify({
+                    //     user_id,
+                    //     stripeProductId,
+                    //     price_per_hour,
+                    //     address_link,
+                    //     pictures,
+                    //     availability,
+                    //     name,
+                    //     description,
+                    //     capacity
+
+                    // }),
                     body: JSON.stringify({
-                        stripeProductId,
-                        price_per_hour,
-                        address_link,
-                        pictures,
-                        availability,
-                        name,
-                        description,
-                        capacity,
+                      listingData
                     })
                 }
-
+        
                 const response = await fetch('http://localhost:8080/listings/', options)
                 const data = await response.json()
-
+        
                 console.log(data)
                 console.log('Listing Created - Success -  by 🍍🍍🍍')
-
+        
                 return data
             } catch (error) {
                 console.error(error)
             }
         },
+        // async createListing(stripeProductId, price_per_hour, address_link, pictures, availability, name, description, capacity) {
+        //     try {
+        //         console.log('Create Listing:', JSON.stringify({
+        //             stripeProductId,
+        //             price_per_hour,
+        //             address_link,
+        //             pictures,
+        //             availability,
+        //             name,
+        //             description,
+        //             capacity,
+        //             ownerID
+        //         }))
+        //         // Retrieve access token from local storage
+        //         const accessToken = localStorage.getItem('access_token')
+
+        //         const options = {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 // Provider Token?
+        //                 Authorization: accessToken
+        //             },
+        //             body: JSON.stringify({
+        //                 stripeProductId,
+        //                 price_per_hour,
+        //                 address_link,
+        //                 pictures,
+        //                 availability,
+        //                 name,
+        //                 description,
+        //                 capacity,
+        //             })
+        //         }
+
+        //         const response = await fetch('http://localhost:8080/listings/', options)
+        //         const data = await response.json()
+
+        //         console.log(data)
+        //         console.log('Listing Created - Success -  by 🍍🍍🍍')
+
+        //         return data
+        //     } catch (error) {
+        //         console.error(error)
+        //     }
+        // },
 
         async updateListing(listingID, stripeProductId, price_per_hour, address_link, pictures, availability, name, description, capacity) {
 
