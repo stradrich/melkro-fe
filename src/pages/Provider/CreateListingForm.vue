@@ -19,21 +19,41 @@
 } -->
 
 <script setup>
-import { ref } from 'vue';
+import Navbar from '../../components/Navbar.vue'
+import Footer from '../../components/Footer.vue'
+import { ref, onMounted, watch } from 'vue';
 import { useListingStores } from '../../stores/listing';
+import { useAuthStores } from '../../stores/auth';
 
 const listingStore = useListingStores();
+const authStore = useAuthStores();
 
+// const currentUser = ref(authStore.currentUser);
 
-const user_id = ref(''); 
-const stripeProductId = ref('');
-const price_per_hour = ref('');
-const address_link = ref('');
-const pictures = ref('');
-const availability = ref('');
-const name = ref('');
-const description = ref('');
-const capacity = ref('');
+// onMounted(() => {
+//   console.log('authStore:', authStore);
+//   console.log('authStore.currentUser:', authStore.currentUser);
+// });
+
+// Watch for changes in authStore.currentUser
+// watch(() => authStore.currentUser, (newValue) => {
+//   currentUser.value = newValue;
+// });
+
+const userId = ref(authStore.currentUser?.id || ''); // Initial value
+// const user_id = ref(''); 
+watch(() => authStore.currentUser?.id, (newValue) => {
+  userId.value = newValue || '';
+});
+
+// const stripeProductId = ref('');
+// const price_per_hour = ref('');
+// const address_link = ref('');
+// const pictures = ref('');
+// const availability = ref('');
+// const name = ref('');
+// const description = ref('');
+// const capacity = ref('');
 
 // const formData = ref({
 //   user_id,
@@ -103,16 +123,50 @@ const formData = ref({
 
 
 const createListing = async () => {
+       
   try {
+
         // Validate that required fields are not empty
-        if (!formData.value.user_id || !formData.value.price_per_hour) {
+        // if (!authStore.currentUser.value.user_id || !formData.value.price_per_hour) 
+        // if (!authStore.currentUser || !authStore.currentUser.value.user_id || !formData.value.price_per_hour) {
+        // console.error('User ID is required.');
+        // return;
+        // }
+
+        // Ensure we have the user data
+        if (!authStore.currentUser) {
+        console.error('User data is not available.');
+        return;
+        }
+
+           // Validate that required fields are not empty
+        if (!authStore.currentUser.id || !formData.value.price_per_hour) {
         console.error('User ID and Price per Hour are required.');
         return;
         }
+
+        console.log('CurrentUser:', authStore.currentUser?.username);
+        console.log('UserID:', authStore.currentUser?.id);
+        console.log('Price per Hour:', formData.value.price_per_hour);
+
+        // Set the user ID in the form data
+        formData.value.user_id = authStore.currentUser.id || authStore.currentUser?.value.id;
     
         console.log('Request Payload:', formData.value);
         
+        // Wait for authStore.currentUser to be available
+        await authStore.getCurrentUser();
+        // console.log('authStore.currentUser after getCurrentUser:', authStore.getCurrentUser);
+
+        // Validate that required fields are not empty
+        if (!formData.value.price_per_hour) {
+        console.error('Price per Hour is required.');
+        return;
+        }
         // await listingStore.createListing({ ...formData.value });
+
+         // Set the user ID in the form data
+        // formData.value.user_id = authStore.currentUser.value.id;
 
         await listingStore.createListing(formData.value);
     // await listingStore.createListing(
@@ -151,32 +205,54 @@ const createListing = async () => {
 // };
 
 
+// const resetForm = () => {
+//   user_id.value = '';
+//   stripeProductId.value = '';
+//   price_per_hour.value = '';
+//   address_link.value = '';
+//   pictures.value = '';
+//   availability.value = '';
+//   name.value = '';
+//   description.value = '';
+//   capacity.value = '';
+// };
+
 const resetForm = () => {
-  user_id.value = '';
-  stripeProductId.value = '';
-  price_per_hour.value = '';
-  address_link.value = '';
-  pictures.value = '';
-  availability.value = '';
-  name.value = '';
-  description.value = '';
-  capacity.value = '';
+//   userId.value = '';
+  formData.value.stripeProductId = '';
+  formData.value.price_per_hour = '';
+  formData.value.address_link = '';
+  formData.value.pictures = '';
+  formData.value.availability = '';
+  formData.value.name = '';
+  formData.value.description = '';
+  formData.value.capacity = '';
 };
+
 </script>
 
 <template>
-    <img
-      class="ml-7 mb-5"
+
+    <Navbar/>
+
+      
+    
+    
+    <v-sheet class="mt-2" width="300" style="margin: auto; margin-top: auto; margin-bottom: auto;">
+     <img
+      class="mx-auto mt-10 mb-10"
       width="100"
       height="100"
       src="/src/assets/IMG_0912.JPG"
       alt="space"
       loading="lazy"
     />
-    <div>CREATE LISTING PAGE (for space provider)</div>
-  
-    <v-sheet class="mt-2" width="300">
+
+    <div class="mb-10">CREATE LISTING PAGE (for space provider)</div>
+     
       <v-form>
+        <v-text-field v-model="userId" label="User ID" :readonly="true"></v-text-field>
+
         <v-text-field v-model="formData.name" label="Name for your space"></v-text-field>
   
         <v-text-field v-model="formData.description" label="Description"></v-text-field>
@@ -192,11 +268,14 @@ const resetForm = () => {
         <v-text-field v-model="formData.price_per_hour" label="Rate per hour"></v-text-field>
   
         <!-- Add v-model bindings for the remaining fields -->
-        <v-text-field v-model="formData.user_id" label="User ID"></v-text-field>
-  
+        <!-- <v-text-field v-model="formData.user_id" label="User ID"></v-text-field> -->
+        
+
         <!-- Add v-model bindings for the other fields similarly -->
         <!-- v-model="createStripeProductId.field_name" label="Field Label" -->
   
+      
+
         <div>
           <v-file-input chips multiple label="Upload listing photo"></v-file-input>
           <v-file-input
@@ -227,5 +306,9 @@ const resetForm = () => {
       </v-form>
   
     </v-sheet>
+
+    <Footer/>
+
+   
   </template>
   
