@@ -39,9 +39,12 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
-import { useListingStore } from 'your-path-to-listing-store';
+import { useListingStores } from '../../stores/listing';
+import { useAuthStores } from '../../stores/auth';
 
-const listingStore = useListingStore();
+const listingStore = useListingStores();
+const authStore = useAuthStores();
+
 const dynamicListings = ref([]);
 
 const router = useRouter();
@@ -64,15 +67,54 @@ onMounted(async () => {
   }
 });
 
+// async function fetchAllListings() {
+//   // Use your Pinia store method to fetch all listings
+//   dynamicListings.value = await listingStore.getAllListings();
+// }
 async function fetchAllListings() {
-  // Use your Pinia store method to fetch all listings
-  dynamicListings.value = await listingStore.getAllListings();
+  try {
+    // Get the current user's object
+    const currentUser = await authStore.getCurrentUser();
+
+    // Extract the user ID from the user object
+    const currentUserID = currentUser.id;
+
+    // Fetch all listings
+    const allListings = await listingStore.getAllListings();
+
+    // Filter listings based on the current user's ID
+    dynamicListings.value = allListings.filter(listing => listing.user_id === currentUserID);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-async function fetchListingsByUserId() {
-  // Use your Pinia store method to fetch listings by user ID
-  dynamicListings.value = await listingStore.getListingsByUserId(userId.value);
-}
+
+// async function fetchListingsByUserId() {
+//   // Use your Pinia store method to fetch listings by user ID
+//   dynamicListings.value = await listingStore.getListingsByUserId(userId.value);
+// }
+
+// const fetchListingsByUserId = async () => {
+//   try {
+//     // Call your Pinia store method to fetch listings by user ID
+//     dynamicListings.value = await listingStore.getListingsByUserId(userId.value);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+const fetchListingsByUserId = async () => {
+  try {
+    // Reset dynamicListings to an empty array
+    dynamicListings.value = [];
+
+    // Call your Pinia store method to fetch listings by user ID
+    dynamicListings.value = await listingStore.getListingsByUserId(userId.value);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 async function fetchListingById() {
   // Use your Pinia store method to fetch a specific listing by ID
@@ -84,18 +126,23 @@ async function fetchListingById() {
 <template>
   <Navbar />
 
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 0; margin-top: 5rem;">
-    <div v-for="(listing, index) in dynamicListings" :key="index" style="width: 200px; margin: 10px;">
-      <div>
-        <h4 style="display: flex; align-items: center;">
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 0; margin-top: 2rem; margin-bottom: 5rem;">
+    <div class="border mb-16"  v-for="(listing, index) in dynamicListings" :key="index" style="width: 200px; margin: 10px;">
+      <div class="mx-2">  
+        <img src="/src/assets/biro-teaching-and-learning-to-play-the-violin-1.png" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
+        <h4 style="display: flex; align-items: center; ">
           <b>{{ listing.name }}</b>
         </h4>
         <div style="display: flex; justify-content: space-between;">
           <p>{{ listing.description }}</p>
-          <p>{{ listing.price }}</p>
+          <p>{{ listing.price_per_hour }}</p>
         </div>
       </div>
-      <img :src="listing.src" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
+      <!-- <img :src="listing.src" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;"> -->
+      <div class="mx-2">
+        <img src="/src/assets/IMG_1280.PNG" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
+        <img src="/src/assets/biro-map-with-the-way-to-the-goal-and-a-compass-for-orientation-in-space-1.png" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
+      </div>
     </div>
   </div>
 

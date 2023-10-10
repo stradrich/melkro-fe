@@ -48,10 +48,10 @@ const handleLogout = async () => {
                     <p >About</p>
                 </v-btn>
 
-                <!-- <v-btn class='bg-white text-black mr-5' variant="outlined" to="/login">Sign In</v-btn> -->
-                <v-btn class='bg-white text-black mr-5' variant="outlined" @click="currentUser.id ? handleLogout : () => router.push('/login')">
+                <v-btn class='bg-white text-black mr-5' variant="outlined" to="/login">Sign In</v-btn>
+                <!-- <v-btn class='bg-white text-black mr-5' variant="outlined" @click="currentUser.id ? handleLogout : () => router.push('/login')">
                 {{ currentUser.id ? 'Sign Out' : 'Sign In' }}
-                </v-btn>
+                </v-btn> -->
 
 
             </v-toolbar>

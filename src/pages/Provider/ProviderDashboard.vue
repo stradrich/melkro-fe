@@ -87,9 +87,13 @@ const currentUserEmail = ref('');
         
         <div>
             <div>
+            <!-- <div style="display: flex; justify-content: center;">
+            <RouterLink to="listingCard" style="flex: 1; text-align: center;">You have 0 listing(s)</RouterLink>
+            </div> -->
             <div style="display: flex; justify-content: center;">
-            <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 listing(s)</RouterLink>
+            <RouterLink to="listingCard" @click="fetchListingsByUserId" style="flex: 1; text-align: center;">You have 0 listing(s)</RouterLink>
             </div>
+
             
             <div style="display: flex; justify-content: center;">
             <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 booking(s)</RouterLink>
