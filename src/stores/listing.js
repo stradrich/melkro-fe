@@ -53,20 +53,62 @@ export const useListingStores = defineStore({
 
         async getAllListings() {
             try {
+                const accessToken = localStorage.getItem('access_token');
+                console.log('Access Token:', accessToken);
+        
+                if (!accessToken) throw new Error('Access token not found');
+        
                 const options = {
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
                 }
+        
+                console.log('Request Headers:', options.headers); // Log headers
+        
+                const response = await fetch('http://localhost:8080/listings/', options);
+                console.log('Response Status:', response.status);
+                const data = await response.json();
+                console.log('Response Data:', data);
 
-                const response = await fetch('http://localhost:8080/listings/', options)
-                const data = await response.json()
 
-                console.log(data, 'by 🍍🍍🍍')
-                console.log('GET All Listings - by 🍍🍍🍍')
-                return data
+
+                console.log(data, 'by 🍍🍍🍍');
+                console.log('GET All Listings - by 🍍🍍🍍');
+                return data;
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         },
+        
+
+        // async getAllListings() {
+        //     try {
+        //         const accessToken = localStorage.getItem('access_token');
+        //         console.log('Access Token:', accessToken);
+
+        //         if (!accessToken) throw new Error('Access token not found');
+      
+        //         const options = {
+        //             method: 'GET',
+        //             headers: {
+        //                 'Authorization': `Bearer ${accessToken}`,
+        //                 'Content-Type': 'application/json',
+        //             },
+        //         }
+
+        //         const response = await fetch('http://localhost:8080/listings/', options)
+        //         const data = await response.json()
+
+        //         console.log(data, 'by 🍍🍍🍍')
+        //         console.log('GET All Listings - by 🍍🍍🍍')
+        //         return data
+        //     } catch (error) {
+        //         console.error(error)
+        //     }
+        // },
 
 
         async getListingsByID(listingID) {

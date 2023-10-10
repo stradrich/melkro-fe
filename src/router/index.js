@@ -156,6 +156,7 @@ const routes = [
     // LISTINGS > BOOKING > PAYMENT
 
     // LISTING
+    // Create Listing
     {
         path: '/createListingForm',
         name: 'Create Listing Form',
@@ -164,6 +165,17 @@ const routes = [
         },
         component: () => import('../../src/pages/Provider/CreateListingForm.vue')
     }, 
+    // View Listing (All or by userID)
+        {
+        path: '/listingCard',
+        name: 'Listing Card',
+        meta: {
+            title: 'Listing Card'
+        },
+        component: () => import('../../src/pages/Shared/viewAllListingsOrByUserID.vue')
+    }, 
+    
+
 ]
 
 const router = createRouter({
