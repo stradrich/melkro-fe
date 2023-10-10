@@ -24,7 +24,9 @@ import Footer from '../../components/Footer.vue'
 import { ref, onMounted, watch } from 'vue';
 import { useListingStores } from '../../stores/listing';
 import { useAuthStores } from '../../stores/auth';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const listingStore = useListingStores();
 const authStore = useAuthStores();
 
@@ -186,6 +188,7 @@ const createListing = async () => {
 
     // Optionally, you can reset the form fields after successful creation
     resetForm();
+    router.push('/providerDashboard');
   } catch (error) {
     console.error('Listing creation error:', error);
     // Optionally, you can display an error message to the user
