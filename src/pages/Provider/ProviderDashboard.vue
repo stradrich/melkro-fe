@@ -14,7 +14,7 @@ const router = useRouter();
 const authStore = useAuthStores();
 
 const headers = [
-  { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
+  { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'Booking_ID', key: 'bookingID' },
   { title: 'Timeslot', key: 'timeslot' },
   { title: 'Musician', key: 'musician' },
@@ -130,3 +130,6 @@ const currentUserEmail = ref('');
     <Footer/>
   </div>
 </template>
+
+
+

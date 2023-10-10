@@ -5,7 +5,7 @@ import Logo from '../components/Logo.vue'
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-
+const { currentUser, logout } = useAuthStores();
 import { useAuthStores } from '../stores/auth';
 import { useUserStores } from '../stores/user'
 
@@ -17,6 +17,11 @@ const useAuthStore = useAuthStores();
 //     userData.id = user.id
 //     userData.role = user.role
 // }
+
+const handleLogout = async () => {
+  await logout();
+  router.push('/login'); // Redirect to login page after logout
+};
 
 </script>
 
@@ -43,8 +48,12 @@ const useAuthStore = useAuthStores();
                     <p >About</p>
                 </v-btn>
 
-                <v-btn class='bg-white text-black mr-5' variant="outlined" to="/login">Sign In</v-btn>
-                
+                <!-- <v-btn class='bg-white text-black mr-5' variant="outlined" to="/login">Sign In</v-btn> -->
+                <v-btn class='bg-white text-black mr-5' variant="outlined" @click="currentUser.id ? handleLogout : () => router.push('/login')">
+                {{ currentUser.id ? 'Sign Out' : 'Sign In' }}
+                </v-btn>
+
+
             </v-toolbar>
     </template> 
 
