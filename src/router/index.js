@@ -174,6 +174,15 @@ const routes = [
         },
         component: () => import('../../src/pages/Shared/viewAllListingsOrByUserID.vue')
     }, 
+    {
+        path: '/updateListingForm',
+        name: 'Update Listing Form',
+        meta: {
+            title: 'Update Listing Form'
+        },
+        props: true,
+        component: () => import('../../src/pages/Provider/UpdateListingForm.vue')
+    }, 
     
 
 ]

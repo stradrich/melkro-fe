@@ -1,17 +1,20 @@
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable';
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import Button from '../../components/Button.vue';
 // import CreateListingForm from '../../pages/Provider/CreateListingForm.vue'
 // import UserIcon from '../../components/icons/UserIcon'
 import { useAuthStores } from '../../stores/auth';
+import { useListingStores } from '../../stores/listing';
+
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const authStore = useAuthStores();
+const listingStore = useListingStores();
 
 const headers = [
   { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
@@ -50,6 +53,52 @@ const currentUserEmail = ref('');
 //     console.error(error);
 //   }
 // });
+
+// Function to count listings by user ID
+
+const numberOfListings = ref(0);
+
+async function countListingsByLoggedInUser() {
+  try {
+    // Get the user ID from the authentication store
+    const currentUser = await authStore.getCurrentUser();
+    const loggedInUserId = currentUser.id;
+    console.log(loggedInUserId);
+
+    // Get the listings from your store
+    const allListings = await listingStore.getAllListings();
+    console.log(allListings);
+
+    // Use filter to get listings that match the logged-in user's ID
+    const userlistings = allListings.filter(listing => listing.user_id === loggedInUserId);
+
+    // Return the count of listings for the logged-in user
+    return userlistings.length;
+     // Update the ref directly instead of returning the count
+    //  numberOfListings.value = userlistings.length;
+  } catch (error) {
+    console.error(error);
+    return 0; // Return 0 in case of an error
+  }
+}
+
+
+
+// countListingsByLoggedInUser().then(numberOfListings => {
+//   console.log(`The logged-in user has ${numberOfListings} listings.`);
+// });
+
+onMounted(async () => {
+  try {
+    const count = await countListingsByLoggedInUser();
+    numberOfListings.value = count;
+    console.log(`The logged-in user has ${count} listings.`);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -90,10 +139,18 @@ const currentUserEmail = ref('');
             <!-- <div style="display: flex; justify-content: center;">
             <RouterLink to="listingCard" style="flex: 1; text-align: center;">You have 0 listing(s)</RouterLink>
             </div> -->
+            
             <div style="display: flex; justify-content: center;">
-            <RouterLink to="listingCard" @click="fetchListingsByUserId" style="flex: 1; text-align: center;">You have 0 listing(s)</RouterLink>
+              <RouterLink to="listingCard" style="flex: 1; text-align: center;">
+                You have {{ numberOfListings }} listing(s)
+              </RouterLink>
             </div>
-
+            
+            <!-- <div style="display: flex; justify-content: center;">
+              <RouterLink :to="{ name: 'listingCard', params: { users: authStore.currentUser?.id } }" style="flex: 1; text-align: center;">
+                You have {{ dynamicListings.length }} listing(s)
+              </RouterLink>
+          </div> -->
             
             <div style="display: flex; justify-content: center;">
             <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 booking(s)</RouterLink>
