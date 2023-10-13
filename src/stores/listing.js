@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "../../../music-space-frontend/music-space-frontend/src/stores/auth";
+// import { reactive } from 'vue';
+
 
 const authStore = useAuthStore();
 
@@ -8,6 +10,20 @@ export const useListingStores = defineStore({
 
     state: () => {
         return {
+            // currentListings: reactive({
+            //     listing_id: null,
+            //     user_id: null,
+            //     stripeProductId: null,
+            //     price_per_hour: null,
+            //     address_link: null,
+            //     pictures: null,
+            //     availability: null,
+            //     name: null,
+            //     description: null,
+            //     capacity: null,
+            //     listings: [],
+            //     bookings: [],
+            // }),
             currentListings: {
                 listing_id: null,
                 user_id: null,
@@ -22,11 +38,15 @@ export const useListingStores = defineStore({
                 listings: [],
                 bookings: [],
             },
-            ownerID: null, // Add this line
+            ownerID: null, 
+            clickedListingId: null,
         }
     },
 
     getters: {
+      
+
+
         getTimeSlotsForListing: (state) => (listingId) => {
             // Filter bookings for the given listingId and extract time slots
             const bookingsForListing = state.bookings.filter(booking => booking.listingId === listingId);
@@ -51,10 +71,17 @@ export const useListingStores = defineStore({
 
     actions: {
 
+        setClickedListingId(listingId) {
+            console.log('Setting clickedListingId:', listingId);
+            this.clickedListingId = listingId;
+          },
+
         async getAllListings() {
             try {
                 const accessToken = localStorage.getItem('access_token');
                 console.log('Access Token:', accessToken);
+
+                // context.currentListings[key] = data[0][key];
         
                 if (!accessToken) throw new Error('Access token not found');
         
@@ -70,10 +97,24 @@ export const useListingStores = defineStore({
         
                 const response = await fetch('http://localhost:8080/listings/', options);
                 console.log('Response Status:', response.status);
+                
                 const data = await response.json();
                 console.log('Response Data:', data);
 
-
+                // Assuming data is an array of listings
+                // if (Array.isArray(data) && data.length > 0) {
+                //     // Use $set to update the properties of currentListings
+                //     Object.keys(data[0]).forEach(key => {
+                //         this.$set(this.currentListings, key, data[0][key]);
+                //     });
+                // }
+                // if (Array.isArray(data) && data.length > 0) {
+                //     // No need for this.$set, reactivity should handle it
+                //     Object.keys(data[0]).forEach(key => {
+                //         this.currentListings[key] = data[0][key];
+                //     });
+                // }
+                
 
                 console.log(data, 'by 🍍🍍🍍');
                 console.log('GET All Listings - by 🍍🍍🍍');
@@ -226,12 +267,34 @@ export const useListingStores = defineStore({
         //     }
         // },
 
-        async updateListing(listingID, stripeProductId, price_per_hour, address_link, pictures, availability, name, description, capacity) {
+        async updateListing(formData) {
+            console.log('Updating listing with ID:', this.clickedListingId);
 
+            // Log entire user object
+            console.log('CurrentUser:', authStore.currentUser);
+            // Log user ID
+            const userId = authStore.currentUser?.userDetails?.id;
+            console.log('User ID:', userId);
+
+
+            console.log('Updating listing with the following data:');
+            // console.log('Listing ID:', this.clickedListingId);
+            console.log('Name:', formData.name);
+            console.log('Price per Hour:', formData.price_per_hour);
+            console.log('Address Link:', formData.address_link);
+            console.log('Pictures:', formData.pictures);
+            console.log('Availability:', formData.availability);
+            console.log('Description:', formData.description);
+            console.log('Capacity:', formData.capacity);
             try {
-
-                const accessToken = localStorage.getItem('access_token')
-
+                const accessToken = localStorage.getItem('access_token');
+        
+                // Check if clickedListingId is available
+                if (!this.clickedListingId) {
+                    console.error('Listing ID not available.');
+                    return;
+                }
+        
                 const options = {
                     method: 'PUT',
                     headers: {
@@ -239,28 +302,30 @@ export const useListingStores = defineStore({
                         Authorization: accessToken
                     },
                     body: JSON.stringify({
-                        stripeProductId,
-                        price_per_hour,
-                        address_link,
-                        pictures,
-                        availability,
-                        name,
-                        description,
-                        capacity,
+                        user_id: userId,
+                        listingID: this.clickedListingId,
+                        price_per_hour: formData.price_per_hour,
+                        address_link: formData.address_link,
+                        pictures: formData.pictures,
+                        availability: formData.availability,
+                        name: formData.name,
+                        description: formData.description,
+                        capacity: formData.capacity,
                     })
-                }
-
-                const response = await fetch(`http://localhost:8080/listings/listing/${listingID}`, options)
-                const data = await response.json()
-
-                console.log(data)
-                console.log('Listing Updated - Success -  by 🍍🍍🍍')
-
-                return data
+                };
+        
+                const response = await fetch(`http://localhost:8080/listings/listing/${this.clickedListingId}`, options);
+                const data = await response.json();
+        
+                console.log(data);
+                console.log('Listing Updated - Success -  by 🍍🍍🍍');
+        
+                return data;
             } catch (error) {
-                console.error(error)
+                console.error(error);
             }
         },
+        
 
         async deleteListing(listingID) {
 

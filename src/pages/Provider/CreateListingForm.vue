@@ -293,18 +293,18 @@ const resetForm = () => {
             Create Listing
           </v-btn>
   
-          <v-btn
+          <!-- <v-btn
             color="warning"
             class="mt-4"
             block
             @click="updateListing"
           >
             Update Listing
-          </v-btn>
+          </v-btn> -->
   
-          <v-btn color="error" class="mt-4" block @click="deleteListing">
+          <!-- <v-btn color="error" class="mt-4" block @click="deleteListing">
             Delete Listing
-          </v-btn>
+          </v-btn> -->
         </div>
       </v-form>
   
