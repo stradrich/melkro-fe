@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "../../../music-space-frontend/music-space-frontend/src/stores/auth";
-// import { reactive } from 'vue';
+
+
 
 
 const authStore = useAuthStore();
@@ -319,7 +320,7 @@ export const useListingStores = defineStore({
         
                 console.log(data);
                 console.log('Listing Updated - Success -  by 🍍🍍🍍');
-        
+                
                 return data;
             } catch (error) {
                 console.error(error);
@@ -327,7 +328,10 @@ export const useListingStores = defineStore({
         },
         
 
-        async deleteListing(listingID) {
+        async deleteListing(clickedListingId) {
+            
+            console.log('Delete Listing method called with ID:', clickedListingId);
+
 
             try {
                 const accessToken = localStorage.getItem('access_token')
@@ -339,11 +343,18 @@ export const useListingStores = defineStore({
                     }
                 }
 
-                const response = await fetch(`http://localhost:8080/listings/listing/${listingID}`, options)
+                console.log(accessToken);
+
+                // const listingId = this.clickedListingId;
+
+                // const response = await fetch(`http://localhost:8080/listings/listing/${listingId}`, options)
+                const response = await fetch(`http://localhost:8080/listings/listing/${clickedListingId}`, options)
                 const data = await response.json()
 
                 console.log(data)
                 console.log('Listing Deleted - Success -  by 🍍🍍🍍')
+
+              
 
             } catch (error) {
                 console.error(error)
