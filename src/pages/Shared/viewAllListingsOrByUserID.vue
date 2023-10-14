@@ -185,6 +185,9 @@ const editListing = async (clickedListingId) => {
     // Call the action directly, no need for setClickedListingId
     await listingStore.setClickedListingId(clickedListingId);
 
+     // Set the clickedListingId in the component's state (if needed)
+    //  this.clickedListingId = clickedListingId;
+
     // Try logging the listingId before navigating to see if it's correct
     console.log('Listing ID before navigation:', listingId.value);
 
@@ -205,13 +208,19 @@ const editListing = async (clickedListingId) => {
 
 
 
+const deleteListing = async (clickedListingId) => {
+  console.log(`Delete Listing Clicked, listingID: ${clickedListingId}`);
+  try {
+    // Call the deleteListing method from your store with the clickedListingId
+    await listingStore.deleteListing(clickedListingId);
 
-
-const deleteListing = (listingId) => {
-  // Use the passed listingId instead of fetching it again
-  // console.log(listingId);
-  console.log(`Delete Listing Clicked, listingID: ${listingId}`);
+    // Now, navigate to the "/providerDashboard" route
+    router.push('/providerDashboard');
+  } catch (error) {
+    console.error(error);
+  }
 };
+
 
 
 
@@ -262,10 +271,14 @@ const deleteListing = (listingId) => {
             </router-link>
           </div>
 
-          <div @click="deleteListing(listing.listing_id)">
+          <!-- <div @click="listingStore.deleteListing(listing.listing_id)"> -->
+            <div @click="deleteListing(listing.listing_id)">
+
+            
             <svg height='30px' widht='30px' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="mt-2 mb-2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
             </svg>
+
           </div>
         </div>
 
