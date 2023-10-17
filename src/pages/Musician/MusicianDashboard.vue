@@ -101,9 +101,11 @@ const currentUserEmail = ref('');
             </div>
             
             <div style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
-            <RouterLink to="/" style="text-decoration: none;">
+            <RouterLink to="listingCard" style="text-decoration: none;">
                 <Button text="Get a room, now!" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" />
             </RouterLink>
+
+      
             </div>
             
             <div style="flex: 1; display: flex; justify-content: center; margin-top: 20px;">

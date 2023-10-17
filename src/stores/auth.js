@@ -40,12 +40,15 @@ export const useAuthStores = defineStore({
               const userDetails = {
                 id: decodedToken.id,
                 email: decodedToken.email,
+                password: decodedToken.password,
                 role: decodedToken.role,
                 username: decodedToken.username,
               };
               
-              this.currentUser = userDetails; // Set the currentUser state
+              console.log(userDetails)
               
+              this.currentUser = userDetails; // Set the currentUser state
+
               return userDetails; // Return user details without navigation
             } catch (error) {
               console.log(error);

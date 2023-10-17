@@ -66,27 +66,169 @@ const router = useRouter();
 const userId = ref(null);
 const listingId = ref(null);
 
-onMounted(async () => {
-  // Check if the route has a "users" or "listing" param
-  if (router.currentRoute.value.params.users) {
-    // Fetch listings based on user ID
-    userId.value = router.currentRoute.value.params.users;
-    await fetchListingsByUserId();
-  } else if (router.currentRoute.value.params.listing) {
-    // Fetch a specific listing by ID
-    listingId.value = router.currentRoute.value.params.listing;
-    await fetchListingById();
-  } else {
-    // Fetch all listings
-    await fetchAllListings();
-  }
-});
+// const handleVerification = async () => {
+//   try {
+//     // Retrieve verification token from localStorage
+//     const verificationToken = localStorage.getItem('access_token');
+
+//     // Check if the token is present
+//     if (!verificationToken) {
+//       console.error('Verification token not found in localStorage');
+//       // Handle error as needed
+//       return;
+//     }
+
+//     // Access your Pinia store
+//     const authStore = useAuthStores();
+
+//     // Make the request to the backend
+//     const response = await fetch('http://localhost:8080/auth/verify', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ verificationToken }),
+//     });
+
+//     const data = await response.json();
+
+//     // Handle the response data as needed
+//     console.log(data);
+
+//     // Assuming you have a method in your store to handle verification response
+//     authStore.handleVerificationResponse(data);
+
+//   } catch (error) {
+//     console.error('Error verifying email:', error);
+//     // Handle error as needed
+//   }
+// };
+
+
+// onMounted(async () => {
+//   // handleVerification();
+//   console.log('Route params:', router.currentRoute.value.params);
+
+//   const currentUser = await authStore.getCurrentUser();
+//   const currentUserRole = currentUser.role;
+
+//   console.log(currentUserRole);
+
+//   const currentListing = await listingStore.getListingsByUserId()
+//   const ownerListing = currentListing.data
+
+//   console.log(ownerListing);
+
+//   // Check if the route has a "users" or "listing" param
+//   if (router.currentRoute.value.params.users) {
+//     // Fetch listings based on user ID
+//     userId.value = router.currentRoute.value.params.users;
+//     console.log('User ID from route:', userId.value);
+//     await fetchListingsByUserId();
+//   } else if (router.currentRoute.value.params.listing) {
+//     // Fetch a specific listing by ID
+//     listingId.value = router.currentRoute.value.params.listing;
+//     console.log('Listing ID from route:', listingId.value);
+//     await fetchListingById();
+//   } else {
+//     // Fetch all listings
+//     await fetchAllListings();
+//   }
+// });
 
 
 // async function fetchAllListings() {
 //   // Use your Pinia store method to fetch all listings
 //   dynamicListings.value = await listingStore.getAllListings();
 // }
+// async function fetchAllListings() {
+//   try {
+//     // Get the current user's object
+//     const currentUser = await authStore.getCurrentUser();
+
+//     // Extract the user ID from the user object
+//     const currentUserID = currentUser.id;
+
+//     // Fetch all listings   
+//     const allListings = await listingStore.getAllListings();
+
+//     // Filter listings based on the current user's ID
+//     dynamicListings.value = allListings.filter(listing => listing.user_id === currentUserID);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+// async function fetchAllListings() {
+//   // handleVerification();
+//   try {
+//     // Get the current user's object
+//     const currentUser = await authStore.getCurrentUser();
+
+//     // Extract the user ID and role from the user object
+//     const currentUserID = currentUser.id;
+//     const currentUserRole = currentUser.role;
+
+//     if (currentUserRole === 'provider') {
+//       // If the user is a provider, fetch and display only their own listings
+//       const providerListings = await fetchListingsByUserId(currentUserID);
+//       dynamicListings.value = providerListings;
+//     } else {
+//       // If the user is a musician, fetch and display all listings
+//       const allListings = await listingStore.getAllListings(currentUserID);
+//       dynamicListings.value = allListings;
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
+
+const currentUser = ref(null);
+
+// Simulate a login when the component is mounted (replace this with actual login logic)
+onMounted(async () => {
+  currentUser.value = await authStore.getCurrentUser();
+  // console.log('Listing Card', currentUser.value.role);
+  await fetchListings(); // Fetch listings after getting the current user
+});
+
+
+async function fetchListings() {
+  try {
+    const currentUser = await authStore.getCurrentUser();
+    const currentUserID = currentUser.id;
+
+    if (currentUser.role === 'musician') {
+      // If the user is a musician, fetch all listings without filtering
+      const allListings = await listingStore.getAllListings();
+      dynamicListings.value = allListings;
+    } else {
+      // If the user is a provider, filter listings based on the user ID
+      const providerListings = await fetchListingsByUserId(currentUserID);
+      dynamicListings.value = providerListings;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+const filteredListings = computed(() => {
+  if (!currentUser.value) {
+    // Return an empty array if currentUser.value is falsy
+    return [];
+  }
+
+  // Filter listings based on the owner's user_id and user's role === "provider"
+  if (currentUser.value.role === "provider") {
+    return dynamicListings.value.filter((listing) => listing.user_id === currentUser.value.id);
+  }
+
+  // For musicians, return all listings
+  return dynamicListings.value;
+});
+
+
+
 async function fetchAllListings() {
   try {
     // Get the current user's object
@@ -95,15 +237,22 @@ async function fetchAllListings() {
     // Extract the user ID from the user object
     const currentUserID = currentUser.id;
 
-    // Fetch all listings   
-    const allListings = await listingStore.getAllListings();
+    // Fetch all listings using the user ID   
+    const allListings = await listingStore.getAllListings(currentUserID);
 
-    // Filter listings based on the current user's ID
-    dynamicListings.value = allListings.filter(listing => listing.user_id === currentUserID);
+    // If the user is a musician, fetch all listings without filtering
+    if (currentUser.role === 'musician') {
+      dynamicListings.value = allListings;
+    } else {
+      // If the user is a provider, filter listings based on the user ID
+      dynamicListings.value = allListings.filter(listing => listing.user_id === currentUserID);
+    }
   } catch (error) {
     console.error(error);
   }
 }
+
+
 
 
 // async function fetchListingsByUserId() {
@@ -120,12 +269,23 @@ async function fetchAllListings() {
 //   }
 // };
 const fetchListingsByUserId = async () => {
+  // handleVerification();
   try {
     // Reset dynamicListings to an empty array
     dynamicListings.value = [];
 
+    const currentUser = await authStore.getCurrentUser();
+    console.log('Current user data:', currentUser);
+
+    // Use the correct property name based on your user data structure
+    const currentUserID = currentUser.id;
+
+    console.log('User ID for fetching listings:', currentUserID);
+
     // Call your Pinia store method to fetch listings by user ID
-    dynamicListings.value = await listingStore.getListingsByUserId(userId.value);
+    dynamicListings.value = await listingStore.getListingsByUserId(currentUserID);
+    // dynamicListings.value = await listingStore.getListingsByUserId(authStore.currentUser.id);
+
   } catch (error) {
     console.error(error);
   }
@@ -231,10 +391,14 @@ const deleteListing = async (clickedListingId) => {
   <Navbar />
   <DropdownMenu2/>
 
+  <!-- test listings on page -->
+  <!-- {{ filteredListings }} -->
+
+  <!-- v-for="(listing, index) in dynamicListings"  -->
   <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 0; margin-top: 2rem; margin-bottom: 5rem;">
     <div 
     class="border mb-16"  
-    v-for="(listing, index) in dynamicListings" 
+     v-for="(listing, index) in filteredListings"
     :key="index" 
     style="width: 200px; margin: 10px;"
     >

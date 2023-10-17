@@ -77,7 +77,8 @@ export const useListingStores = defineStore({
             this.clickedListingId = listingId;
           },
 
-        async getAllListings() {
+          async getAllListings() {
+          
             try {
                 const accessToken = localStorage.getItem('access_token');
                 console.log('Access Token:', accessToken);
@@ -124,6 +125,41 @@ export const useListingStores = defineStore({
                 console.error(error);
             }
         },
+
+        async getListingsByUserId(userId) {
+            
+          
+
+            try {
+              const accessToken = localStorage.getItem('access_token');
+              console.log('Access Token:', accessToken);
+              const options = {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+                },
+              };
+
+            console.log(options.headers)
+
+      
+            //   http://localhost:8080/listings/users/4/listings
+              const response = await fetch(`http://localhost:8080/listings/users/${userId}/listings`, options);
+            //   const response = await fetch(`http://localhost:8080/listings/user/${userId}`, options);
+              const data = await response.json();
+      
+              console.log('Request Headers:', response.headers);
+              console.log('Response Status:', response.status);
+              console.log(data, 'by 🍍🍍🍍');
+              console.log(`GET Listings by User ID ${userId} - by 🍍🍍🍍`);
+      
+              return data;
+            } catch (error) {
+              console.error(error);
+            }
+          },
+        
         
 
         // async getAllListings() {
@@ -154,6 +190,7 @@ export const useListingStores = defineStore({
 
 
         async getListingsByID(listingID) {
+           
             try {
                 const options = {
                     method: 'GET'
@@ -170,8 +207,12 @@ export const useListingStores = defineStore({
             }
         },
 
+        
+
         // user_id, stripeProductId, price_per_hour, address_link, pictures, availability, name, description, capacity
         async createListing(listingData) {
+            // console.log('Received Data:', req.body);
+
             try {
                 
                 // Retrieve access token from local storage
@@ -204,10 +245,12 @@ export const useListingStores = defineStore({
                     //     description,
                     //     capacity
 
-                    // }),
+                    // }),        
                     body: JSON.stringify({
                       listingData
-                    })
+                    }),
+                    // body: JSON.stringify(listingData)
+
                 }
         
                 const response = await fetch('http://localhost:8080/listings/', options)
@@ -269,6 +312,8 @@ export const useListingStores = defineStore({
         // },
 
         async updateListing(formData) {
+            // console.log('Received Data:', req.body);
+
             console.log('Updating listing with ID:', this.clickedListingId);
 
             // Log entire user object
