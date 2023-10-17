@@ -38,6 +38,7 @@ const dynamicListings = ref(listings.map(listing => ({
 import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import { ref, onMounted, watch, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import Button from '../../components/Button.vue'
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import { useListingStores } from '../../stores/listing';
@@ -404,6 +405,14 @@ const deleteListing = async (clickedListingId) => {
     >
     <!-- @click="editDeleteOptions" -->
       <div class="mx-2">  
+
+        <div class="mx-2">
+          <div v-if="currentUser && currentUser.role !== 'provider'"  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;">
+            <RouterLink to="/" style="text-decoration: none;">
+              <Button text="Book now" style="margin: 5px; padding: 10px; width: 100px; background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer;" />
+            </RouterLink>
+          </div>
+
       
         <img src="/src/assets/biro-teaching-and-learning-to-play-the-violin-1.png" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
         <h4 style="display: flex; align-items: center; ">
@@ -420,10 +429,11 @@ const deleteListing = async (clickedListingId) => {
 
       
       <!-- <img :src="listing.src" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;"> -->
-      <div class="mx-2">
         <img src="/src/assets/IMG_1280.PNG" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
 
-        <div style="display: flex; justify-content: space-evenly;">
+      
+
+        <div v-if="currentUser && currentUser.role !== 'musician'" style="display: flex; justify-content: space-evenly;">
           <div  @click="editListing(listing.listing_id)">
             <!-- In viewAllListingsOrByUserID.vue -->
             <router-link :to="{ name: 'Update Listing Form', params: { listingId: listing.listing_id } }">
@@ -446,8 +456,12 @@ const deleteListing = async (clickedListingId) => {
           </div>
         </div>
 
+
+
         <img src="/src/assets/biro-map-with-the-way-to-the-goal-and-a-compass-for-orientation-in-space-1.png" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
       </div>
+
+     
     </div>
   </div>
 
