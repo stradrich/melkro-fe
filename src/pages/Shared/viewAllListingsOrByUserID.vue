@@ -43,6 +43,7 @@ import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import { useListingStores } from '../../stores/listing';
 import { useAuthStores } from '../../stores/auth';
+import { useBookingStores } from '../../stores/booking';
 import UpdateDeleteListing from '../../../../music-space-frontend/music-space-frontend/src/views/UpdateDeleteListing.vue';
 
 const formData = ref({
@@ -60,6 +61,7 @@ const formData = ref({
 
 const listingStore = useListingStores();
 const authStore = useAuthStores();
+const bookingStore = useBookingStores();
 
 const dynamicListings = ref([]);
 
@@ -188,6 +190,7 @@ const currentUser = ref(null);
 // Simulate a login when the component is mounted (replace this with actual login logic)
 onMounted(async () => {
   currentUser.value = await authStore.getCurrentUser();
+  console.log('Hello World, current user id is:', currentUser);
   // console.log('Listing Card', currentUser.value.role);
   await fetchListings(); // Fetch listings after getting the current user
 });
@@ -365,10 +368,6 @@ const editListing = async (clickedListingId) => {
 
 
 
-
-
-
-
 const deleteListing = async (clickedListingId) => {
   console.log(`Delete Listing Clicked, listingID: ${clickedListingId}`);
   try {
@@ -382,6 +381,50 @@ const deleteListing = async (clickedListingId) => {
   }
 };
 
+
+const createBooking = async (clickedListingId, ownerId) => {
+    // console.log(clickedListingId);
+    console.log(`Book Now Clicked, listingID: ${clickedListingId}`);
+
+    // console.log(ownerUserId);
+    console.log(`Book Now Clicked, Owned By: ${ownerId}`);
+
+    const musicianId = currentUser.value.id
+    console.log('Book Now Clicked by musician:', musicianId);
+
+
+    // Update the formData.listing_id with the received listingId
+    listingId.value = clickedListingId;
+
+    // Call the action directly, no need for setClickedListingId
+    await listingStore.setClickedListingId(clickedListingId);
+
+     // Set the clickedListingId in the component's state (if needed)
+    //  this.clickedListingId = clickedListingId;
+
+    // Try logging the listingId before navigating to see if it's correct
+    // console.log('Listing ID before navigation:', listingId.value);
+
+    // Now, navigate to the CreateBookingForm component
+  //     await router.push({
+  //     name: 'Create Booking Form',
+  //     params: {
+  //         clickedListingId: clickedListingId,
+  //         ownerId: ownerId,
+  //         musicianId: musicianId
+  //     },
+  //     replace: true,
+  // })
+
+  bookingStore.setBookingInfo({ clickedListingId, ownerId, musicianId });
+  console.log('Params before navigation:', clickedListingId, ownerId, musicianId);
+
+
+
+
+    // Now, the navigation is completed, and you can access the updated listingId
+    // console.log('Listing ID after navigation:', listingId.value);
+};
 
 
 
@@ -408,8 +451,11 @@ const deleteListing = async (clickedListingId) => {
 
         <div class="mx-2">
           <div v-if="currentUser && currentUser.role !== 'provider'"  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;">
-            <RouterLink to="/" style="text-decoration: none;">
+           
+            <!-- <RouterLink to="" style="text-decoration: none;"  @click="createBooking(listing.listing_id, listing.user_id)"> -->
+            <RouterLink to="/createBookingForm" style="text-decoration: none;"  @click="createBooking(listing.listing_id, listing.user_id)">
               <Button text="Book now" style="margin: 5px; padding: 10px; width: 100px; background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer;" />
+              <!-- <p>Musician User ID: {{ currentUser.id }}</p> -->
             </RouterLink>
           </div>
 

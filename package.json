@@ -11,10 +11,12 @@
   "dependencies": {
     "@mdi/js": "^7.2.96",
     "axios": "^1.5.1",
+    "flatpickr": "^4.6.13",
     "jose": "^4.14.6",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "pinia": "^2.1.6",
+    "time-slots-generator": "^1.0.6",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",
     "vuetify": "^3.3.19"

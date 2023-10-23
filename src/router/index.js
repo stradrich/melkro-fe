@@ -183,6 +183,19 @@ const routes = [
         props: true,
         component: () => import('../../src/pages/Provider/UpdateListingForm.vue')
     }, 
+    {
+        path: '/createBookingForm',
+        name: 'Create Booking Form',
+        meta: {
+            title: 'Create Booking Form'
+        },
+        // props: (route) => ({
+        //     clickedListingId: route.params.clickedListingId,
+        //     ownerId: route.params.ownerId,
+        //     musicianId: route.params.musicianId,
+        //   }),
+        component: () => import('../../src/pages/Musician/CreateBooking.vue')
+    }, 
     
 
 ]

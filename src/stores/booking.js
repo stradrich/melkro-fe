@@ -3,15 +3,22 @@ import { defineStore } from "pinia";
 export const useBookingStores = defineStore({
     id: 'bookings',
 
-    state: () => {
-
-    },
+    state: () => ({
+        clickedListingId: null,
+        ownerId: null,
+        musicianId: null,
+    }),
 
     getters: {
 
     },
 
     actions: {
+        setBookingInfo({ clickedListingId, ownerId, musicianId }) {
+            this.clickedListingId = clickedListingId;
+            this.ownerId = ownerId;
+            this.musicianId = musicianId;
+        },
         
         async getAllBookings() {
             try {
