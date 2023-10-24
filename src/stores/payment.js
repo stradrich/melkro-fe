@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useTimeslotStores = defineStore({
+export const usePaymentStores = defineStore({
     id: 'payments',
 
     state: () => {
