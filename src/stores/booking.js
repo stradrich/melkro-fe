@@ -77,8 +77,20 @@ export const useBookingStores = defineStore({
 //                 console.error(error)
 //             }
 //         },
+// async createBooking(booking_id, user_id, listing_id, status, reminder, check_in, check_out, required_equipments, other_remarks, purpose, first_instrument) 
+        async createBooking(formData) {
+            console.log('Inside bookingStore createBooking:', formData);
+            console.log('Inside bookingStore listingId:', formData.listingId);
+            console.log('Inside bookingStore musicianId:', formData.musicianId);
 
-        async createBooking(booking_id, user_id, listing_id, status, reminder, check_in, check_out, required_equipments, other_remarks, purpose, first_instrument) {
+              // Define default values for variables
+            const status = 'pending';
+            const reminder = '24_hours';
+            const required_equipments = 'NO';// Set your default value
+            const other_remarks = '';  // Set your default value
+            const purpose = 'practice';  // Set your default value
+            const first_instrument = '';  // Set your default value
+
             try {
                 const accessToken = localStorage.getItem('access_token')
 
@@ -89,17 +101,32 @@ export const useBookingStores = defineStore({
                         Authorization: accessToken
                     },
                     body: JSON.stringify({
-                        booking_id,
-                        user_id,
-                        listing_id,
-                        status,
-                        reminder,
-                        check_in,
-                        check_out,
-                        required_equipments,
-                        other_remarks,
-                        purpose,
-                        first_instrument,
+        
+                            // listing_id: formData.value.listingId,
+                            // user_id: formData.value.ownerId,
+                            // musician_id: formData.value.musicianId,
+                            // status: formData.value.status,
+                            // reminder: formData.value.reminder,
+                            // check_in: formData.value.check_in,
+                            // check_out: formData.value.check_out,
+                            // required_equipments: formData.value.required_equipments,
+                            // other_remarks: formData.value.other_remarks,
+                            // purpose: formData.value.purpose,
+                            // first_instrument: formData.value.first_instrument,
+
+                            listing_id: formData.listingId,
+                            // user_id: formData.ownerId,
+                            user_id: formData.musicianId,
+                            status,
+                            reminder,
+                            check_in: formData.check_in,
+                            check_out: formData.check_out,
+                            required_equipments,
+                            other_remarks,
+                            purpose,
+                            first_instrument,
+                      
+                        
                     })
                 }
 
