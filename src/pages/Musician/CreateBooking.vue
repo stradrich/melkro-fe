@@ -5,16 +5,28 @@ import flatpickr from "flatpickr";
 import 'flatpickr/dist/themes/light.css';
 
 
-import { ref, onMounted, watch, nextTick, reactive,  toRefs } from 'vue';
+import { ref, onMounted, watch, nextTick, reactive,  toRefs, computed } from 'vue';
 import { useListingStores } from '../../stores/listing';
 import { useAuthStores } from '../../stores/auth';
 import { useBookingStores } from '../../stores/booking';
 import { useTimeslotStores } from '../../stores/timeslot';
 import { usePaymentStores } from '../../stores/payment'
 
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 
-const route = useRouter();
+// console.log('Current Route Path:', router.currentRoute.value.path);
+// const isCreateBookingRoute = router.currentRoute.value.path === '/createBookingForm';
+// const isCreateBookingRoute = router.currentRoute.value.path === '/listingCard';
+// console.log('isCreateBookingRoute:', isCreateBookingRoute);
+
+// const isUpdateBookingRoute = route.path.includes('/createBookingForm');
+// const isUpdateBookingRoute = route.path.includes('/musicianDashboard');
+
+
+
+
 const listingStore = useListingStores();
 const authStore = useAuthStores();
 const bookingStore = useBookingStores();
@@ -121,11 +133,13 @@ async function createBooking() {
         }
 
   try {
-    await bookingStore.createBooking(formData);
-
+    // NEED TO CHECK FOR OVERLAPPING TIMESLOT
     // Create Timeslot
     // await timeslotStore.createTimeslot(formData)
     await createTimeslot();
+
+    await bookingStore.createBooking(formData);
+
 
   console.log('Booking created successfully!');
   } catch (error) {
@@ -133,6 +147,7 @@ async function createBooking() {
   }
 
   // resetForm();
+  router.push('/musicianDashboard')
 }
 
 const resetForm = () => {
@@ -230,8 +245,10 @@ const resetForm = () => {
         </div>
 
 
- 
-      
+        <!-- check route -->
+        {{ isCreateBookingRoute }}
+        {{ isUpdateBookingRoute }}
+
 
         <div class="d-flex flex-column">
           <!-- <v-btn color="success" class="mt-4" block > -->
@@ -239,6 +256,7 @@ const resetForm = () => {
             Create Booking
           </v-btn>
 
+          <!-- <v-btn v-else-if="route.path === '/CreateBookingForm'" color="warning" class="mt-4" block> -->
           <v-btn color="warning" class="mt-4" block>
           <!-- <v-btn color="warning" class="mt-4" block @click="updateBooking"> -->
             Update Booking

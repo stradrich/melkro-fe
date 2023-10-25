@@ -37,7 +37,7 @@ const dynamicListings = ref(listings.map(listing => ({
 <script setup>
 import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import { ref, onMounted, watch, computed } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import Button from '../../components/Button.vue'
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
@@ -45,6 +45,12 @@ import { useListingStores } from '../../stores/listing';
 import { useAuthStores } from '../../stores/auth';
 import { useBookingStores } from '../../stores/booking';
 import UpdateDeleteListing from '../../../../music-space-frontend/music-space-frontend/src/views/UpdateDeleteListing.vue';
+
+
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
+const action = route.query.action;
 
 const formData = ref({
   user_id: '',
@@ -65,7 +71,7 @@ const bookingStore = useBookingStores();
 
 const dynamicListings = ref([]);
 
-const router = useRouter();
+// const router = useRouter();
 const userId = ref(null);
 const listingId = ref(null);
 
