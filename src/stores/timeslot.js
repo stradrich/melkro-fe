@@ -100,7 +100,7 @@ export const useTimeslotStores = defineStore({
             }
         },
 
-        async updateTimeslot(user_id, timeslot_datetime, booking_id) {
+        async updateTimeslot(formData) {
             try {
                 const accessToken = localStorage.getItem('access_token')
 
@@ -111,9 +111,9 @@ export const useTimeslotStores = defineStore({
                         Authorization: accessToken
                     },
                     body: JSON.stringify({
-                        user_id,
-                        timeslot_datetime,
-                        booking_id
+                        user_id: formData.musicianId,
+                        timeslot_datetime_start: formData.check_in,
+                        timeslot_datetime_end: formData.check_out ,
                     })
                 }
 

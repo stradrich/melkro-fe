@@ -50,40 +50,31 @@ const flatpickrOptions = {
 
 const datetimeRef = ref(null);
 
-// onMounted(async () => {
-//   await nextTick();
-
-//   const { clickedListingId, ownerId, musicianId, check_in, check_out } = bookingStore;
-//   // const { clickedListingId, ownerId, musicianId } = toRefs(bookingStore);
-//   console.log('Booking Info from store:', clickedListingId, ownerId, musicianId, check_in, check_out);     
-
-//   try {
-//     const flatpickrInstance = datetimeRef.value?.flatpickrRef;
-
-//     if (flatpickrInstance) {
-//       console.log('Flatpickr version:', flatpickr.version);
-//       // You can do additional configuration or operations with flatpickrInstance if needed
-//     } else {
-//       console.error('Flatpickr instance not available.');
-
-//       const startDateInput = startDateContainer.value.querySelector('#start-datetime');
-//       const timeInput = startDateContainer.value.querySelector('#end-datetime');
-
-//       flatpickr(startDateInput, { ...flatpickrOptions }); 
-//       flatpickr(timeInput, { ...flatpickrOptions }); 
-//     }
-//   } catch (error) {
-//     console.error('Error initializing Flatpickr:', error);
-//   }
-// });
 onMounted(async () => {
   await nextTick();
 
-  const startDateInput = startDateContainer.value.querySelector('#start-datetime');
-  const endDateInput = startDateContainer.value.querySelector('#end-datetime');
+  const { clickedListingId, ownerId, musicianId } = bookingStore;
+  // const { clickedListingId, ownerId, musicianId } = toRefs(bookingStore);
+  console.log('Booking Info from store:', clickedListingId, ownerId, musicianId);     
 
-  flatpickr(startDateInput, { ...flatpickrOptions });
-  flatpickr(endDateInput, { ...flatpickrOptions });
+  try {
+    const flatpickrInstance = datetimeRef.value?.flatpickrRef;
+
+    if (flatpickrInstance) {
+      console.log('Flatpickr version:', flatpickr.version);
+      // You can do additional configuration or operations with flatpickrInstance if needed
+    } else {
+      console.error('Flatpickr instance not available.');
+
+      const startDateInput = startDateContainer.value.querySelector('#start-datetime');
+      const timeInput = startDateContainer.value.querySelector('#end-datetime');
+
+      flatpickr(startDateInput, { ...flatpickrOptions }); 
+      flatpickr(timeInput, { ...flatpickrOptions }); 
+    }
+  } catch (error) {
+    console.error('Error initializing Flatpickr:', error);
+  }
 });
 
 
@@ -91,10 +82,8 @@ const formData = reactive({
   listingId: bookingStore.clickedListingId,
   ownerId: bookingStore.ownerId,
   musicianId: bookingStore.musicianId,
-  check_in: bookingStore.check_in,
-  check_out: bookingStore.check_out,
-  // check_in: bookingStore.check_in,
-  // check_out: bookingStore.check_out,
+  check_in: '',
+  check_out: '',
   status:  '',
   reminder:  '',
   required_equipments: '',
@@ -110,23 +99,21 @@ function logFormData() {
   console.log('Form Data:', formData);
   };
 
-async function createTimeslot() {
-   await timeslotStore.createTimeslot(formData)
+async function updateTimeslot() {
+   await timeslotStore.updateTimeslot(formData)
 }
 
 
-async function createBooking() {
-   // Wait for the next tick to ensure formData values are updated by flatpickr
-   await nextTick();
-
-  console.log('Inside createBooking:', formData);
+async function updateBooking() {
+  console.log('Inside editBooking:', formData);
 
   // call create booking in pinia
-  console.log('Creating booking');
-  console.log('Booking data needed: listing ID, provider ID, musician ID, Check In, Check Out');
+  console.log('Updating booking, you will receive a payment link');
+  console.log('Updating data needed: listing ID, provider ID, musician ID, Check In, Check Out');
  // call create timeslot in pinia
-  console.log('Create Timeslot');
+  console.log('Update Timeslot');
   console.log('You will be redirected to Payment page, if you wish to confirm your Booking, please click on the Stripe Payment Link');
+  console.log('If already paid, stay on page');
 
 // console.log(formData.value.listingId);
 // console.log(formData.value.ownerId);
@@ -142,7 +129,7 @@ async function createBooking() {
 
 
   if (!formData.check_in && !formData.check_out) {
-        console.error('Check in and Check out, date and time required!');
+        console.error('Check in and Check out, date and time required for update!');
         return;
         }
 
@@ -150,19 +137,18 @@ async function createBooking() {
     // NEED TO CHECK FOR OVERLAPPING TIMESLOT
     // Create Timeslot
     // await timeslotStore.createTimeslot(formData)
-    await createTimeslot();
+    await updateTimeslot();
 
-    await bookingStore.createBooking(formData);
+    await bookingStore.updateBooking(formData);
 
 
-  console.log('Booking created successfully!');
-
-  router.push('/stripePaymentLink')
-  // resetForm();
+  console.log('Booking edited successfully!');
   } catch (error) {
-  console.log('Error creating booking', error);
+  console.log('Error editing booking', error);
   }
 
+  // resetForm();
+  router.push('/musicianDashboard')
 }
 
 const resetForm = () => {
@@ -260,20 +246,22 @@ const resetForm = () => {
         </div>
 
 
-  
+        <!-- check route -->
+        {{ isCreateBookingRoute }}
+        {{ isUpdateBookingRoute }}
 
 
         <div class="d-flex flex-column">
           <!-- <v-btn color="success" class="mt-4" block > -->
-          <v-btn color="success" class="mt-4" block @click="createBooking">
+          <!-- <v-btn color="success" class="mt-4" block @click="createBooking">
             Create Booking
-          </v-btn>
+          </v-btn> -->
 
           <!-- <v-btn v-else-if="route.path === '/CreateBookingForm'" color="warning" class="mt-4" block> -->
-          <!-- <v-btn color="warning" class="mt-4" block> -->
+          <v-btn color="warning" class="mt-4" block @click="editBooking">
           <!-- <v-btn color="warning" class="mt-4" block @click="updateBooking"> -->
-            <!-- Update Booking -->
-          <!-- </v-btn> -->
+            Update Booking
+          </v-btn>
   
           <!-- <v-btn
             color="warning"

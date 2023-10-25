@@ -7,6 +7,8 @@ export const useBookingStores = defineStore({
         clickedListingId: null,
         ownerId: null,
         musicianId: null,
+        check_in: null,
+        check_out: null
     }),
 
     getters: {
@@ -14,10 +16,13 @@ export const useBookingStores = defineStore({
     },
 
     actions: {
-        setBookingInfo({ clickedListingId, ownerId, musicianId }) {
+        // setBookingInfo({ clickedListingId, ownerId, musicianId }) {
+        setBookingInfo({ clickedListingId, ownerId, musicianId, check_in, check_out }) {
             this.clickedListingId = clickedListingId;
             this.ownerId = ownerId;
             this.musicianId = musicianId;
+            this.check_in = check_in;
+            this.check_out = check_out;
         },
         
         async getAllBookings() {
@@ -134,6 +139,11 @@ export const useBookingStores = defineStore({
                 const response = await fetch('http://localhost:8080/bookings/bookings', options)
                 const data = await response.json()
 
+                // Set check_in and check_out in the store
+                this.check_in = formData.check_in;
+                this.check_out = formData.check_out;
+
+
                 console.log(data)
                 console.log('Booking Created - Success - by 🍍🍍🍍')
             } catch (error) {
@@ -141,7 +151,7 @@ export const useBookingStores = defineStore({
             }
         },
 
-        async updateBooking(booking_id, user_id, listing_id, status, reminder, check_in, check_out, required_equipments, other_remarks, purpose, first_instrument) {
+        async updateBooking(formData) {
             try {
                 const accessToken = localStorage.getItem('access_token')
 
@@ -152,18 +162,18 @@ export const useBookingStores = defineStore({
                         Authorization: accessToken
                     },
                     body: JSON.stringify({
-                        booking_id,
-                        user_id,
-                        listing_id,
+                        listing_id: formData.listingId,
+                        // user_id: formData.ownerId,
+                        user_id: formData.musicianId,
                         status,
                         reminder,
-                        check_in,
-                        check_out,
+                        check_in: formData.check_in,
+                        check_out: formData.check_out,
                         required_equipments,
                         other_remarks,
                         purpose,
-                        first_instrument,
-                    })
+                        first_instrument,    
+                })
                 }
 
                 // const response = await fetch('actual cloud hosting platform', options)

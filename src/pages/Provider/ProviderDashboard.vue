@@ -1,8 +1,14 @@
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable';
+import '@mdi/font/css/materialdesignicons.css'
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiPencil, mdiDelete, mdiAccount} from '@mdi/js';
+
+
 import { ref, watch, onMounted } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
+import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import Button from '../../components/Button.vue';
 // import CreateListingForm from '../../pages/Provider/CreateListingForm.vue'
 // import UserIcon from '../../components/icons/UserIcon'
@@ -22,7 +28,9 @@ const headers = [
   { title: 'Timeslot', key: 'timeslot' },
   { title: 'Musician', key: 'musician' },
   { title: 'Payment_ID', key: 'paymentID' },
-  { title: 'Status', key: 'status' }
+  { title: 'Status', key: 'status' },
+  { title: 'Edit', key: 'edit' },
+  { title: 'Delete', key: 'delete' },
 ];
 
 const bookingData = [
@@ -32,9 +40,21 @@ const bookingData = [
     timeslot: '00:00',
     musician: 'test',
     paymentID: 'not found',
-    status: 'pending'
+    status: 'pending',
+    edit: 'mdiPencil',
+    delete: 'mdiDelete'
   },
 ];
+
+function editItem(item) {
+      // Handle edit action
+      console.log('Edit item:', item);
+    }
+    
+function  deleteItem(item) {
+      // Handle delete action
+      console.log('Delete item:', item);
+    }
 
 const getStatus = (status) => {
   if (status === 'declined') return 'red';
@@ -44,17 +64,6 @@ const getStatus = (status) => {
 
 const currentUserEmail = ref('');
 
-// Watch for changes in authStore.currentUser
-// watch(() => authStore.currentUser, async (newUser) => {
-//   try {
-//     await authStore.getCurrentUser(); // Assuming getCurrentUser is an async method
-//     currentUserEmail.value = authStore.currentUser.email;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
-
-// Function to count listings by user ID
 
 const numberOfListings = ref(0);
 
@@ -105,10 +114,13 @@ onMounted(async () => {
 <template>
   <div>
       <Navbar/>
+      <DropdownMenu2/>
 
       <div class="mt-10 flex border">
          <!-- <UserIcon/> -->
-        <div class="mt-5 ml-5">
+         
+         <div class="mt-5 ml-5">
+          <svg-icon class="custom-icon mb-5" type="mdi" :path="mdiAccount"></svg-icon>
             <span class="mr-2">Name:</span>
             <span>{{  authStore.currentUser?.username}}</span>
          </div>
@@ -179,18 +191,40 @@ onMounted(async () => {
         </div>
     </div>
    
-    <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
+    <!-- <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
       <template v-slot:item.status="{ value }">
         <v-chip :color="getStatus(value)">
           {{ value }}
         </v-chip>
       </template>
-    </v-data-table>
+    </v-data-table> -->
+
+    <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
+    <template v-slot:item.status="{ value }">
+      <v-chip :color="getStatus(value)">
+        {{ value }}
+      </v-chip>
+    </template>
+
+    <template v-slot:item.edit="{ item }">
+      <v-icon class="custom-icon" @click="editItem(item)" style="color: black">{{ mdiPencil }}</v-icon>
+    </template>
+
+    <template v-slot:item.delete="{ item }">
+      <v-icon class="custom-icon" @click="deleteItem(item)" style="color: black;">{{ mdiDelete }}</v-icon>
+    </template>
+  </v-data-table>
 
 
     <Footer/>
   </div>
 </template>
+
+<style scoped>
+.custom-icon {
+  color: black;
+}
+</style>
 
 
 

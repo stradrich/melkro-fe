@@ -1,13 +1,15 @@
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable';
 import '@mdi/font/css/materialdesignicons.css'
-import { mdiPencil, mdiDelete } from '@mdi/js';
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiPencil, mdiDelete, mdiAccount} from '@mdi/js';
 
 import { ref, watch, onMounted } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
+import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import Button from '../../components/Button.vue';
-import { mdiAccount } from '@mdi/js'
+// import { mdiAccount } from '@mdi/js'
 // import { aliases, mdi } from 'vuetify/iconsets/mdi'
 // import UserIcon from '../../components/icons/UserIcon'
 import { useAuthStores } from '../../stores/auth';
@@ -34,6 +36,7 @@ const headers = [
   // { title: 'Edit', key: 'edit', slot: 'editColumn' },
 ];
 
+// Dummy Data, keep it here!
 const bookingData = [
   {
     listing: `Melkro TEST`,
@@ -43,8 +46,8 @@ const bookingData = [
     owner: 'test',
     paymentID: 'not found',
     status: 'pending',
-    edit: 'mdi-pencil',
-    delete: ''
+    edit: 'mdiPencil',
+    delete: 'mdiDelete'
     // edit: 'mdi-pencil'
 
   },
@@ -117,10 +120,12 @@ onMounted(async () => {
 <template>
   <div>
       <Navbar/>
+      <DropdownMenu2/>
 
       <div class="mt-10 flex border">
          <!-- <UserIcon/> -->
         <div class="mt-5 ml-5">
+          <svg-icon class="custom-icon mb-5" type="mdi" :path="mdiAccount"></svg-icon>
             <span class="mr-2">Name:</span>
             <span>{{  authStore.currentUser?.username}}</span>
          </div>
@@ -157,7 +162,7 @@ onMounted(async () => {
             </div> -->
             
             <div style="display: flex; justify-content: center;">
-            <RouterLink to="/" style="flex: 1; text-align: center;">
+            <RouterLink to="#" style="flex: 1; text-align: center;">
             You have {{ numberOfBookings }} booking(s)
           </RouterLink>
             </div>
