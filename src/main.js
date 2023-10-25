@@ -1,5 +1,6 @@
 import './assets/main.css'
 import 'flatpickr/dist/flatpickr.css';
+import '@mdi/font/css/materialdesignicons.css' 
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -16,7 +17,14 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 
 const vuetify = createVuetify({
     components,
-    directives
+    directives,
+    icons: {
+        defaultSet: 'mdi',
+        aliases,
+        sets: {
+          mdi,
+        },
+      },
 })
 
 // Import App.vue

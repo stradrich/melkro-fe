@@ -194,6 +194,7 @@ const routes = [
         //     ownerId: route.params.ownerId,
         //     musicianId: route.params.musicianId,
         //   }),
+        props: (route) => ({ action: route.query.action }),
         component: () => import('../../src/pages/Musician/CreateBooking.vue')
     }, 
     

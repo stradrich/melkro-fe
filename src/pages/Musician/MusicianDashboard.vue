@@ -1,6 +1,9 @@
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable';
-import { ref, watch } from 'vue';
+import '@mdi/font/css/materialdesignicons.css'
+import { mdiPencil, mdiDelete } from '@mdi/js';
+
+import { ref, watch, onMounted } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import Button from '../../components/Button.vue';
@@ -8,16 +11,26 @@ import { mdiAccount } from '@mdi/js'
 // import { aliases, mdi } from 'vuetify/iconsets/mdi'
 // import UserIcon from '../../components/icons/UserIcon'
 import { useAuthStores } from '../../stores/auth';
+import { useBookingStores } from '../../stores/booking';
 
 const authStore = useAuthStores();
+const bookingStore = useBookingStores();
+
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
+const action = route.query.action;
 
 const headers = [
   { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
   { title: 'Booking_ID', key: 'bookingID' },
-  { title: 'Timeslot', key: 'timeslot' },
-  { title: 'Provider', key: 'provider' },
+  { title: 'check_in', key: 'check_in' },
+  { title: 'check_out', key: 'check_out' },
+  { title: 'Owner', key: 'owner' },
   { title: 'Payment_ID', key: 'paymentID' },
   { title: 'Status', key: 'status' },
+  { title: 'Edit', key: 'edit' },
+  { title: 'Delete', key: 'delete' },
   // { title: 'Edit', key: 'edit', slot: 'editColumn' },
 ];
 
@@ -25,14 +38,27 @@ const bookingData = [
   {
     listing: `Melkro TEST`,
     bookingID: 1,
-    timeslot: '00:00',
-    provider: 'test',
+    check_in: '00:00',
+    check_out: '00:00',
+    owner: 'test',
     paymentID: 'not found',
     status: 'pending',
+    edit: 'mdi-pencil',
+    delete: ''
     // edit: 'mdi-pencil'
 
   },
 ];
+
+function editItem(item) {
+      // Handle edit action
+      console.log('Edit item:', item);
+    }
+    
+function  deleteItem(item) {
+      // Handle delete action
+      console.log('Delete item:', item);
+    }
 
 const getStatus = (status) => {
   if (status === 'declined') return 'red';
@@ -51,6 +77,40 @@ const currentUserEmail = ref('');
 //     console.error(error);
 //   }
 // });
+
+const numberOfBookings = ref(0);
+
+async function countBookingsByLoggedInUser() {
+  try {
+    const currentUser = await authStore.getCurrentUser();
+    const loggedInUserId = currentUser.id;
+    console.log(loggedInUserId);
+
+    // Get the vookings from pinia store
+    const allBookings = await bookingStore.getAllBookings();
+    console.log(allBookings);
+
+    // Use filter to get listings that match the logged-in user's ID
+    const userBookings = allBookings.filter(booking => booking.user_id === loggedInUserId);
+
+    // Return the count of listings for the logged-in user
+    return userBookings.length;
+
+  } catch (error) {
+    console.error(error);
+    return 0; // Return 0 in case of an error
+  }
+}
+
+onMounted(async () => {
+  try {
+    const count = await  countBookingsByLoggedInUser();
+    numberOfBookings.value = count;
+    console.log(`The logged-in user has ${count} bookings.`);
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -97,7 +157,9 @@ const currentUserEmail = ref('');
             </div> -->
             
             <div style="display: flex; justify-content: center;">
-            <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 booking(s)</RouterLink>
+            <RouterLink to="/" style="flex: 1; text-align: center;">
+            You have {{ numberOfBookings }} booking(s)
+          </RouterLink>
             </div>
             
             <div style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
@@ -113,7 +175,7 @@ const currentUserEmail = ref('');
             </div>
 
             <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
-            <RouterLink to="/" style="text-decoration: none;">
+            <RouterLink  to="/createBookingForm" style="text-decoration: none;">
                 <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
             </RouterLink>
             </div>
@@ -123,14 +185,14 @@ const currentUserEmail = ref('');
       
     
      
-    <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
-      <template v-slot:item.status="{ value }">
-        <v-chip :color="getStatus(value)">
-          {{ value }}
-        </v-chip>
+    <!-- <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10"> -->
+      <!-- <template v-slot:item.status="{ value }"> -->
+        <!-- <v-chip :color="getStatus(value)"> -->
+          <!-- {{ value }} -->
+        <!-- </v-chip> -->
         
         <!-- <v-btn class="mt-8 mb-8 ml-8">Hello</v-btn> -->
-      </template>
+      <!-- </template> -->
 
       <!-- <template v-slot:item.editColumn="{ item }">
         <v-icon>{{ item.edit }}</v-icon>
@@ -138,11 +200,35 @@ const currentUserEmail = ref('');
 
       
       
-    </v-data-table>
+    <!-- </v-data-table> -->
     
- 
-    
+    <!-- Testing for MDI icons -->
+    <!-- <v-icon @click="editItem(item)" style="color: red;">{{ mdiPencil }}</v-icon> -->
+    <!-- <v-icon @click="deleteItem(item)" style="color: blue;">{{ mdiDelete }}</v-icon> -->
+
+  <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
+    <template v-slot:item.status="{ value }">
+      <v-chip :color="getStatus(value)">
+        {{ value }}
+      </v-chip>
+    </template>
+
+    <template v-slot:item.edit="{ item }">
+      <v-icon class="custom-icon" @click="editItem(item)" style="color: black">{{ mdiPencil }}</v-icon>
+    </template>
+
+    <template v-slot:item.delete="{ item }">
+      <v-icon class="custom-icon" @click="deleteItem(item)" style="color: black;">{{ mdiDelete }}</v-icon>
+    </template>
+  </v-data-table>
 
     <Footer/>
   </div>
 </template>
+
+
+<style scoped>
+.custom-icon {
+  color: black;
+}
+</style>
