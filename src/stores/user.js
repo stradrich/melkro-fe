@@ -45,53 +45,103 @@ export const useUserStores = defineStore({
         },
 
         async getUserByID(userID) {
-            console.log('USER ID (From Get User By Id)', userID)
-            
-            if(userID) {
-                try {
-                    const options = {
-                        method: 'GET'
-                    }
-                     // const response = await fetch('actual cloud hosting platform', options)
-                     const response = await fetch('http://localhost:8080/users/${userID}', options)
-                    const data = await response.json()
-                    
-                    this.user = data // Set the user information in the state
-                    
-                    console.log('GET User By ID - User ID:' , userID)
-                    console.log('GET User By ID - User Data', data)
-                    console.log('GET user id - by 🍍🍍🍍')
-                    
-                    return data
-                } catch (error) {
-                    console.error(error)
-                }
+            console.log('USER ID (From Get User By Id)', userID);
+          
+            if (userID) {
+              try {
+                const accessToken = localStorage.getItem('access_token');
+                console.log('Access Token:', accessToken);
+          
+                const options = {
+                  method: 'GET',
+                  headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                  },
+                };
+          
+                const response = await fetch(`http://localhost:8080/users/${userID}`, options);
+                const data = await response.json();
+          
+                this.user = data; // Set the user information in the state
+          
+                console.log('GET User By ID - User ID:', userID);
+                console.log('GET User By ID - User Data', data);
+                console.log('GET user id - by 🍍🍍🍍');
+          
+                return data;
+              } catch (error) {
+                console.error(error);
+              }
             }
-        },
+          },
+          
+        
+
+        // async getUserByID(userID) {
+        //     console.log('USER ID (From Get User By Id)', userID)
+            
+        //     if(userID) {
+        //         try {
+        //             const accessToken = localStorage.getItem('access_token');
+        //             console.log('Access Token:', accessToken);
+
+        //             // Add this line to log the token
+        //             console.log('Token:', accessToken);
+
+        //             const options = {
+        //                 method: 'GET',
+        //                 headers: {
+        //                     'Authorization': `Bearer ${accessToken}`,
+        //                     'Content-Type': 'application/json',
+        //             }
+        //              // const response = await fetch('actual cloud hosting platform', options)
+        //              const response = await fetch('http://localhost:8080/users/${userID}', options)
+        //             const data = await response.json()
+                    
+        //             this.user = data // Set the user information in the state
+                    
+        //             console.log('GET User By ID - User ID:' , userID)
+        //             console.log('GET User By ID - User Data', data)
+        //             console.log('GET user id - by 🍍🍍🍍')
+                    
+        //             return data
+        //         } catch (error) {
+        //             console.error(error)
+        //         }
+        //     }
+        // },
 
         async createUser() {
             try {
-                const accessToken = localStorage.getItem('access_token')
-                
-                const options = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: accessToken
-                    },
-                    body: JSON.stringify({email, password, role, isVerified})
-                }
-
-                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/users', options)
-                const data = await response.json()
-
-                console.log('User Data', data)
-                console.log('User Created - by 🍍🍍🍍')
+              const accessToken = localStorage.getItem('access_token');
+              console.log('Access Token:', accessToken);
+              
+              if (!accessToken) {
+                console.error('Access token is null or undefined');
+                return;
+              }
+          
+              const options = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': accessToken,
+                },
+                body: JSON.stringify({ email, password, role, isVerified }),
+              };
+          
+              const response = await fetch('http://localhost:8080/users', options);
+              const data = await response.json();
+          
+              console.log('User Data', data);
+              console.log('User Created - by 🍍🍍🍍');
             } catch (error) {
-                console.error(error)
+              console.error(error);
             }
-        },
+          },
+          
+          
 
         async updateUser(name, email) {
             try {

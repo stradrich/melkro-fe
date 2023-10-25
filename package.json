@@ -9,7 +9,8 @@
     "test:unit": "vitest"
   },
   "dependencies": {
-    "@mdi/js": "^7.2.96",
+    "@jamescoyle/vue-icon": "^0.1.2",
+    "@mdi/js": "^7.3.67",
     "axios": "^1.5.1",
     "flatpickr": "^4.6.13",
     "jose": "^4.14.6",

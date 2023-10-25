@@ -1,8 +1,13 @@
 <script setup>
 import { VDataTable } from 'vuetify/labs/VDataTable';
+import '@mdi/font/css/materialdesignicons.css'
+import SvgIcon from '@jamescoyle/vue-icon'
+import { mdiPencil, mdiDelete, mdiAccount} from '@mdi/js';
+
 import { ref, watch } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
+import DropdownMenu2Vue from '../../components/DropdownMenu2.vue';
 import Button from '../../components/Button.vue';
 // import UserIcon from '../../components/icons/UserIcon'
 import { useAuthStores } from '../../stores/auth';
@@ -18,7 +23,8 @@ const headers = [
   { title: 'Musician', key: 'musician' },
   { title: 'Payment_ID', key: 'paymentID' },
   { title: 'Status', key: 'status' },
-  { title: 'edit', key: 'edit' }
+  { title: 'Edit', key: 'edit' },
+  { title: 'Delete', key: 'delete' },
 ];
 
 const bookingData = [
@@ -31,9 +37,22 @@ const bookingData = [
             timeslot: '23:59',
             musician: 'stradrich',
             paymentID: 'not found', 
-            status: 'pending'
+            status: 'pending',
+            edit: 'mdiPencil',
+            delete: 'mdiDelete'
+            
           },
 ];
+
+function editItem(item) {
+      // Handle edit action
+      console.log('Edit item:', item);
+    }
+    
+function  deleteItem(item) {
+      // Handle delete action
+      console.log('Delete item:', item);
+    }
 
 const getStatus = (status) => {
   if (status === 'declined') return 'red';
@@ -45,10 +64,12 @@ const getStatus = (status) => {
 <!-- ProviderDashboard.vue -->
 <template>
     <Navbar/>
+    <DropdownMenu2Vue/>
 
     <div class="mt-10 flex border">
          <!-- <UserIcon/> -->
         <div class="mt-5 ml-5">
+          <svg-icon class="custom-icon mb-5" type="mdi" :path="mdiAccount"></svg-icon>
             <span class="mr-2">Name:</span>
             <span>{{  authStore.currentUser?.username}}</span>
          </div>
@@ -114,7 +135,8 @@ const getStatus = (status) => {
            <Button text="Edit Data" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" />
        </RouterLink>
      </div>
-    <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
+
+    <!-- <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
       <template v-slot:item.status="{ value }" >
         <v-chip :color="getStatus(value)">
           {{ value }}
@@ -122,10 +144,31 @@ const getStatus = (status) => {
       </template>
 
     
-    </v-data-table>
+    </v-data-table> -->
+    <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
+    <template v-slot:item.status="{ value }">
+      <v-chip :color="getStatus(value)">
+        {{ value }}
+      </v-chip>
+    </template>
+
+    <template v-slot:item.edit="{ item }">
+      <v-icon class="custom-icon" @click="editItem(item)" style="color: black">{{ mdiPencil }}</v-icon>
+    </template>
+
+    <template v-slot:item.delete="{ item }">
+      <v-icon class="custom-icon" @click="deleteItem(item)" style="color: black;">{{ mdiDelete }}</v-icon>
+    </template>
+  </v-data-table>
 
     <Footer/>
   </template>
+
+<style scoped>
+.custom-icon {
+  color: black;
+}
+</style>
   
  
   

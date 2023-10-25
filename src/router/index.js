@@ -194,8 +194,24 @@ const routes = [
         //     ownerId: route.params.ownerId,
         //     musicianId: route.params.musicianId,
         //   }),
-        props: (route) => ({ action: route.query.action }),
+        // props: (route) => ({ action: route.query.action }),
         component: () => import('../../src/pages/Musician/CreateBooking.vue')
+    }, 
+    {
+        path: '/updateBookingForm',
+        name: 'Update Booking Form',
+        meta: {
+            title: 'Update Booking Form'
+        },
+        component: () => import('../../src/pages/Musician/UpdateBooking.vue')
+    }, 
+    {
+        path: '/stripePaymentLink',
+        name: 'Stripe Payment Link',
+        meta: {
+            title: 'Stripe Payment Link'
+        },
+        component: () => import('../../src/pages/Shared/stripePaymentLink.vue')
     }, 
     
 
