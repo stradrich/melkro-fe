@@ -1,7 +1,11 @@
 <script setup>
 import Navbar from '../../components/Navbar.vue'
 import Footer from '../../components/Footer.vue'
+import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import Button from '../../components/Button.vue';
+
+import SvgIcon from '@jamescoyle/vue-icon';
+import { mdiGoogle, mdiApple } from '@mdi/js';
 
 import { ref, onMounted, watch, nextTick, reactive,  toRefs, computed } from 'vue';
 import { useUserStores } from '../../stores/user';
@@ -119,7 +123,16 @@ onMounted(async () => {
     }
 });
 
+const bookingHours = computed(() => {
+    const checkIn = new Date(bookingStore.check_in);
+    const checkOut = new Date(bookingStore.check_out);
+    const hoursDifference = (checkOut - checkIn) / (1000 * 60 * 60);
+    return hoursDifference;
+});
 
+const totalCost = computed(() => {
+    return listingStore.currentListings.price_per_hour * bookingHours.value;
+});
 
 
 </script>
@@ -127,14 +140,69 @@ onMounted(async () => {
 <template>
 
     <Navbar/>
+    <DropdownMenu2/>
 
-    <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem;  margin-bottom: 2rem;">
+    <div style="flex: 1; display: flex; justify-content: center; margin-top: 1rem;  margin-bottom: 2rem;">
              <img :src="'/src/assets/bao-meditation-in-garden-1.png'" alt="">
     </div>
 
-    <div style="display: flex; justify-content: center;">
-        <p>Please complete payment to secure your booking</p> 
+    <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+        <p>Dear {{ authStore.currentUser.username }}</p> 
     </div>
+
+    <div style="display: flex; justify-content: center;">
+        <p>You are booking {{ listingStore.currentListings.name }} provided by {{ userStore.user.username }} </p> 
+    </div>
+
+    <div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
+        <div>
+            <div style="display: flex; justify-content: center; margin-right; margin-right: 2rem;">
+                <p>From:</p> 
+            </div>
+        
+            <div style="display: flex; justify-content: center; margin-right: 2rem;">
+                {{ bookingStore.check_in }} 
+            </div>
+        </div>
+    
+        <div>
+            <div style="display: flex; justify-content: center; margin-left: 2rem;">
+                To:
+            </div>
+        
+            <div style="display: flex; justify-content: center; margin-left: 2rem;">
+                {{ bookingStore.check_out  }}
+            </div>
+        </div>
+
+    </div>
+
+    <div style="flex: 1; display: flex; justify-content: center; margin-top: 1rem;  margin-bottom: 1rem;">
+             <img src="../../assets/bonbon-line-hands-playing-the-violin-as-a-hobby.png" alt="">
+    </div>
+
+
+    <div style="display: flex; justify-content: center;">
+        <p>Your current booking is {{ bookingHours }} hour(s) long</p> 
+    </div>
+
+    <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
+        <p>Which amounts to ${{ totalCost }}</p> 
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <p>To reduce clunky commute, you are encouraged to rent our instruments</p> 
+    </div>
+
+    <!-- <div style="flex: 1; display: flex; justify-content: center; margin-top: 1rem;  margin-bottom: 1rem;">
+             <img src="../../assets/abstract-902.gif" alt="">
+    </div> -->
+
+    <div style="display: flex; justify-content: center;">
+        <p>Please complete payment to secure your booking timeslot </p> 
+    </div>
+
+    
 
     <div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
         <div>
@@ -143,6 +211,7 @@ onMounted(async () => {
             <p>ClickedListingId: {{ bookingStore.clickedListingId }}</p>
             <p>Owner name: {{ userStore.user.username }}</p>
             <p>OwnerUserId: {{ bookingStore.ownerId }}</p>
+            <p>Musician name: {{ authStore.currentUser.username }}</p>
             <p>MusicianId: {{ bookingStore.musicianId }}</p>
             <p>Listing hourly rate: {{ listingStore.currentListings.price_per_hour }}</p>
             <p>BookingId: {{  bookingStore.booking_id}}</p>
@@ -156,13 +225,17 @@ onMounted(async () => {
 
     <div style="display: flex; justify-content: center;  margin-top: 2rem;  margin-bottom: 1rem;">
        <div>
-           <p>Get your stripe payment link: </p>  
+           <p>Proceed to your stripe payment link: </p>  
         </div>
     </div>
         <div style="display: flex; justify-content: center;">
             <Button text="Pay Now" @click="createPayment" />
         </div>
+
+      
     
+        <!-- <svg-icon type="mdi" :path="mdiGoogle"></svg-icon> -->
+        <!-- <svg-icon type="mdi" :path="mdiApple"></svg-icon> -->
     <Footer/>
 
    
