@@ -48,6 +48,10 @@ import Footer from '../../components/Footer.vue';
     <RouterLink to="/contactForm">More...</RouterLink>
     </div>
 
+    <div style="display: flex; justify-content: center; margin-top: 5rem;">
+        <img src="src/assets/app-store_google-play.jpeg" alt="">
+    </div>
+
     <Footer/>
 
 </template>

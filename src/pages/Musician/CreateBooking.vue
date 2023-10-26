@@ -154,6 +154,10 @@ async function createBooking() {
 
     await bookingStore.createBooking(formData);
 
+      // Call createBooking and log the auto-generated booking_id
+    //  const createdBooking = await bookingStore.createBooking(formData);
+
+  console.log('Auto-generated Booking ID:', bookingStore.booking_id);
 
   console.log('Booking created successfully!');
 

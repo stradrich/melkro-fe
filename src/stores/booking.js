@@ -8,7 +8,8 @@ export const useBookingStores = defineStore({
         ownerId: null,
         musicianId: null,
         check_in: null,
-        check_out: null
+        check_out: null,
+        booking_id: null
     }),
 
     getters: {
@@ -17,12 +18,13 @@ export const useBookingStores = defineStore({
 
     actions: {
         // setBookingInfo({ clickedListingId, ownerId, musicianId }) {
-        setBookingInfo({ clickedListingId, ownerId, musicianId, check_in, check_out }) {
+        setBookingInfo({ clickedListingId, ownerId, musicianId, check_in, check_out, booking_id }) {
             this.clickedListingId = clickedListingId;
             this.ownerId = ownerId;
             this.musicianId = musicianId;
             this.check_in = check_in;
             this.check_out = check_out;
+            this.booking_id = booking_id;
         },
         
         async getAllBookings() {
@@ -143,9 +145,12 @@ export const useBookingStores = defineStore({
                 this.check_in = formData.check_in;
                 this.check_out = formData.check_out;
 
+                 // Set the booking_id
+                this.booking_id = data.booking_id;
 
-                console.log(data)
+                console.log('Booking Data:', data)
                 console.log('Booking Created - Success - by 🍍🍍🍍')
+                console.log('Generated Booking ID:', this.booking_id);
             } catch (error) {
                 console.error(error)
             }

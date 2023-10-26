@@ -115,6 +115,8 @@ const goToSignUp = () => {
       </template>
     </div>
 
+     
+
     <!-- Footer Section -->
     <Footer />
   </div>
