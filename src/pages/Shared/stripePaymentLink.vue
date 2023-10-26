@@ -29,29 +29,97 @@ async function createPayment() {
 
 
 
+// onMounted(async () => {
+//     const { clickedListingId, ownerId, musicianId } = bookingStore;
+//     console.log('Booking Info from store:', clickedListingId, ownerId, musicianId);
+
+//         // Fetch listing details using the clickedListingId
+//         await listingStore.getListingsByID(clickedListingId);
+
+        
+//         // Fetch owner details using the ownerId
+//         await userStore.getUserByID(ownerId);
+
+//         // Now you can access the details
+//         const listing = listingStore.currentListings;
+//         const owner = userStore.currentUser;
+
+//     console.log('Listing name', listingStore.name)
+//     console.log('Owner name', owner.username)
+//     console.log('Hourly-rate', listing.price_per_hour)
+//     console.log('Check-in:', bookingStore.check_in, 'Check-out:', bookingStore.check_out);
+    
+
+//     // Additional logic as needed
+// });
+
+// onMounted(async () => {
+//     const { clickedListingId, ownerId, musicianId } = bookingStore;
+//     console.log('Booking Info from store:', clickedListingId, ownerId, musicianId);
+
+//     try {
+//         // Fetch listing details using the clickedListingId
+//         await listingStore.getListingsByID(clickedListingId);
+
+//         // Fetch owner details using the ownerId
+//         await userStore.getUserByID(ownerId);
+
+//         // Now you can access the details
+//         await nextTick(); // Wait for the next tick to ensure the DOM has been updated
+
+//            // Log the entire listingStore.currentListings object
+//            console.log('Current Listings:', listingStore.currentListings);
+
+//         // Now you can access the details
+//         const listing = listingStore.currentListings;
+//         const owner = userStore.currentUser;
+        
+//         // Log the owner object
+//         console.log('Owner Object:', owner);
+
+//         console.log('Listing name', listingStore.currentListings);
+//         console.log('Owner name', owner.username);
+//         console.log('Hourly-rate', listing.price_per_hour);
+//         console.log('Check-in:', bookingStore.check_in, 'Check-out:', bookingStore.check_out);
+//     } catch (error) {
+//         console.error(error);
+//     }
+// });
+
 onMounted(async () => {
     const { clickedListingId, ownerId, musicianId } = bookingStore;
     console.log('Booking Info from store:', clickedListingId, ownerId, musicianId);
+    console.log('BookingStore ClickedListingID:', clickedListingId);
+    console.log('BookingStore OwnerId:', ownerId);
+    console.log('BookingStore MusicianId:', musicianId);
+    console.log('BookingStore:', bookingStore.booking_id);
 
+
+    try {
         // Fetch listing details using the clickedListingId
         await listingStore.getListingsByID(clickedListingId);
 
         // Fetch owner details using the ownerId
-        const user = await userStore.getUserByID(ownerId);
+        await userStore.getUserByID(ownerId);
 
+        // Now you can access the details
+        await nextTick(); // Wait for the next tick to ensure the DOM has been updated
 
         // Now you can access the details
         const listing = listingStore.currentListings;
-        const owner = userStore.currentUser;
+        const owner = userStore.user;
+        console.log(userStore.user);
 
-    console.log('Listing name', listingStore.name)
-    console.log('Owner name', user.name)
-    console.log('Hourly-rate', listing.price_per_hour)
-    console.log('Check-in:', bookingStore.check_in, 'Check-out:', bookingStore.check_out);
-    
-
-    // Additional logic as needed
+        console.log('Hourly-rate', listing.price_per_hour);
+        console.log('Check-in:', bookingStore.check_in, 'Check-out:', bookingStore.check_out);
+        console.log('Owner name', owner.username);
+        console.log('Booking ID', bookingStore.booking_id);
+    } catch (error) {
+        console.error(error);
+    }
 });
+
+
 
 
 </script>
@@ -71,13 +139,16 @@ onMounted(async () => {
     <div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
         <div>
             <!-- Test -->
-            <p>Listing name: {{ listingStore.name }}</p>
+            <p>Listing name: {{ listingStore.currentListings.name }}</p>
             <p>ClickedListingId: {{ bookingStore.clickedListingId }}</p>
+            <p>Owner name: {{ userStore.user.username }}</p>
             <p>OwnerUserId: {{ bookingStore.ownerId }}</p>
             <p>MusicianId: {{ bookingStore.musicianId }}</p>
-            <p>Listing hourly rate: {{ listingStore.price_per_hour }}</p>
+            <p>Listing hourly rate: {{ listingStore.currentListings.price_per_hour }}</p>
+            <p>BookingId: {{  bookingStore.booking_id}}</p>
             <p>Booking hours: {{ bookingStore.check_out }} minus {{ bookingStore.check_in }}</p>
-            <p>Listing hourly rate * Booking hours: </p> 
+            <p>Listing hourly rate * Booking hours: {{ listingStore.currentListings.price_per_hour }} * x hours </p> 
+            <p>Add ons?</p>
         </div>
     </div>
    

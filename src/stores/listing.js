@@ -190,22 +190,23 @@ export const useListingStores = defineStore({
 
 
         async getListingsByID(listingID) {
-           
             try {
                 const options = {
                     method: 'GET'
                 }
-
+        
                 const response = await fetch(`http://localhost:8080/listings/listing/${listingID}`, options)
                 const data = await response.json()
-
-                console.log(data, 'by 🍍🍍🍍')
-                console.log('GET Listing by Listing ID - by 🍍🍍🍍')
-                return data
+        
+                this.currentListings = data; // Assign the entire data object
+                console.log('GET Listing by Listing ID - by 🍍🍍🍍', data);
+        
+                return data;
             } catch (error) {
                 console.error(error)
             }
         },
+        
 
         
 
