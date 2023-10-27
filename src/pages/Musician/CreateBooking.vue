@@ -95,7 +95,7 @@ const formData = reactive({
   check_out: bookingStore.check_out,
   // check_in: bookingStore.check_in,
   // check_out: bookingStore.check_out,
-  status:  '',
+  status:  bookingStore.status,
   reminder:  '',
   required_equipments: '',
   other_remark:  '',

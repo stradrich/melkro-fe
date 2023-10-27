@@ -59,6 +59,7 @@ export const usePaymentStores = defineStore({
                 console.error(error)
             }
         },
+
         async getAllPayments() {
             try {
                 const options = {
@@ -78,5 +79,10 @@ export const usePaymentStores = defineStore({
             }
             
         },
+
+        
+        
+
+        
     }
 })

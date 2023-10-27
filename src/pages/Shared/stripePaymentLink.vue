@@ -26,10 +26,322 @@ const bookingStore = useBookingStores();
 const timeslotStore = useTimeslotStores();
 const paymentStore = usePaymentStores();
 
+// const services = ['add on', 'no add on']; // Define the available roles
+// const selectedService = ref(null); 
+const services = ['add on all', 'piano', 'doublebass', 'drumset', 'mix and match', 'no add on'];
+const selectedService = ref(null);
+
+// async function createPayment() {
+//     console.log('Creating payment, you will receive a stripe payment link');
+//     console.log('Complete booking with Stripe Payment, please click the provided link');
+// }
+
+const rules = {
+  required: v => !!v || 'This field is required',
+};
+
+// DON'T DELETE THIS, OPTION 1:
+// async function createPayment() {
+//     console.log('Creating payment, you will receive a stripe payment link');
+//     console.log('Complete booking with Stripe Payment, please click the provided link');
+    
+//     try {
+//         const data = {
+//             bookingId: bookingStore.booking_id,
+//             hourlyRate: listingStore.currentListings.price_per_hour,
+//             totalCost: totalCost.value,
+//             // add other necessary data as needed in the future
+//         };
+
+//         console.log('Creating payment with data:', data);
+//         console.log('Complete booking with Stripe Payment, please click the provided link');
+
+//         // Call the Pinia store action to create the payment
+//         await paymentStore.createPayment(
+//             bookingStore.booking_id,
+//             listingStore.currentListings.price_per_hour,
+//             totalCost.value
+//             // Add other parameters as needed
+//         );
+
+//         // Add your logic to handle payment creation
+//         // You can access the data properties like data.bookingId, data.hourlyRate, etc.
+//         // For example, you can make an API call to create the payment
+//         // const response = await somePaymentAPI.createPayment(data);
+
+//         // Handle the response as needed
+//         // console.log('Payment creation response:', response);
+
+//         // ... (remaining logic)
+
+//     } catch (error) {
+//         console.error('Error creating payment:', error);
+//     }
+// }
+
+// DON'T DELETE THIS, OPTION 2:
+// async function createPayment() {
+//     console.log('Creating payment, you will receive a stripe payment link');
+//     console.log('Complete booking with Stripe Payment, please click the provided link');
+    
+//     try {
+
+//         if (!selectedService.value) {
+//             // If no service is selected, show a message and return
+//             alert('Please select a service before proceeding with payment.');
+//             // You might also show a user-friendly message on the UI
+//             return;
+//         }
+       
+
+//         const data = {
+//             bookingId: bookingStore.booking_id,
+//             hourlyRate: listingStore.currentListings.price_per_hour,
+//             totalCost: totalCost.value,
+//             // add other necessary data as needed in the future
+//         };
+
+//         console.log('Creating payment with data:', data);
+//         console.log('Complete booking with Stripe Payment, please click the provided link');
+
+//         let checkoutSessionUrl;
+
+//         // Check if "add on" is selected
+//         if (selectedService.value === 'add on') {
+//             const addonsData = {
+//                 listingId: listingStore.currentListings.listing_id,
+//                 hours: bookingHours.value,
+//                 addons: [
+//                     // Add your addon details here
+//                     {
+//                         "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
+//                         "qty": 1
+//                     },
+//                     {
+//                         "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
+//                         "qty": 1
+//                     },
+//                     {
+//                         "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
+//                         "qty": 1
+//                     }
+//                 ],
+//             };
+
+//             const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(addonsData),
+//             });
+
+//             const responseData = await response.json();
+//             checkoutSessionUrl = responseData.url;
+//         } else {
+//             // "no add on" scenario
+//             const noAddOnData = {
+//                 listingId: listingStore.currentListings.listing_id,
+//                 hours: bookingHours.value,
+//             };
+
+//             const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(noAddOnData),
+//             });
+
+//             const responseData = await response.json();
+//             checkoutSessionUrl = responseData.url;
+//         }
+
+//         // Open a new tab with the Stripe checkout session URL
+//         window.open(checkoutSessionUrl, '_blank');
+
+//         // ... (remaining logic)
+
+//     } catch (error) {
+//         console.error('Error creating payment:', error);
+//     }
+// }
+
+// DON'T DELETE THIS, OPTION 3:
 async function createPayment() {
     console.log('Creating payment, you will receive a stripe payment link');
     console.log('Complete booking with Stripe Payment, please click the provided link');
+
+    try {
+        if (!selectedService.value) {
+            
+            alert('Please select a service before proceeding with payment.');
+       
+            return;
+        }
+
+        if (selectedService.value === 'mix and match') {
+            
+            alert('Mix and match service is not available at the moment. Please check back later.');
+            
+            return;
+        }
+
+        const data = {
+            bookingId: bookingStore.booking_id,
+            hourlyRate: listingStore.currentListings.price_per_hour,
+            totalCost: totalCost.value,
+            // add other necessary data as needed in the future
+        };
+
+        // Call the Pinia store action to create the payment in DB
+        await paymentStore.createPayment(
+            bookingStore.booking_id,
+            listingStore.currentListings.price_per_hour,
+            totalCost.value
+            // Add other parameters as needed
+        );
+
+        console.log('Creating payment with data:', data);
+        console.log('Complete booking with Stripe Payment, please click the provided link');
+
+        let checkoutSessionUrl;
+        let addons;
+
+        switch (selectedService.value) {
+            case 'add on all':
+                // Add your logic for mix and match
+                // Example:
+                addons = [
+                {
+                    "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
+                    "qty": 1
+                },
+                {
+                    "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
+                    "qty": 1
+                },
+                {
+                    "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
+                    "qty": 1
+                }
+                ];
+                break;
+            case 'piano':
+                addons = [
+                    {
+                        "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
+                        "qty": 1
+                    }
+                ];
+                break;
+            case 'doublebass':
+                addons = [
+                    {
+                        "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
+                        "qty": 1
+                    }
+                ];
+                break;
+            case 'drumset':
+                addons = [
+                    {
+                        "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
+                        "qty": 1
+                    }
+                ];
+                break;
+                case 'mix and match':
+                 alert('Mix and match service is not available at the moment. Please check back later.');
+                break;
+                // case 'mix and match':
+                // // Add your logic for mix and match
+                // // Example:
+
+                // // Available mix and match add-ons
+                // const availableAddons = [
+                //     {
+                //         "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
+                //         "name": "Piano"
+                //     },
+                //     {
+                //         "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
+                //         "name": "Double Bass"
+                //     },
+                //     {
+                //         "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
+                //         "name": "Drum Set"
+                //     }
+                // ];
+
+                // // Display a prompt with a list of available add-ons
+                // const userInput = window.prompt(
+                //     `Choose your mix and match add-ons:\n${availableAddons.map(addon => addon.name).join('\n')}`
+                // );
+
+                // if (userInput) {
+                //     // Split the user input into an array of selected add-on names
+                //     const selectedAddonNames = userInput.split(',');
+
+                //     // Map the selected add-on names to the corresponding add-on objects
+                //     addons = selectedAddonNames.map(selectedAddonName => {
+                //         const selectedAddon = availableAddons.find(addon => addon.name === selectedAddonName.trim());
+
+                //         // Check if a valid add-on was selected
+                //         if (selectedAddon) {
+                //             return {
+                //                 "priceId": selectedAddon.priceId,
+                //                 "qty": 1 // You might allow users to specify quantities
+                //             };
+                //         } else {
+                //             // Handle the case where the user provides an invalid add-on name
+                //             alert(`Invalid mix and match add-on: ${selectedAddonName}. Please try again.`);
+                //             return null;
+                //         }
+                //     }).filter(Boolean); // Remove null entries (invalid add-ons)
+                // } else {
+                //     // Handle the case where the user cancels or provides invalid input
+                //     alert('Mix and match add-on selection canceled or invalid. Please try again.');
+                // }
+                // break;
+
+            case 'no add on':
+                // Handle the case where no add-ons are selected
+                addons = [];
+                break;
+            default:
+                // Handle the default case
+                break;
+        }
+
+        const addonsData = {
+            listingId: listingStore.currentListings.listing_id,
+            hours: bookingHours.value,
+            addons: addons,
+        };
+
+        const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(addonsData),
+        });
+
+        const responseData = await response.json();
+        checkoutSessionUrl = responseData.url;
+
+        // Open a new tab with the Stripe checkout session URL
+        window.open(checkoutSessionUrl, '_blank');
+
+        // ... (remaining logic)
+
+    } catch (error) {
+        console.error('Error creating payment:', error);
+    }
 }
+
+
 
 
 
@@ -131,7 +443,8 @@ const bookingHours = computed(() => {
 });
 
 const totalCost = computed(() => {
-    return listingStore.currentListings.price_per_hour * bookingHours.value;
+    const rawTotal = listingStore.currentListings.price_per_hour * bookingHours.value;
+    return rawTotal.toFixed(2);
 });
 
 
@@ -190,23 +503,22 @@ const totalCost = computed(() => {
         <p>Which amounts to ${{ totalCost }}</p> 
     </div>
 
-    <div style="display: flex; justify-content: center;">
+    <!-- <div style="display: flex; justify-content: center;">
         <p>To reduce clunky commute, you are encouraged to rent our instruments</p> 
-    </div>
+    </div> -->
 
     <!-- <div style="flex: 1; display: flex; justify-content: center; margin-top: 1rem;  margin-bottom: 1rem;">
              <img src="../../assets/abstract-902.gif" alt="">
     </div> -->
 
-    <div style="display: flex; justify-content: center;">
+    <div style="display: flex; justify-content: center; margin-bottom: 3rem;">
         <p>Please complete payment to secure your booking timeslot </p> 
     </div>
 
-    
 
-    <div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
-        <div>
-            <!-- Test -->
+    <div v-show="false" style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
+        <div style="display: none;">
+            <!-- Testing data flow, DO NOT DELETE THIS-->
             <p>Listing name: {{ listingStore.currentListings.name }}</p>
             <p>ClickedListingId: {{ bookingStore.clickedListingId }}</p>
             <p>Owner name: {{ userStore.user.username }}</p>
@@ -223,17 +535,54 @@ const totalCost = computed(() => {
    
    
 
-    <div style="display: flex; justify-content: center;  margin-top: 2rem;  margin-bottom: 1rem;">
-       <div>
-           <p>Proceed to your stripe payment link: </p>  
-        </div>
-    </div>
-        <div style="display: flex; justify-content: center;">
-            <Button text="Pay Now" @click="createPayment" />
-        </div>
+   
 
-      
-    
+        <!-- <div style="display: flex; justify-content: center;">
+            <Button text="Pay Now" @click="createPayment" />
+        </div> -->
+
+        <v-sheet width="300" class="mx-auto">
+            <v-form fast-fail @submit.prevent>
+                <!-- "booking_id": 4,
+                "amount": 150.00,
+                "amount_total": 500.00,
+                "payment_method": "Credit Card",
+                "payment_method_types": ["card"],
+                "status": "incomplete" -->
+            <v-text-field v-model=" bookingStore.booking_id" label="Booking ID"></v-text-field>
+            <v-text-field v-model=" listingStore.currentListings.price_per_hour" label="Hourly Rate"></v-text-field>
+            <v-text-field v-model="totalCost " label="Total Cost"></v-text-field>
+            <!-- <v-text-field label="Payment Method"></v-text-field> -->
+            <!-- <v-text-field label="Payment Method Types?"></v-text-field> -->
+            <!-- <v-text-field label="Status"></v-text-field> -->
+            <div class="mx-5 mb-2">
+                <p>To reduce clunky commute, you are encouraged to rent our instruments</p> 
+            </div>
+            
+            <v-select
+                v-model="selectedService"
+                :items="services"
+                label="services"
+                :rules="[rules.required]"
+                variant="filled"
+                color="deep-purple"
+            ></v-select>
+
+            <div style="display: flex; justify-content: center;  margin-top: 2rem;  margin-bottom: 1rem;">
+                 <div>
+                    <p>Proceed to your stripe payment link: </p>  
+                </div>
+            </div>
+
+            <!-- Without deployment: Run this ~/.npm-global/bin/ngrok http 8080 in backend -->
+            <div style="display: flex; justify-content: center;">
+                <Button text="Pay Now" @click="createPayment" />
+            </div>
+            <!-- <v-btn type="submit" block class="mt-2">Submit</v-btn> -->
+            </v-form>
+        </v-sheet>
+
+        
         <!-- <svg-icon type="mdi" :path="mdiGoogle"></svg-icon> -->
         <!-- <svg-icon type="mdi" :path="mdiApple"></svg-icon> -->
     <Footer/>

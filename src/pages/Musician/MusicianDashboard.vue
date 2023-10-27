@@ -180,7 +180,7 @@ onMounted(async () => {
             </div>
 
             <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
-            <RouterLink  to="/createBookingForm" style="text-decoration: none;">
+            <RouterLink  to="/UpdateBookingForm" style="text-decoration: none;">
                 <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
             </RouterLink>
             </div>
