@@ -26,8 +26,10 @@ const bookingStore = useBookingStores();
 const timeslotStore = useTimeslotStores();
 const paymentStore = usePaymentStores();
 
-const services = ['add on', 'no add on']; // Define the available roles
-const selectedService = ref(null); 
+// const services = ['add on', 'no add on']; // Define the available roles
+// const selectedService = ref(null); 
+const services = ['add on all', 'piano', 'doublebass', 'drumset', 'mix and match', 'no add on'];
+const selectedService = ref(null);
 
 // async function createPayment() {
 //     console.log('Creating payment, you will receive a stripe payment link');
@@ -38,6 +40,7 @@ const rules = {
   required: v => !!v || 'This field is required',
 };
 
+// DON'T DELETE THIS, OPTION 1:
 // async function createPayment() {
 //     console.log('Creating payment, you will receive a stripe payment link');
 //     console.log('Complete booking with Stripe Payment, please click the provided link');
@@ -76,19 +79,113 @@ const rules = {
 //     }
 // }
 
+// DON'T DELETE THIS, OPTION 2:
+// async function createPayment() {
+//     console.log('Creating payment, you will receive a stripe payment link');
+//     console.log('Complete booking with Stripe Payment, please click the provided link');
+    
+//     try {
+
+//         if (!selectedService.value) {
+//             // If no service is selected, show a message and return
+//             alert('Please select a service before proceeding with payment.');
+//             // You might also show a user-friendly message on the UI
+//             return;
+//         }
+       
+
+//         const data = {
+//             bookingId: bookingStore.booking_id,
+//             hourlyRate: listingStore.currentListings.price_per_hour,
+//             totalCost: totalCost.value,
+//             // add other necessary data as needed in the future
+//         };
+
+//         console.log('Creating payment with data:', data);
+//         console.log('Complete booking with Stripe Payment, please click the provided link');
+
+//         let checkoutSessionUrl;
+
+//         // Check if "add on" is selected
+//         if (selectedService.value === 'add on') {
+//             const addonsData = {
+//                 listingId: listingStore.currentListings.listing_id,
+//                 hours: bookingHours.value,
+//                 addons: [
+//                     // Add your addon details here
+//                     {
+//                         "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
+//                         "qty": 1
+//                     },
+//                     {
+//                         "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
+//                         "qty": 1
+//                     },
+//                     {
+//                         "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
+//                         "qty": 1
+//                     }
+//                 ],
+//             };
+
+//             const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(addonsData),
+//             });
+
+//             const responseData = await response.json();
+//             checkoutSessionUrl = responseData.url;
+//         } else {
+//             // "no add on" scenario
+//             const noAddOnData = {
+//                 listingId: listingStore.currentListings.listing_id,
+//                 hours: bookingHours.value,
+//             };
+
+//             const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(noAddOnData),
+//             });
+
+//             const responseData = await response.json();
+//             checkoutSessionUrl = responseData.url;
+//         }
+
+//         // Open a new tab with the Stripe checkout session URL
+//         window.open(checkoutSessionUrl, '_blank');
+
+//         // ... (remaining logic)
+
+//     } catch (error) {
+//         console.error('Error creating payment:', error);
+//     }
+// }
+
+// DON'T DELETE THIS, OPTION 3:
 async function createPayment() {
     console.log('Creating payment, you will receive a stripe payment link');
     console.log('Complete booking with Stripe Payment, please click the provided link');
-    
-    try {
 
+    try {
         if (!selectedService.value) {
-            // If no service is selected, show a message and return
+            
             alert('Please select a service before proceeding with payment.');
-            // You might also show a user-friendly message on the UI
+       
             return;
         }
-       
+
+        if (selectedService.value === 'mix and match') {
+            
+            alert('Mix and match service is not available at the moment. Please check back later.');
+            
+            return;
+        }
 
         const data = {
             bookingId: bookingStore.booking_id,
@@ -97,61 +194,142 @@ async function createPayment() {
             // add other necessary data as needed in the future
         };
 
+        // Call the Pinia store action to create the payment in DB
+        await paymentStore.createPayment(
+            bookingStore.booking_id,
+            listingStore.currentListings.price_per_hour,
+            totalCost.value
+            // Add other parameters as needed
+        );
+
         console.log('Creating payment with data:', data);
         console.log('Complete booking with Stripe Payment, please click the provided link');
 
         let checkoutSessionUrl;
+        let addons;
 
-        // Check if "add on" is selected
-        if (selectedService.value === 'add on') {
-            const addonsData = {
-                listingId: listingStore.currentListings.listing_id,
-                hours: bookingHours.value,
-                addons: [
-                    // Add your addon details here
+        switch (selectedService.value) {
+            case 'add on all':
+                // Add your logic for mix and match
+                // Example:
+                addons = [
+                {
+                    "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
+                    "qty": 1
+                },
+                {
+                    "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
+                    "qty": 1
+                },
+                {
+                    "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
+                    "qty": 1
+                }
+                ];
+                break;
+            case 'piano':
+                addons = [
                     {
                         "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
                         "qty": 1
-                    },
+                    }
+                ];
+                break;
+            case 'doublebass':
+                addons = [
                     {
                         "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
                         "qty": 1
-                    },
+                    }
+                ];
+                break;
+            case 'drumset':
+                addons = [
                     {
                         "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
                         "qty": 1
                     }
-                ],
-            };
+                ];
+                break;
+                case 'mix and match':
+                 alert('Mix and match service is not available at the moment. Please check back later.');
+                break;
+                // case 'mix and match':
+                // // Add your logic for mix and match
+                // // Example:
 
-            const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(addonsData),
-            });
+                // // Available mix and match add-ons
+                // const availableAddons = [
+                //     {
+                //         "priceId": "price_1Nk2V9GjGLAwb5UuoVWmX6BG",
+                //         "name": "Piano"
+                //     },
+                //     {
+                //         "priceId": "price_1NkNgSGjGLAwb5Uu7jvAfrdx",
+                //         "name": "Double Bass"
+                //     },
+                //     {
+                //         "priceId": "price_1NvB4ZGjGLAwb5UuaSTTXgEo",
+                //         "name": "Drum Set"
+                //     }
+                // ];
 
-            const responseData = await response.json();
-            checkoutSessionUrl = responseData.url;
-        } else {
-            // "no add on" scenario
-            const noAddOnData = {
-                listingId: listingStore.currentListings.listing_id,
-                hours: bookingHours.value,
-            };
+                // // Display a prompt with a list of available add-ons
+                // const userInput = window.prompt(
+                //     `Choose your mix and match add-ons:\n${availableAddons.map(addon => addon.name).join('\n')}`
+                // );
 
-            const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(noAddOnData),
-            });
+                // if (userInput) {
+                //     // Split the user input into an array of selected add-on names
+                //     const selectedAddonNames = userInput.split(',');
 
-            const responseData = await response.json();
-            checkoutSessionUrl = responseData.url;
+                //     // Map the selected add-on names to the corresponding add-on objects
+                //     addons = selectedAddonNames.map(selectedAddonName => {
+                //         const selectedAddon = availableAddons.find(addon => addon.name === selectedAddonName.trim());
+
+                //         // Check if a valid add-on was selected
+                //         if (selectedAddon) {
+                //             return {
+                //                 "priceId": selectedAddon.priceId,
+                //                 "qty": 1 // You might allow users to specify quantities
+                //             };
+                //         } else {
+                //             // Handle the case where the user provides an invalid add-on name
+                //             alert(`Invalid mix and match add-on: ${selectedAddonName}. Please try again.`);
+                //             return null;
+                //         }
+                //     }).filter(Boolean); // Remove null entries (invalid add-ons)
+                // } else {
+                //     // Handle the case where the user cancels or provides invalid input
+                //     alert('Mix and match add-on selection canceled or invalid. Please try again.');
+                // }
+                // break;
+
+            case 'no add on':
+                // Handle the case where no add-ons are selected
+                addons = [];
+                break;
+            default:
+                // Handle the default case
+                break;
         }
+
+        const addonsData = {
+            listingId: listingStore.currentListings.listing_id,
+            hours: bookingHours.value,
+            addons: addons,
+        };
+
+        const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(addonsData),
+        });
+
+        const responseData = await response.json();
+        checkoutSessionUrl = responseData.url;
 
         // Open a new tab with the Stripe checkout session URL
         window.open(checkoutSessionUrl, '_blank');
@@ -396,7 +574,7 @@ const totalCost = computed(() => {
                 </div>
             </div>
 
-            <!-- Add rules here, must select services -->
+            <!-- Without deployment: Run this ~/.npm-global/bin/ngrok http 8080 in backend -->
             <div style="display: flex; justify-content: center;">
                 <Button text="Pay Now" @click="createPayment" />
             </div>
