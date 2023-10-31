@@ -25,7 +25,8 @@ const listingStore = useListingStores();
 const headers = [
   { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'Booking_ID', key: 'bookingID' },
-  { title: 'Timeslot', key: 'timeslot' },
+  { title: 'check_in', key: 'check_in' },
+  { title: 'check_out', key: 'check_out' },
   { title: 'Musician', key: 'musician' },
   { title: 'Payment_ID', key: 'paymentID' },
   { title: 'Status', key: 'status' },
@@ -37,7 +38,8 @@ const bookingData = [
   {
     listing: `Melkro TEST`,
     bookingID: 1,
-    timeslot: '00:00',
+    check_in: '00:00',
+    check_out: '00:00',
     musician: 'test',
     paymentID: 'not found',
     status: 'pending',

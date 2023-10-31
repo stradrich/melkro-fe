@@ -213,6 +213,22 @@ const routes = [
         },
         component: () => import('../../src/pages/Shared/stripePaymentLink.vue')
     }, 
+    {
+        path: '/generalErrorPage',
+        name: 'General Error Page',
+        meta: {
+            title: 'General Error Page'
+        },
+        component: () => import('../../src/pages/Shared/generalErrorPage.vue')
+    }, 
+    {
+        path: '/paymentErrorPage',
+        name: 'Payment Error Page',
+        meta: {
+            title: 'Payment Error Page'
+        },
+        component: () => import('../../src/pages/Shared/paymentErrorPage.vue')
+    }, 
     
 
 ]

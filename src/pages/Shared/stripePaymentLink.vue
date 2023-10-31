@@ -175,7 +175,8 @@ async function createPayment() {
     try {
         if (!selectedService.value) {
             
-            alert('Please select a service before proceeding with payment.');
+            router.push('/paymentErrorPage')
+            // alert('Please select a service before proceeding with payment.');
        
             return;
         }
@@ -183,6 +184,7 @@ async function createPayment() {
         if (selectedService.value === 'mix and match') {
             
             alert('Mix and match service is not available at the moment. Please check back later.');
+            router.push('/underconstruction')
             
             return;
         }
