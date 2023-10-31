@@ -4,45 +4,229 @@ import '@mdi/font/css/materialdesignicons.css'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiPencil, mdiDelete, mdiAccount} from '@mdi/js';
 
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import DropdownMenu2Vue from '../../components/DropdownMenu2.vue';
 import Button from '../../components/Button.vue';
 // import UserIcon from '../../components/icons/UserIcon'
+
 import { useAuthStores } from '../../stores/auth';
+import { useUserStores } from '../../stores/user';
+import { useListingStores } from '../../stores/listing';
+import { useBookingStores } from '../../stores/booking';
+import { usePaymentStores } from '../../stores/payment'
 
 const authStore = useAuthStores();
+const userStore = useUserStores();
+const listingStore = useListingStores();
+const bookingStore = useBookingStores();
+const paymentStore = usePaymentStores();
+
+import axios from 'axios';
+
+const userData = ref([]);
+// console.log(`User Data:`,userData);
+const listingsData = ref([]);
+// console.log(`Listing Data`,listingsData);
+const timeslotData = ref([]);
+// console.log(`Timeslot Data`,timeslotData);
+const bookingData = ref([]); 
+// console.log(`Booking Data`, bookingData);
+const paymentData = ref([]);
+// console.log(`Payment Data`, paymentData);
+
+const generalData = ref([]);
+
+onMounted(async () => {
+  try {
+    const fetchData = async (url, targetRef, targetName) => {
+      const response = await axios.get(url);
+      targetRef.value = response.data;
+      console.log(`Fetched ${targetName} data:`, targetRef.value);
+    };
+
+    // Fetch data from different tables
+    await Promise.all([
+      fetchData('http://localhost:8080/users/users', userData, 'users'),
+      fetchData('http://localhost:8080/listings/', listingsData, 'space listings'),
+      fetchData('http://localhost:8080/bookings/bookings', bookingData, 'bookings'),
+      fetchData('http://localhost:8080/timeslot/timeslot', timeslotData, 'timeslots'),
+      fetchData('http://localhost:8080/payment/payment/', paymentData, 'payments'),
+    ]);
+
+    // Populate generalData after fetching all necessary data
+    const dataPromises = bookingData.value.map(async booking => {
+      const listing = await getListingName(booking.listing_id);
+      const provider = await getUserName(booking.user_id);
+      const musician = await getUserName(booking.musician_id);
+      const paymentStatus = await getPaymentStatus(booking.payment_id);
+
+      return {
+        bookingID: booking.booking_id,
+        paymentID: booking.payment_id,
+        status: paymentStatus,
+        listing: listing,
+        listingID: booking.listing_id,
+        provider: provider,
+        providerID: booking.user_id,
+        check_in: booking.check_in,
+        check_out: booking.check_out,
+        musician: musician,
+        musicianID: booking.musician_id,
+        edit: mdiPencil,
+        delete: mdiDelete,
+      };
+    });
+
+    // Wait for all promises to resolve
+    generalData.value = await Promise.all(dataPromises);
+
+    console.log('General Data:', generalData.value);
+
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// onMounted(async () => {
+//   try {
+//     const fetchData = async (url, targetRef, targetName) => {
+//       const response = await axios.get(url);
+//       targetRef.value = response.data;
+//       console.log(`Fetched ${targetName} data:`, targetRef.value);
+//     };
+
+//     // Fetch data from different tables
+//     await Promise.all([
+//       fetchData('http://localhost:8080/users/users', userData, 'users'),
+//       fetchData('http://localhost:8080/listings/', listingsData, 'space listings'),
+//       fetchData('http://localhost:8080/bookings/bookings', bookingData, 'bookings'),
+//       fetchData('http://localhost:8080/timeslot/timeslot', timeslotData, 'timeslots'),
+//       fetchData('http://localhost:8080/payment/payment/', paymentData, 'payments'),
+//     ]);
+
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
 const headers = [
+  { title: 'Booking_ID', key: 'bookingID' },
+  { title: 'Payment_ID', key: 'paymentID' },
+  { title: 'Status', key: 'status' },
   { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
   { title: 'Listing_ID', key: 'listingID' },
   { title: 'Provider', key: 'provider' },
-  { title: 'Booking_ID', key: 'bookingID' },
-  { title: 'Timeslot', key: 'timeslot' },
+  { title: 'Provider_ID', key: 'providerID' },
+  { title: 'check_in', key: 'check_in' },
+  { title: 'check_out', key: 'check_out' },
   { title: 'Musician', key: 'musician' },
-  { title: 'Payment_ID', key: 'paymentID' },
-  { title: 'Status', key: 'status' },
+  { title: 'Musician_ID', key: 'musicianID' },
   { title: 'Edit', key: 'edit' },
   { title: 'Delete', key: 'delete' },
 ];
 
-const bookingData = [
-        {
+const dummyData = [
+          {
+            bookingID: 1,
+            paymentID: 'not found', 
+            // confirmed (green), pending (yellow), declined (red)
+            status: 'confirmed',
             listing: `Melkro Centrum`,
             listingID: 1,
-            provider: 'stradrich',
+            provider: 'stradrich', 
+            providerID: 1,
             bookingID: 1,
-            bookingID: 1,
-            timeslot: '23:59',
+            check_in: '00:00',
+            check_out: '00:00',
             musician: 'stradrich',
-            paymentID: 'not found', 
-            status: 'pending',
+              musicianID: 1,
             edit: 'mdiPencil',
             delete: 'mdiDelete'
             
           },
-];
+          {
+            bookingID: 1,
+            paymentID: 'not found', 
+            // confirmed (green), pending (yellow), declined (red)
+            status: 'pending',
+            listing: `Melkro 888`,
+            listingID: 1,
+            provider: 'stradrich', 
+            providerID: 1,
+            bookingID: 1,
+            check_in: '00:00',
+            check_out: '00:00',
+            musician: 'stradrich',
+              musicianID: 1,
+            edit: 'mdiPencil',
+            delete: 'mdiDelete'
+          },
+          {
+            bookingID: 1,
+            paymentID: 'not found', 
+            // confirmed (green), pending (yellow), declined (red)
+            status: 'declined',
+            listing: `Melkro Beach View`,
+            listingID: 1,
+            provider: 'stradrich', 
+            providerID: 1,
+            bookingID: 1,
+            check_in: '00:00',
+            check_out: '00:00',
+            musician: 'stradrich',
+              musicianID: 1,
+            edit: 'mdiPencil',
+            delete: 'mdiDelete'
+            
+          },
+ ];
+
+//  const generalData = computed(() => {
+//   return bookingData.value.map(async booking => {
+//     const listing = await getListingName(booking.listing_id);
+//     const provider = await getUserName(booking.user_id);
+//     const musician = await getUserName(booking.musician_id);
+//     const paymentStatus = await getPaymentStatus(booking.payment_id);
+
+//     return {
+//       bookingID: booking.booking_id,
+//       paymentID: booking.payment_id,
+//       status: paymentStatus,
+//       listing: listing,
+//       listingID: booking.listing_id,
+//       provider: provider,
+//       providerID: booking.user_id,
+//       check_in: booking.check_in,
+//       check_out: booking.check_out,
+//       musician: musician,
+//       musicianID: booking.musician_id,
+//       edit: mdiPencil,
+//       delete: mdiDelete,
+//     };
+//   });
+// });
+
+// console.log('General Data:', generalData.value);
+
+
+const getListingName = async (listingId) => {
+  const listing = listingsData.value.find(item => item.listing_id === listingId);
+  return listing ? listing.name : 'N/A';
+};
+
+const getUserName = async (userId) => {
+  const user = userData.value.find(item => item.user_id === userId);
+  return user ? user.username : 'N/A';
+};
+
+const getPaymentStatus = async (paymentId) => {
+  const payment = paymentData.value.find(item => item.payment_id === paymentId);
+  return payment ? payment.status : 'N/A';
+};
+
+
 
 function editItem(item) {
       // Handle edit action
@@ -59,6 +243,32 @@ const getStatus = (status) => {
   else if (status === 'pending') return 'orange';
   else return 'green';
 };
+
+
+
+
+
+
+
+
+
+
+
+// onMounted(async () => {
+//   try {
+//     //fetch data from user sql table
+//     //fetch data from space_listings sql table
+//     //fetch data from bookings sql table
+//     //fetch data from timeslot sql table
+//     //fetch data from payment sql table
+  
+   
+
+    
+//   } catch (error) {
+//     console.error(error);
+//   }
+// })
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -145,7 +355,8 @@ const getStatus = (status) => {
 
     
     </v-data-table> -->
-    <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
+    <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
+    <v-data-table v-if="generalData && generalData.length" :headers="headers" :items="generalData" class="elevation-1 mt-10">
     <template v-slot:item.status="{ value }">
       <v-chip :color="getStatus(value)">
         {{ value }}
