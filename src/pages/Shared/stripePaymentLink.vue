@@ -173,6 +173,18 @@ async function createPayment() {
     console.log('Complete booking with Stripe Payment, please click the provided link');
 
     try {
+        // Fetch all payment IDs from the server
+        const allPayments = await paymentStore.getAllPayments();
+        const allPaymentIds = allPayments.map(payment => payment.payment_id);
+        console.log('All Payment IDs from payment table:', allPaymentIds);
+
+        // Check if the booking already has a payment
+        if (allPaymentIds.includes(bookingStore.booking_id)) {
+            // Booking already has a payment, handle accordingly
+            alert('Booking already has a payment');
+            return;
+        }
+
         if (!selectedService.value) {
             
             router.push('/paymentErrorPage')
@@ -201,11 +213,11 @@ async function createPayment() {
             bookingStore.booking_id,
             listingStore.currentListings.price_per_hour,
             totalCost.value
-            // Add other parameters as needed
+           
         );
 
         console.log('Creating payment with data:', data);
-        console.log('Complete booking with Stripe Payment, please click the provided link');
+        alert('Complete booking with Stripe Payment, please click the provided link');
 
         let checkoutSessionUrl;
         let addons;
@@ -337,6 +349,7 @@ async function createPayment() {
         window.open(checkoutSessionUrl, '_blank');
 
         // ... (remaining logic)
+        router.push('/')
 
     } catch (error) {
         console.error('Error creating payment:', error);
@@ -412,6 +425,10 @@ onMounted(async () => {
     console.log('BookingStore MusicianId:', musicianId);
     console.log('BookingStore:', bookingStore.booking_id);
 
+    // Get booking data, avoid duplicating payment at createPayment()
+    const allPayments = await paymentStore.getAllPayments(); 
+    const allPaymentIds = allPayments.map(payment => payment.payment_id);
+    console.log('All Payment IDs from payment table:', allPaymentIds);
 
     try {
         // Fetch listing details using the clickedListingId

@@ -38,56 +38,135 @@ const paymentData = ref([]);
 
 const generalData = ref([]);
 
+const fetchData = async () => {
+  const [userDataResponse, listingsDataResponse, bookingDataResponse, timeslotDataResponse, paymentDataResponse] = await Promise.all([
+    axios.get('http://localhost:8080/users/users'),
+    axios.get('http://localhost:8080/listings/'),
+    axios.get('http://localhost:8080/bookings/bookings'),
+    axios.get('http://localhost:8080/timeslot/timeslot'),
+    axios.get('http://localhost:8080/payment/payment/'),
+  ]);
+
+  userData.value = userDataResponse.data;
+  listingsData.value = listingsDataResponse.data;
+  bookingData.value = bookingDataResponse.data;
+  timeslotData.value = timeslotDataResponse.data;
+  paymentData.value = paymentDataResponse.data;
+
+  console.log('Fetched users data:', userData.value);
+  console.log('Fetched space listings data:', listingsData.value);
+  console.log('Fetched bookings data:', bookingData.value);
+  console.log('Fetched timeslots data:', timeslotData.value);
+  console.log('Fetched payments data:', paymentData.value);
+};
+
 onMounted(async () => {
   try {
-    const fetchData = async (url, targetRef, targetName) => {
-      const response = await axios.get(url);
-      targetRef.value = response.data;
-      console.log(`Fetched ${targetName} data:`, targetRef.value);
-    };
-
-    // Fetch data from different tables
-    await Promise.all([
-      fetchData('http://localhost:8080/users/users', userData, 'users'),
-      fetchData('http://localhost:8080/listings/', listingsData, 'space listings'),
-      fetchData('http://localhost:8080/bookings/bookings', bookingData, 'bookings'),
-      fetchData('http://localhost:8080/timeslot/timeslot', timeslotData, 'timeslots'),
-      fetchData('http://localhost:8080/payment/payment/', paymentData, 'payments'),
-    ]);
+    await fetchData();
 
     // Populate generalData after fetching all necessary data
-    const dataPromises = bookingData.value.map(async booking => {
-      const listing = await getListingName(booking.listing_id);
-      const provider = await getUserName(booking.user_id);
-      const musician = await getUserName(booking.musician_id);
-      const paymentStatus = await getPaymentStatus(booking.payment_id);
-
-      return {
-        bookingID: booking.booking_id,
-        paymentID: booking.payment_id,
-        status: paymentStatus,
-        listing: listing,
-        listingID: booking.listing_id,
-        provider: provider,
-        providerID: booking.user_id,
-        check_in: booking.check_in,
-        check_out: booking.check_out,
-        musician: musician,
-        musicianID: booking.musician_id,
-        edit: mdiPencil,
-        delete: mdiDelete,
-      };
-    });
-
-    // Wait for all promises to resolve
-    generalData.value = await Promise.all(dataPromises);
+    generalData.value = await getPaymentData();
 
     console.log('General Data:', generalData.value);
-
   } catch (error) {
     console.error(error);
   }
 });
+
+const getPaymentData = async () => {
+  return Promise.all(bookingData.value.map(async booking => {
+    const listingID = await getListingName(booking.listing_id);
+    const listing = await getListingInfo(booking.listing_id)
+    const musician = await getUserName(booking.user_id);
+    const provider = await getUserName(listing.user_id);
+    const payment = await getPaymentID(booking.payment_id);
+    const paymentID = await getPaymentByID(booking.payment_id);
+    // const paymentStatus = await getPaymentStatus(payment.status);
+    const paymentsForBooking = paymentData.value.filter(payment => payment.booking_id === booking.booking_id);
+    const paymentStatus = paymentsForBooking.length > 0 ? paymentsForBooking[0].status : 'N/A';
+
+    console.log('Booking:', booking);
+    console.log('ListingID:', listingID);
+    console.log('Listing:', listing);
+    console.log('ProviderID:', provider);
+    console.log('Musician:', musician);
+    console.log('Payment:', payment);
+    console.log('PaymentID:', paymentID);
+    console.log('Payment Status:', paymentStatus);
+
+    const Payment = paymentData.value.find((payment) => payment.booking_id === booking.booking_id);
+
+    return {
+      paymentID: Payment ? Payment.payment_id : 'N/A',
+      bookingID: booking.booking_id,
+      status: paymentStatus,
+      listing: listing.name,
+      listingID: booking.listing_id,
+      provider: provider,
+      providerID: listing.user_id,
+      check_in: booking.check_in,
+      check_out: booking.check_out,
+      musician: musician,
+      musicianID: booking.user_id,
+      edit: mdiPencil,
+      delete: mdiDelete,
+    };
+  }));
+};
+
+
+// const generalData = ref([]);
+
+// onMounted(async () => {
+//   try {
+//     const fetchData = async (url, targetRef, targetName) => {
+//       const response = await axios.get(url);
+//       targetRef.value = response.data;
+//       console.log(`Fetched ${targetName} data:`, targetRef.value);
+//     };
+
+//     // Fetch data from different tables
+//     await Promise.all([
+//       fetchData('http://localhost:8080/users/users', userData, 'users'),
+//       fetchData('http://localhost:8080/listings/', listingsData, 'space listings'),
+//       fetchData('http://localhost:8080/bookings/bookings', bookingData, 'bookings'),
+//       fetchData('http://localhost:8080/timeslot/timeslot', timeslotData, 'timeslots'),
+//       fetchData('http://localhost:8080/payment/payment/', paymentData, 'payments'),
+//     ]);
+
+//     // Populate generalData after fetching all necessary data
+//     const dataPromises = bookingData.value.map(async booking => {
+//       const listing = await getListingName(booking.listing_id);
+//       const provider = await getUserName(booking.user_id);
+//       const musician = await getUserName(booking.musician_id);
+//       const paymentStatus = await getPaymentStatus(booking.payment_id);
+
+//       return {
+//         bookingID: booking.booking_id,
+//         paymentID: booking.payment_id,
+//         status: paymentStatus,
+//         listing: listing,
+//         listingID: booking.listing_id,
+//         provider: provider,
+//         providerID: booking.user_id,
+//         check_in: booking.check_in,
+//         check_out: booking.check_out,
+//         musician: musician,
+//         musicianID: booking.musician_id,
+//         edit: mdiPencil,
+//         delete: mdiDelete,
+//       };
+//     });
+
+//     // Wait for all promises to resolve
+//     generalData.value = await Promise.all(dataPromises);
+
+//     console.log('General Data:', generalData.value);
+
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
 // onMounted(async () => {
 //   try {
@@ -112,8 +191,8 @@ onMounted(async () => {
 // });
 
 const headers = [
-  { title: 'Booking_ID', key: 'bookingID' },
   { title: 'Payment_ID', key: 'paymentID' },
+  { title: 'Booking_ID', key: 'bookingID' },
   { title: 'Status', key: 'status' },
   { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
   { title: 'Listing_ID', key: 'listingID' },
@@ -129,8 +208,8 @@ const headers = [
 
 const dummyData = [
           {
-            bookingID: 1,
             paymentID: 'not found', 
+            bookingID: 1,
             // confirmed (green), pending (yellow), declined (red)
             status: 'confirmed',
             listing: `Melkro Centrum`,
@@ -147,8 +226,8 @@ const dummyData = [
             
           },
           {
-            bookingID: 1,
             paymentID: 'not found', 
+            bookingID: 1,
             // confirmed (green), pending (yellow), declined (red)
             status: 'pending',
             listing: `Melkro 888`,
@@ -159,13 +238,13 @@ const dummyData = [
             check_in: '00:00',
             check_out: '00:00',
             musician: 'stradrich',
-              musicianID: 1,
+            musicianID: 1,
             edit: 'mdiPencil',
             delete: 'mdiDelete'
           },
           {
-            bookingID: 1,
             paymentID: 'not found', 
+            bookingID: 1,
             // confirmed (green), pending (yellow), declined (red)
             status: 'declined',
             listing: `Melkro Beach View`,
@@ -221,10 +300,49 @@ const getUserName = async (userId) => {
   return user ? user.username : 'N/A';
 };
 
-const getPaymentStatus = async (paymentId) => {
-  const payment = paymentData.value.find(item => item.payment_id === paymentId);
-  return payment ? payment.status : 'N/A';
+const getListingInfo = async (listingId) => {
+  const listing = listingsData.value.find(item => item.listing_id === listingId);
+  return listing || {}; // Return an empty object if not found
 };
+
+const getPaymentID = async () => {
+  // Implement logic to fetch payment IDs
+  // For example, if payment IDs are stored in paymentData
+  // You can modify this based on your actual data structure
+
+  // Assuming paymentData is an array of payments
+  const paymentIDs = paymentData.value.map(payment => payment.payment_id);
+
+  // Return an array of payment IDs
+  return paymentIDs.length > 0 ? paymentIDs : ['N/A'];
+};
+
+const getPaymentByID = async (paymentId) => {
+  // Implement logic to fetch payment details from paymentStore
+  // You should replace this with your actual implementation
+  const payment = await paymentStore.getAllPayments(paymentId);
+  return payment || {}; // Return an empty object if not found
+};
+
+const getPaymentStatus = async (bookingId) => {
+  // Assuming bookingId is used to filter payments for a specific booking
+  const paymentsForBooking = paymentData.value.filter(payment => payment.booking_id === bookingId);
+
+  // Check if there are payments for the booking
+  if (paymentsForBooking.length > 0) {
+    // Get the status from the first payment
+    return paymentsForBooking[0].status;
+  } else {
+    return 'N/A';
+  }
+};
+
+
+
+
+
+
+
 
 
 
@@ -239,9 +357,9 @@ function  deleteItem(item) {
     }
 
 const getStatus = (status) => {
-  if (status === 'declined') return 'red';
-  else if (status === 'pending') return 'orange';
-  else return 'green';
+  if (status === 'completed') return 'green';
+  else if (status === 'incomplete') return 'orange';
+  else return 'red';
 };
 
 
@@ -357,9 +475,9 @@ const getStatus = (status) => {
     </v-data-table> -->
     <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
     <v-data-table v-if="generalData && generalData.length" :headers="headers" :items="generalData" class="elevation-1 mt-10">
-    <template v-slot:item.status="{ value }">
-      <v-chip :color="getStatus(value)">
-        {{ value }}
+    <template v-slot:item.status="{ item }">
+      <v-chip :color="getStatus(item.status)">
+        {{ item.status }}
       </v-chip>
     </template>
 
