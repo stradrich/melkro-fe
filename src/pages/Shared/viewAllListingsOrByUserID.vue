@@ -456,7 +456,8 @@ const createBooking = async (clickedListingId, ownerId) => {
       <div class="mx-2">  
 
         <div class="mx-2">
-          <div v-if="currentUser && currentUser.role !== 'provider'"  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;">
+          <div v-if="currentUser && currentUser.role === 'musician' && 'admin' "  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;">
+          <!-- <div v-if="currentUser && currentUser.role !== 'provider'"  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;"> -->
            
             <!-- <RouterLink to="" style="text-decoration: none;"  @click="createBooking(listing.listing_id, listing.user_id)"> -->
             <RouterLink to="/createBookingForm" style="text-decoration: none;"  @click="createBooking(listing.listing_id, listing.user_id)">

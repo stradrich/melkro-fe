@@ -115,8 +115,9 @@ const getPaymentData = async () => {
 
     return {
       paymentID: Payment ? Payment.payment_id : 'N/A',
+      paymentStatus: paymentStatus,
       bookingID: booking.booking_id,
-      status: paymentStatus,
+      bookingStatus: '',
       listing: listing.name,
       listingID: booking.listing_id,
       provider: provider,
@@ -209,8 +210,9 @@ const getPaymentData = async () => {
 
 const headers = [
   { title: 'Payment_ID', key: 'paymentID' },
+  { title: 'Payment Status', key: 'paymentStatus' },
   { title: 'Booking_ID', key: 'bookingID' },
-  { title: 'Status', key: 'status' },
+  { title: 'Booking Status', key: 'bookingStatus' },
   { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
   { title: 'Listing_ID', key: 'listingID' },
   { title: 'Provider', key: 'provider' },
@@ -373,9 +375,9 @@ function  deleteItem(item) {
       console.log('Delete item:', item);
     }
 
-const getStatus = (status) => {
-  if (status === 'completed') return 'green';
-  else if (status === 'incomplete') return 'orange';
+const getStatus = (paymentStatus) => {
+  if (paymentStatus === 'completed') return 'green';
+  else if (paymentStatus === 'incomplete') return 'orange';
   else return 'red';
 };
 
@@ -572,7 +574,7 @@ async function countBookings() {
                  <Button text="Create Listing" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
 
-             <RouterLink to="/listingCard" style="text-decoration: none;">
+             <RouterLink to="/" style="text-decoration: none;">
                  <Button text="Create Booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
              </div>
@@ -583,12 +585,12 @@ async function countBookings() {
              </div>
          </div>
      </div>   
-
+<!-- 
      <div style="flex: 1; display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
        <RouterLink to="/" style="text-decoration: none;">
            <Button text="Edit Data" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" />
        </RouterLink>
-     </div>
+     </div> -->
 
     <!-- <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
       <template v-slot:item.status="{ value }" >
@@ -601,9 +603,9 @@ async function countBookings() {
     </v-data-table> -->
     <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
     <v-data-table v-if="generalData && generalData.length" :headers="headers" :items="generalData" class="elevation-1 mt-10">
-    <template v-slot:item.status="{ item }">
-      <v-chip :color="getStatus(item.status)">
-        {{ item.status }}
+    <template v-slot:item.paymentStatus="{ item }">
+      <v-chip :color="getStatus(item.paymentStatus)">
+        {{ item.paymentStatus }}
       </v-chip>
     </template>
 

@@ -368,7 +368,7 @@ const resetForm = () => {
             block
             @click="() => listingStore.updateListing(formData)"
               >
-              <router-link to='/'>
+              <router-link to='/providerDashboard'>
                 Update Listing
               </router-link>
           </v-btn>
