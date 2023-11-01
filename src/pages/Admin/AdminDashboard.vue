@@ -117,7 +117,7 @@ const getPaymentData = async () => {
       paymentID: Payment ? Payment.payment_id : 'N/A',
       paymentStatus: paymentStatus,
       bookingID: booking.booking_id,
-      bookingStatus: '',
+      bookingStatus: booking.status,
       listing: listing.name,
       listingID: booking.listing_id,
       provider: provider,
@@ -375,14 +375,18 @@ function  deleteItem(item) {
       console.log('Delete item:', item);
     }
 
-const getStatus = (paymentStatus) => {
+const getPaymentStatuses = (paymentStatus) => {
   if (paymentStatus === 'completed') return 'green';
   else if (paymentStatus === 'incomplete') return 'orange';
   else return 'red';
 };
 
 
-
+const getBookingStatus = (bookingStatus) => {
+  if (bookingStatus === 'pending') return 'orange';
+  else if (bookingStatus === 'confirmed') return 'green';
+  else return 'red';
+};
 
 
 
@@ -604,8 +608,14 @@ async function countBookings() {
     <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
     <v-data-table v-if="generalData && generalData.length" :headers="headers" :items="generalData" class="elevation-1 mt-10">
     <template v-slot:item.paymentStatus="{ item }">
-      <v-chip :color="getStatus(item.paymentStatus)">
+      <v-chip :color="getPaymentStatuses(item.paymentStatus)">
         {{ item.paymentStatus }}
+      </v-chip>
+    </template>
+
+    <template v-slot:item.bookingStatus="{ item }">
+      <v-chip :color="getBookingStatus(item.bookingStatus)">
+        {{ item.bookingStatus }}
       </v-chip>
     </template>
 
