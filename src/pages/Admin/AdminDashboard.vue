@@ -25,6 +25,11 @@ const paymentStore = usePaymentStores();
 
 import axios from 'axios';
 
+const numberOfProviders = ref(0);
+const numberOfMusicians = ref(0);
+const numberOfListings = ref(0);
+const numberOfBookings = ref(0);
+
 const userData = ref([]);
 // console.log(`User Data:`,userData);
 const listingsData = ref([]);
@@ -62,6 +67,18 @@ const fetchData = async () => {
 
 onMounted(async () => {
   try {
+    const providerCount = await countProviders();
+    numberOfProviders.value = providerCount;
+
+    const musicianCount = await countMusicians();
+    numberOfMusicians.value = musicianCount;
+
+    const listingCount = await countListings();
+    numberOfListings.value = listingCount;
+
+    const bookingCount = await countBookings();
+    numberOfBookings.value = bookingCount;
+
     await fetchData();
 
     // Populate generalData after fetching all necessary data
@@ -387,6 +404,115 @@ const getStatus = (status) => {
 //     console.error(error);
 //   }
 // })
+// const getCounts = async () => {
+//   try {
+//     const [userData, listingsData, bookingData, timeslotData, paymentData] = await Promise.all([
+//       axios.get('http://localhost:8080/users/users'),
+//       axios.get('http://localhost:8080/listings/'),
+//       axios.get('http://localhost:8080/bookings/bookings'),
+//       axios.get('http://localhost:8080/timeslot/timeslot'),
+//       axios.get('http://localhost:8080/payment/payment/'),
+//     ]);
+
+//     console.log('Fetched users data:', userData.data);
+//     console.log('Fetched space listings data:', listingsData.data);
+//     console.log('Fetched bookings data:', bookingData.data);
+//     console.log('Fetched timeslots data:', timeslotData.data);
+//     console.log('Fetched payments data:', paymentData.data);
+
+// const providerCount = userData.data.filter(item => item.status === 'provider').length;
+// const musicianCount = userData.data.filter(item => item.status === 'musician').length;
+// const listingCount = listingsData.data.filter(item => item.status === 'listing').length;
+// const bookingCount = bookingData.data.filter(item => item.status === 'booking').length;
+
+
+//     console.log('Provider Count:', providerCount);
+//     console.log('Musician Count:', musicianCount);
+//     console.log('Listing Count:', listingCount);
+//     console.log('Booking Count:', bookingCount);
+
+//     return {
+//       providerCount,
+//       musicianCount,
+//       listingCount,
+//       bookingCount,
+//     };
+//   } catch (error) {
+//     console.error(error);
+//     throw error; // Handle the error as needed
+//   }
+// };
+
+// // Example usage
+// const counts = await getCounts();
+
+
+// const getCounts = () => {
+// console.log('Fetched users data:', userDataResponse.data);
+// console.log('Fetched space listings data:', listingsDataResponse.data);
+// console.log('Fetched bookings data:', bookingDataResponse.data);
+// console.log('Fetched timeslots data:', timeslotDataResponse.data);
+// console.log('Fetched payments data:', paymentDataResponse.data);
+
+//   const providerCount = generalData.value.filter(item => item.status === 'provider').length;
+//   const musicianCount = generalData.value.filter(item => item.status === 'musician').length;
+//   const listingCount = generalData.value.filter(item => item.status === 'listing').length;
+//   const bookingCount = generalData.value.filter(item => item.status === 'booking').length;
+
+//   console.log(providerCount);
+//   console.log(musicianCount);
+//   console.log(listingCount);
+//   console.log(bookingCount);
+
+//   return {
+//     providerCount,
+//     musicianCount,
+//     listingCount,
+//     bookingCount,
+//   };
+// };
+async function countProviders() {
+  try {
+    const response = await axios.get('http://localhost:8080/users/users');
+    const providerCount = response.data.filter(user => user.role === 'provider').length;
+    return providerCount;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
+}
+
+async function countMusicians() {
+  try {
+    const response = await axios.get('http://localhost:8080/users/users');
+    const musicianCount = response.data.filter(user => user.role === 'musician').length;
+    return musicianCount;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
+}
+
+async function countListings() {
+  try {
+    const response = await axios.get('http://localhost:8080/listings/');
+    return response.data.length;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
+}
+
+async function countBookings() {
+  try {
+    const response = await axios.get('http://localhost:8080/bookings/bookings');
+    return response.data.length;
+  } catch (error) {
+    console.error(error);
+    return 0;
+  }
+}
+
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -426,27 +552,27 @@ const getStatus = (status) => {
          <div>
              <div>
              <div style="display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 1rem; ">
-             <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 provider(s)</RouterLink>
+             <RouterLink to="/" style="flex: 1; text-align: center;">You have {{ numberOfProviders }} provider(s)</RouterLink>
              </div>
 
              <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-             <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 musician(s)</RouterLink>
+             <RouterLink to="/" style="flex: 1; text-align: center;">You have {{ numberOfMusicians }} musician(s)</RouterLink>
              </div>
 
              <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-             <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 listing(s)</RouterLink>
+             <RouterLink to="/listingCard" style="flex: 1; text-align: center;">You have {{ numberOfListings }}  listing(s)</RouterLink>
              </div>
              
              <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-             <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 booking(s)</RouterLink>
+             <RouterLink to="/" style="flex: 1; text-align: center;">You have {{ numberOfBookings }} booking(s) </RouterLink>
              </div>
              
              <div style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
-             <RouterLink to="/" style="text-decoration: none;">
+             <RouterLink to="/createListingAdmin" style="text-decoration: none;">
                  <Button text="Create Listing" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
 
-             <RouterLink to="/" style="text-decoration: none;">
+             <RouterLink to="/listingCard" style="text-decoration: none;">
                  <Button text="Create Booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
              </div>
