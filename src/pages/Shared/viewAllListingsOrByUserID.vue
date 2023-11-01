@@ -207,7 +207,7 @@ async function fetchListings() {
     const currentUser = await authStore.getCurrentUser();
     const currentUserID = currentUser.id;
 
-    if (currentUser.role === 'musician') {
+    if (currentUser.role === 'musician' || 'admin') {
       // If the user is a musician, fetch all listings without filtering
       const allListings = await listingStore.getAllListings();
       dynamicListings.value = allListings;
@@ -484,8 +484,8 @@ const createBooking = async (clickedListingId, ownerId) => {
         <img src="/src/assets/IMG_1280.PNG" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
 
       
-
-        <div v-if="currentUser && currentUser.role !== 'musician'" style="display: flex; justify-content: space-evenly;">
+        <div v-if="currentUser && currentUser.role === 'admin' || currentUser.role === 'provider'  " style="display: flex; justify-content: space-evenly;">
+        <!-- <div v-if="currentUser && currentUser.role !== 'musician'" style="display: flex; justify-content: space-evenly;"> -->
           <div  @click="editListing(listing.listing_id)">
             <!-- In viewAllListingsOrByUserID.vue -->
             <router-link :to="{ name: 'Update Listing Form', params: { listingId: listing.listing_id } }">

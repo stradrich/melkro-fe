@@ -165,6 +165,14 @@ const routes = [
         },
         component: () => import('../../src/pages/Provider/CreateListingForm.vue')
     }, 
+    {
+        path: '/createListingAdmin',
+        name: 'Create ListingAdmin',
+        meta: {
+            title: 'Create Listing Admin'
+        },
+        component: () => import('../../src/pages/Admin/CreateListingAdmin.vue')
+    }, 
     // View Listing (All or by userID)
         {
         path: '/listingCard',
