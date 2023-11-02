@@ -16,12 +16,18 @@ import { useUserStores } from '../../stores/user';
 import { useListingStores } from '../../stores/listing';
 import { useBookingStores } from '../../stores/booking';
 import { usePaymentStores } from '../../stores/payment'
+import { useAdminStores } from '../../stores/admin'
 
 const authStore = useAuthStores();
 const userStore = useUserStores();
 const listingStore = useListingStores();
 const bookingStore = useBookingStores();
 const paymentStore = usePaymentStores();
+const adminStore = useAdminStores();
+
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 
 import axios from 'axios';
 
@@ -368,6 +374,13 @@ const getPaymentStatus = async (bookingId) => {
 function editItem(item) {
       // Handle edit action
       console.log('Edit item:', item);
+      adminStore.setSelectedItem(item);
+      
+      if (router) {
+        router.push({ name: 'Admin Multiple Edit' });
+      } else {
+        console.error('Router instance is not available.');
+      }
     }
     
 function  deleteItem(item) {
@@ -578,7 +591,7 @@ async function countBookings() {
                  <Button text="Create Listing" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
 
-             <RouterLink to="/" style="text-decoration: none;">
+             <RouterLink to="/listingCard" style="text-decoration: none;">
                  <Button text="Create Booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
              </div>
