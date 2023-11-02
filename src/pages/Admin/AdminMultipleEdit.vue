@@ -91,6 +91,24 @@ onMounted(async () => {
   }
 });
 
+const updateData = () => {
+  // Log out the data from v-text-field and input fields
+  console.log('Payment ID:', paymentID.value);
+  console.log('Payment Status:', paymentStatus.value);
+  console.log('Booking ID:', bookingID.value);
+  console.log('Booking Status:', bookingStatus.value);
+  console.log('Listing:', listing.value);
+  console.log('Listing ID:', listingID.value);
+  console.log('Provider:', provider.value);
+  console.log('Provider ID:', providerID.value);
+  console.log('Check In:', check_in.value);
+  console.log('Check Out:', check_out.value);
+  console.log('Musician:', musician.value);
+  console.log('Musician ID:', musicianID.value);
+
+  // Add any other fields as needed
+};
+
 
 
 </script>
@@ -99,9 +117,14 @@ onMounted(async () => {
   <Navbar />
 
 
-  <v-sheet class="mt-2" width="300" style="margin: auto; margin-top: auto; margin-bottom: auto;">
+  <v-sheet class="mt-2" width="350" style="margin: auto; margin-top: auto; margin-bottom: auto;">
+    <div class="mx-16 mt-16 mb-5">
+        <div style="font-size: 20px">Edit Multiple DB Tables</div>
+    </div>
+    <div class="mx-auto mb-5">users, listings, bookings, timeslot, payment</div>
+    
     <img
-      class="mx-auto mt-10 mb-10"
+      class="mx-auto mt-5 mb-16"
       width="800"
       height="800"
       src="/src/assets/polar-musical-trumpet.gif"
@@ -109,10 +132,6 @@ onMounted(async () => {
       loading="lazy"
     />
 
-    <div class="mx-16 mb-3">
-        <div>Edit Multiple Tables</div>
-    </div>
-    <div class="mx-auto mb-10">users, listings, bookings, timeslot, payment</div>
 
 <!-- 
         bookingID
@@ -158,7 +177,7 @@ onMounted(async () => {
         : 
         2 -->
     <v-form>
-        <p class="mb-2">Update Payment Table</p>
+        <p class="mb-2 text-5xl" style="font-size: 20px;">Update Payment Table</p>
         <v-text-field v-model="paymentID" label="Payment ID"></v-text-field>
         <!-- <v-text-field v-model="paymentStatus" label="Payment Status"></v-text-field> -->
         <v-select
@@ -170,7 +189,7 @@ onMounted(async () => {
         color="deep-purple"
         ></v-select>
 
-        <p class="mb-2">Update Booking Table</p>
+        <p class="mb-2" style="font-size: 20px;">Update Booking Table</p>
         <v-text-field v-model="bookingID" label="Booking ID"></v-text-field>
         <!-- <v-text-field v-model="bookingStatus" label="Booking Status"></v-text-field> -->
         <v-select
@@ -182,22 +201,22 @@ onMounted(async () => {
         color="deep-purple"
         ></v-select>
 
-        <p class="mb-2">Update Listing Table</p>
+        <p class="mb-2" style="font-size: 20px;">Update Listing Table</p>
         <v-text-field v-model="listing" label="Listing Name"></v-text-field>
         <v-text-field v-model="listingID" label="Listing ID"></v-text-field>
 
-        <p class="mb-2">Update Booking & Timeslot Table</p>
-        <v-text-field v-model="check_in" label="Check In"></v-text-field>
-        <v-text-field v-model="check_out"  label="Check Out"></v-text-field>
+        <p class="mb-2" style="font-size: 20px;">Update Booking & Timeslot Table</p>
+        <v-text-field v-model="check_in" label="Check In from record" :readonly="true"></v-text-field>
+        <v-text-field v-model="check_out"  label="Check Out from record" :readonly="true"></v-text-field>
 
         <div ref="startDateContainer" class="row border-b mb-10">
           <div class="col-md-6">
             <div class="form-group">
               <div>
-                <label for="date" class="mr-5">Check in:</label>
-                <input ref="datetime" type="text" class="form-control flatpickr" id="start-datetime"/>
-                
-                <!-- <input type="date" class="form-control flatpickr" id="date"/> -->
+                <label for="date" class="mr-5">New Check in:</label>
+                <!-- <input ref="datetime" type="text" class="form-control flatpickr" id="start-datetime"/> -->
+                <input v-model="check_in" type="text" class="form-control flatpickr" id="start-datetime"/>  
+              
               </div>
             </div>
           </div>
@@ -206,15 +225,15 @@ onMounted(async () => {
           <div class="col-md-6">
             <div class="form-group">
               <div>
-                <label for="time" class="mr-3">Check out:</label>
-                <input type="text" class="form-control flatpickr" id="end-datetime" />
-                <!-- <input type="time" class="form-control flatpickr" id="time" /> -->
+                <label for="time" class="mr-3">New Check out:</label>
+                <!-- <input type="text" class="form-control flatpickr" id="end-datetime" /> -->
+                <input v-model="check_out" type="text" class="form-control flatpickr" id="end-datetime" />
               </div> 
             </div>  
           </div>
         </div>
 
-        <p class="mb-2">Update User Table</p>
+        <p class="mb-2" style="font-size: 20px;">Update User Table</p>
         <v-text-field v-model="provider" label="Provider Name"></v-text-field>
         <v-text-field v-model="providerID" label="Provider ID"></v-text-field>
         <v-text-field v-model="musician" label="Musician Name"></v-text-field>
@@ -230,10 +249,11 @@ onMounted(async () => {
             color="warning"
             class="mt-4"
             block
-            @click="() => listingStore.updateListing(formData)"
+            @click="updateData"
               >
-              <router-link to='/adminDashboard'>
-                Update Listing
+              <router-link to='#'>
+              <!-- <router-link to='/adminDashboard'> -->
+                Update Data
               </router-link>
           </v-btn>
   
