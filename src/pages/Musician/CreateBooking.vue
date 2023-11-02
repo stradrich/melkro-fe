@@ -216,7 +216,7 @@ const resetForm = () => {
         <!-- Provider ID -->
         <v-text-field @input="logFormData" v-model="bookingStore.ownerId" label="Provider ID"></v-text-field>
         <!-- Musician ID -->
-        <v-text-field @input="logFormData" v-model="bookingStore.musicianId" label="Musician ID"></v-text-field>
+        <v-text-field @input="logFormData" v-model="bookingStore.musicianId" label="Musician or Admin ID"></v-text-field>
         <!-- Listing ID -->
         <!-- <p>{{bookingStore.clickedListingId}}</p> -->
         <!-- <v-text-field  v-model="formData.listingId" label="Listing ID"></v-text-field> -->

@@ -117,6 +117,14 @@ const routes = [
         },
         component: () => import('../pages/Admin/AdminDashboard.vue')
     },
+    {
+        path: '/adminMultipleEdit',
+        name: 'Admin Multiple Edit',
+        meta: {
+            title: 'Admin Multiple Edit'
+        },
+        component: () => import('../pages/Admin/AdminMultipleEdit.vue')
+    },
     // DASHBOARD (Provider)
     {
          path: '/providerDashboard',
