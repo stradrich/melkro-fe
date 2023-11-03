@@ -59,6 +59,14 @@ const musician = ref(null);
 const musicianID = ref(null);
 
 onMounted(async () => {
+    // Fetch the current user details
+    // const currentUser = await authStore.getCurrentUser();
+    // console.log('Current User:', currentUser);
+    // console.log('Access Token:', currentUser.accessToken);
+    console.log('Fetching current user... ');
+    const accessToken = localStorage.getItem('access_token');
+    console.log(accessToken, 'by Admin Mutliple Edit Page');
+
     await nextTick();
 
     const startDateInput = startDateContainer.value.querySelector('#start-datetime');
@@ -91,7 +99,9 @@ onMounted(async () => {
   }
 });
 
-const updateData = () => {
+import axios from 'axios'; 
+
+const updateData = async () => {
   // Log out the data from v-text-field and input fields
   console.log('Payment ID:', paymentID.value);
   console.log('Payment Status:', paymentStatus.value);
@@ -106,7 +116,64 @@ const updateData = () => {
   console.log('Musician:', musician.value);
   console.log('Musician ID:', musicianID.value);
 
+  const userProviderID =  providerID.value
+  const userMusicianID =  musicianID.value
+
+  // By passing backend verifyToken
+  console.log('Fetching current user for authorization... ');
+  const accessToken = localStorage.getItem('access_token');
+  console.log(accessToken, 'by Update Data Function');
+
+  const userResponse = await axios.get(`http://localhost:8080/users/${userMusicianID}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+  // Get the rest for the data, used for auto filling up email and password field, only then we match the JSON payload
+  const user = userResponse.data;
+
   // Add any other fields as needed
+  try {
+   
+ 
+    // Construct the data object to send to the server
+    const userData = {
+      user_id: userMusicianID,
+      username: musician.value,
+      email: user.email, // AUTO FILLED original data from DB
+      password: user.password, // AUTO FULLED original data from DB
+      role: 'musician', 
+      
+    };
+
+
+
+   // Make the PUT request to update the user
+    const response = await axios.put(`http://localhost:8080/users/${userMusicianID}`, userData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // Check if the update was successful
+    if (response.status === 200) { 
+      console.log('User data updated successfully:', response.data);
+      // Add any additional logic or notifications for a successful update
+    } else {
+      console.error('Failed to update user data:', response.data);
+      // Handle the error, show a notification, or redirect the user
+    }
+  } catch (error) {
+    console.error('Error updating user data:', error);
+    // Handle the error, show a notification, or redirect the user
+     // Log the entire Axios error object
+     if (error.isAxiosError) {
+      console.error('Axios Error Details:', error.toJSON());
+      // router.push('/generalErrorPage')
+    }
+}
+  
 };
 
 
