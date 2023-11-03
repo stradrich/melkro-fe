@@ -15,7 +15,7 @@ import { mdiMusicRestSixteenth } from '@mdi/js';
     <p>The Melkro's is a platform that connects musicians from different level (amateurs, music major, music teachers, concert performers, recording artists), allowing them to share and discover practice, rehearsal, recording space in different cities. The app aims to foster collaboration, creativity, and community among musicians, making it easier for local and travelling musicians to find suitable space for rehearsals and collaborations.</p>
     <br>
     <!-- <svg-icon type="mdi" :path="mdiMusicRestSixteenth"></svg-icon> -->
-    <p>Founded by <a href="https://www.youtube.com/watch?v=exdROUlv3fo">Aldrich Pinso</a>, a professional musician, he was also behind this e-commerce website as a Full Stack Developer. The conception of this app aims to address shared experiences amongst musicians, by transforming inconveniences into opportunities, Melkro's empowers musicians to effortlessly share and discover the right space in different cities. </p>
+    <p>Founded by <a href="https://www.youtube.com/watch?v=exdROUlv3fo">stradrich (stage name)</a>, a professional musician. He was also behind this e-commerce website as a Full Stack Developer. The conception of this app aims to address shared experiences amongst musicians, by transforming inconveniences into opportunities, Melkro's empowers musicians to effortlessly share and discover the right space in different cities. </p>
     <!-- <svg-icon type="mdi" :path="mdiMusicRestSixteenth"></svg-icon> -->
     <br>
     <p> At the same time, local music centres or studios or conservatory can maximize their profit by renting out their unused space through the Melkro's App. By listing their available rooms, studios or performance spaces on the platform, these establishments can tap into a broader network of musicians and music enthusiasts, effectively turning their under-utilised areas into profitable assets. </p>
@@ -56,6 +56,21 @@ import { mdiMusicRestSixteenth } from '@mdi/js';
             <li>Ads and Sponsorship</li>
         </div>
     </div> -->
+
+    <div style="display: flex; justify-content: center; margin-top: 3rem;">
+        <a href="https:linkedin.com/in/aldrich-pinso-07a42b12a">
+            <img  class="mx-2" style="width: 30px; height: 30px;" src="/src/assets/linkedin.svg" alt="">
+        </a>
+        <a href="https:github.com/stradrich">
+            <img  class="mx-2" style="width: 30px; height: 30px;" src="/src/assets/github.svg" alt="">
+        </a>
+        <a href="https://www.youtube.com/@aldrichpinso8089">
+            <img  class="mx-2" style="width: 30px; height: 30px;" src="/src/assets/youtube.svg" alt="">
+        </a>
+        <a href="">
+            <img  class="mx-2" style="width: 30px; height: 30px;" src="/src/assets/instagram.svg" alt="">
+        </a>
+    </div>
 
     <Footer/>
     
