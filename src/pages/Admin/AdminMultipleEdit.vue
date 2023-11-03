@@ -124,44 +124,72 @@ const updateData = async () => {
   const accessToken = localStorage.getItem('access_token');
   console.log(accessToken, 'by Update Data Function');
 
-  const userResponse = await axios.get(`http://localhost:8080/users/${userMusicianID}`, {
+  // Used for UPDATING MUSICIAN's username
+  const userMusicianResponse = await axios.get(`http://localhost:8080/users/${userMusicianID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
   // Get the rest for the data, used for auto filling up email and password field, only then we match the JSON payload
-  const user = userResponse.data;
+  const userMusician = userMusicianResponse.data;
+
+  // Used for UPDATING PROVIDER's username
+  const userProviderResponse = await axios.get(`http://localhost:8080/users/${userProviderID}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // Get the rest for the data, used for auto filling up email and password field, only then we match the JSON payload
+    const userProvider = userProviderResponse.data;
 
   // Add any other fields as needed
   try {
    
  
+    // UPDATE Musician's username
     // Construct the data object to send to the server
-    const userData = {
+    const userDataMusician = {
       user_id: userMusicianID,
-      username: musician.value,
-      email: user.email, // AUTO FILLED original data from DB
-      password: user.password, // AUTO FULLED original data from DB
+      username: provider.value,
+      email: userMusician.email, // AUTO FILLED original data from DB
+      password: userMusician.password, // AUTO FULLED original data from DB
       role: 'musician', 
-      
+    };
+
+    // UPDATE Provider's username
+    // Construct the data object to send to the server
+    const userDataProvider = {
+      user_id: userProviderID,
+      username: musician.value,
+      email: userProvider.email, // AUTO FILLED original data from DB
+      password: userProvider.password, // AUTO FULLED original data from DB
+      role: 'provider', 
     };
 
 
 
-   // Make the PUT request to update the user
-    const response = await axios.put(`http://localhost:8080/users/${userMusicianID}`, userData, {
+   // Make the PUT request to update the musician username
+    const responseMusician = await axios.put(`http://localhost:8080/users/${userMusicianID}`, userDataMusician, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+     // Make the PUT request to update the provider username
+     const responseProvider = await axios.put(`http://localhost:8080/users/${userProviderID}`, userDataProvider, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
     // Check if the update was successful
-    if (response.status === 200) { 
-      console.log('User data updated successfully:', response.data);
+    if (responseMusician.status === 200 && responseProvider.status ===200) { 
+      console.log('User data updated successfully:', responseMusician.data, responseProvider.data);
       // Add any additional logic or notifications for a successful update
     } else {
-      console.error('Failed to update user data:', response.data);
+      console.error('Failed to update user data:', responseMusician.data, responseProvider.data);
       // Handle the error, show a notification, or redirect the user
     }
   } catch (error) {
