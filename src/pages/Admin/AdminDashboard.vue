@@ -632,6 +632,18 @@ async function countBookings() {
       </v-chip>
     </template>
 
+    <template v-slot:item.check_in="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ new Date(item.check_in).toLocaleString() }}
+      </td>
+    </template>
+
+    <template v-slot:item.check_out="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+      {{ new Date(item.check_out).toLocaleString() }}
+      </td>
+    </template>
+
     <template v-slot:item.edit="{ item }">
       <v-icon class="custom-icon" @click="editItem(item)" style="color: black">{{ mdiPencil }}</v-icon>
     </template>
@@ -639,6 +651,7 @@ async function countBookings() {
     <template v-slot:item.delete="{ item }">
       <v-icon class="custom-icon" @click="deleteItem(item)" style="color: black;">{{ mdiDelete }}</v-icon>
     </template>
+
   </v-data-table>
 
     <Footer/>
