@@ -49,56 +49,107 @@ export const useTimeslotStores = defineStore({
             }
         },
 
-        async createTimeslot(formData) {
-             console.log('Inside timeslotStore createTimeslot:', formData);
-              console.log('Inside timeslotStore createTimeslot:', formData.musicianId);
-              console.log('Inside timeslotStore createTimeslot:', formData.check_in);
-               console.log('Inside timeslotStore createTimeslot:', formData.check_out);
+        // async createTimeslot(formData) {
+        //      console.log('Inside timeslotStore createTimeslot:', formData);
+        //       console.log('Inside timeslotStore createTimeslot:', formData.musicianId);
+        //       console.log('Inside timeslotStore createTimeslot:', formData.check_in);
+        //        console.log('Inside timeslotStore createTimeslot:', formData.check_out);
 
-            try {
-                const accessToken = localStorage.getItem('access_token')
+        //     try {
+        //         const accessToken = localStorage.getItem('access_token')
 
-                // Check for overlapping timeslots
-                // const overlappingTimeslot = await Timeslot.findOne({
-                // where: {
-                //     user_id: formData.musicianId,
-                //     timeslot_datetime_start: {
-                //     [Op.lt]: formData.check_out,
-                //     },
-                //     timeslot_datetime_end: {
-                //     [Op.gt]: formData.check_in,
-                //     },
-                // },
-                // });
+        //         // Check for overlapping timeslots
+        //         // const overlappingTimeslot = await Timeslot.findOne({
+        //         // where: {
+        //         //     user_id: formData.musicianId,
+        //         //     timeslot_datetime_start: {
+        //         //     [Op.lt]: formData.check_out,
+        //         //     },
+        //         //     timeslot_datetime_end: {
+        //         //     [Op.gt]: formData.check_in,
+        //         //     },
+        //         // },
+        //         // });
 
-                // if (overlappingTimeslot) {
-                // alert('Overlapping timeslot detected. Please choose a different time.');
-                // return;
-                // }
+        //         // if (overlappingTimeslot) {
+        //         // alert('Overlapping timeslot detected. Please choose a different time.');
+        //         // return;
+        //         // }
 
-                const options = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: accessToken
-                    },
-                    body: JSON.stringify({
-                        user_id: formData.musicianId,
-                        timeslot_datetime_start: formData.check_in,
-                        timeslot_datetime_end: formData.check_out ,
-                    })
-                }
+        //         const options = {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 Authorization: accessToken
+        //             },
+        //             body: JSON.stringify({
+        //                 user_id: formData.musicianId,
+        //                 timeslot_datetime_start: formData.check_in,
+        //                 timeslot_datetime_end: formData.check_out ,
+        //             })
+        //         }
 
-                // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch(`http://localhost:8080/timeslot/timeslot`, options)
-                const data = await response.json()
+        //         // const response = await fetch('actual cloud hosting platform', options)
+        //         const response = await fetch(`http://localhost:8080/timeslot/timeslot`, options)
+        //         const data = await response.json()
 
-                console.log(data)
-                console.log('Timeslot Created - Success - by 🍍🍍🍍')
-            } catch (error) {
-                console.error(error)
-            }
-        },
+        //         console.log(data)
+        //         console.log('Timeslot Created - Success - by 🍍🍍🍍')
+        //     } catch (error) {
+        //         console.error(error)
+        //     }
+        // },
+        async createTimeslot() {
+            // console.log('Inside timeslotStore createTimeslot:', formData);
+            //  console.log('Inside timeslotStore createTimeslot:', formData.musicianId);
+            //  console.log('Inside timeslotStore createTimeslot:', formData.check_in);
+            //   console.log('Inside timeslotStore createTimeslot:', formData.check_out);
+
+           try {
+               const accessToken = localStorage.getItem('access_token')
+
+               // Check for overlapping timeslots
+               // const overlappingTimeslot = await Timeslot.findOne({
+               // where: {
+               //     user_id: formData.musicianId,
+               //     timeslot_datetime_start: {
+               //     [Op.lt]: formData.check_out,
+               //     },
+               //     timeslot_datetime_end: {
+               //     [Op.gt]: formData.check_in,
+               //     },
+               // },
+               // });
+
+               // if (overlappingTimeslot) {
+               // alert('Overlapping timeslot detected. Please choose a different time.');
+               // return;
+               // }
+
+               const options = {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                       Authorization: accessToken
+                   },
+                   body: JSON.stringify({
+                       user_id,
+                       booking_id,
+                       timeslot_datetime_start,
+                       timeslot_datetime_end,
+                   })
+               }
+
+               // const response = await fetch('actual cloud hosting platform', options)
+               const response = await fetch(`http://localhost:8080/timeslot/timeslot`, options)
+               const data = await response.json()
+
+               console.log(data)
+               console.log('Timeslot Created - Success - by 🍍🍍🍍')
+           } catch (error) {
+               console.error(error)
+           }
+       },
 
         async updateTimeslot(formData) {
             try {

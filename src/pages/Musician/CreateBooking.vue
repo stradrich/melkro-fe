@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar.vue'
 import Footer from '../../components/Footer.vue'
 import flatpickr from "flatpickr";
 import 'flatpickr/dist/themes/light.css';
-
+import axios from 'axios';
 
 import { ref, onMounted, watch, nextTick, reactive,  toRefs, computed } from 'vue';
 import { useListingStores } from '../../stores/listing';
@@ -77,6 +77,10 @@ const datetimeRef = ref(null);
 //   }
 // });
 onMounted(async () => {
+  const getAllTimeslot = await axios.get(`http://localhost:8080/timeslot/timeslot`);
+        const timeslotData = getAllTimeslot.data
+        console.log(`Timeslot Data`, timeslotData);
+
   await nextTick();
 
   const startDateInput = startDateContainer.value.querySelector('#start-datetime');
@@ -150,7 +154,7 @@ async function createBooking() {
     // NEED TO CHECK FOR OVERLAPPING TIMESLOT
     // Create Timeslot
     // await timeslotStore.createTimeslot(formData)
-    await createTimeslot();
+    // await createTimeslot();
 
     await bookingStore.createBooking(formData);
 

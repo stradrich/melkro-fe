@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar.vue'
 import Footer from '../../components/Footer.vue'
 import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import Button from '../../components/Button.vue';
+import axios from 'axios'; 
 
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiGoogle, mdiApple } from '@mdi/js';
@@ -165,6 +166,9 @@ const rules = {
 //     } catch (error) {
 //         console.error('Error creating payment:', error);
 //     }
+// }
+// async function createTimeslot() {
+//    await timeslotStore.createTimeslot(bookingStore.booking_id)
 // }
 
 // DON'T DELETE THIS, OPTION 3:
@@ -345,11 +349,41 @@ async function createPayment() {
         const responseData = await response.json();
         checkoutSessionUrl = responseData.url;
 
+        const currentBookingID =  bookingStore.booking_id
+        console.log(currentBookingID);
+        const getBookingByID = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+        const bookingDataById = getBookingByID.data
+        console.log(bookingDataById);
+        console.log(`Prep for sync for booking and timeslot`,bookingDataById.check_in);
+        console.log(`Prep for sync for booking and timeslot`,bookingDataById.check_out);
+        const checkInBooking = bookingDataById.check_in
+        const checkOutBooking = bookingDataById.check_out
+
+
+          // Get the musicianId using async/await
+        const currentUser = await authStore.getCurrentUser();
+        console.log(currentUser);
+        const musicianId = currentUser.id;
+        console.log(musicianId);
+
+        const timeslotBookingData = {
+            user_id: musicianId, // AUTO FILLED data from createBooking.vue
+            booking_id: currentBookingID, // AUTO FILLED original data from DB
+            timeslot_datetime_start: checkInBooking, // AUTO FILLED original data from DB
+            timeslot_datetime_end: checkOutBooking // AUTO FILLED original data from DB
+        };
+
+        // Make PUT request to CREATE timeslot data
+        const responseTimeslot = await axios.post(`http://localhost:8080/timeslot/timeslot`, timeslotBookingData);
+
+        console.log(responseTimeslot.data);
+       
+
         // Open a new tab with the Stripe checkout session URL
         window.open(checkoutSessionUrl, '_blank');
 
         // ... (remaining logic)
-        router.push('/')
+        // router.push('/')
 
     } catch (error) {
         console.error('Error creating payment:', error);
@@ -449,6 +483,30 @@ onMounted(async () => {
         console.log('Check-in:', bookingStore.check_in, 'Check-out:', bookingStore.check_out);
         console.log('Owner name', owner.username);
         console.log('Booking ID', bookingStore.booking_id);
+
+        
+        const currentBookingID =  bookingStore.booking_id
+        console.log(currentBookingID);
+        const getBookingByID = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+        const bookingDataById = getBookingByID.data
+        console.log(bookingDataById);
+        console.log(`Prep for sync for booking and timeslot`,bookingDataById.check_in);
+        console.log(`Prep for sync for booking and timeslot`,bookingDataById.check_out);
+        const checkInBooking = bookingDataById.check_in
+        const checkOutBooking = bookingDataById.check_out
+
+        // const timeslotBookingData = {
+        //     user_id: musicianId, // AUTO FILLED data from createBooking.vue
+        //     booking_id: currentBookingID, // AUTO FILLED original data from DB
+        //     timeslot_datetime_start: checkInBooking, // AUTO FILLED original data from DB
+        //     timeslot_datetime_end: checkOutBooking // AUTO FILLED original data from DB
+        // };
+
+        // const getAllTimeslot = await axios.get(`http://localhost:8080/timeslot/timeslot`);
+        // const timeslotData = getAllTimeslot.data
+        // console.log(`Timeslot Data`, timeslotData);
+
+        // const getTimeslotbyID = await axios.get(`http://localhost:8080/timeslot/timeslot/${}`)
     } catch (error) {
         console.error(error);
     }

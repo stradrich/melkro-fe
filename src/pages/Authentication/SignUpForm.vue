@@ -38,7 +38,9 @@ const rules = {
 const submitForm = async () => {
   try {
     // Call your registerUser function from the pinia store
-    await authStore.registerUser(username.value, email.value, password.value, selectedRole.value);
+    // await authStore.registerUser(username.value, email.value, password.value, selectedRole.value);
+    await authStore.registerUser(username.value, undefined, undefined, email.value, password.value, undefined, selectedRole.value);
+
     router.push('/login')
   } catch (error) {
     console.error(error);
