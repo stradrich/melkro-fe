@@ -1,6 +1,14 @@
+// one user, can have 3 roles
+// Admin can do all CRUD
+// Authorized users can have many listings
+// One listing can have many bookings
+// One booking can have many timeslot 
+// One booking can have one payment 
+
 <script setup>
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
+import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import { ref, onMounted, watch, nextTick} from 'vue';
 import flatpickr from "flatpickr";
 import 'flatpickr/dist/themes/light.css';
@@ -23,7 +31,7 @@ const bookingStore = useBookingStores();
 const paymentStore = usePaymentStores();
 const adminStore = useAdminStores();
 
-const selectedPaymentStatus = ['incomplete','complete']; // Define the available roles
+const selectedPaymentStatus = ['incomplete','completed']; // Define the available roles
 // const paymentStatus = ref(null); 
 
 const selectedBookingStatus = ['pending', 'confirmed', 'cancelled', 'declined']
@@ -103,97 +111,180 @@ import axios from 'axios';
 
 const updateData = async () => {
   // Log out the data from v-text-field and input fields
-  console.log('Payment ID:', paymentID.value);
-  console.log('Payment Status:', paymentStatus.value);
-  console.log('Booking ID:', bookingID.value);
-  console.log('Booking Status:', bookingStatus.value);
-  console.log('Listing:', listing.value);
-  console.log('Listing ID:', listingID.value);
-  console.log('Provider:', provider.value);
-  console.log('Provider ID:', providerID.value);
-  console.log('Check In:', check_in.value);
-  console.log('Check Out:', check_out.value);
-  console.log('Musician:', musician.value);
-  console.log('Musician ID:', musicianID.value);
+  console.log('Payment ID:', paymentID.value); // ✅
+  console.log('Payment Status:', paymentStatus.value); // ✅
+  console.log('Booking ID:', bookingID.value); // ✅
+  console.log('Booking Status:', bookingStatus.value); // ✅
+  console.log('Listing:', listing.value); // ✅
+  console.log('Listing ID:', listingID.value); // ✅
+  console.log('Provider:', provider.value);// ✅
+  console.log('Provider ID:', providerID.value);// ✅
+  console.log('Check In:', check_in.value); // Use bookingID (timeslot DB logic is off)
+  console.log('Check Out:', check_out.value); // Use bookingID (timeslot DB logic is off)
+  console.log('Musician:', musician.value); // ✅
+  console.log('Musician ID:', musicianID.value);// ✅
 
   const userProviderID =  providerID.value
   const userMusicianID =  musicianID.value
+  const currentListingID = listingID.value
+  const currentPaymentID = paymentID.value
+  const currentBookingID = bookingID.value
 
   // By passing backend verifyToken
   console.log('Fetching current user for authorization... ');
   const accessToken = localStorage.getItem('access_token');
   console.log(accessToken, 'by Update Data Function');
 
-  // Used for UPDATING MUSICIAN's username
+  // Get MUSICIAN's data (target: username) prep for update
   const userMusicianResponse = await axios.get(`http://localhost:8080/users/${userMusicianID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
-  // Get the rest for the data, used for auto filling up email and password field, only then we match the JSON payload
+  // Musician data, used for auto filling up email and password field, only then we match the JSON payload
   const userMusician = userMusicianResponse.data;
 
-  // Used for UPDATING PROVIDER's username
+
+  // Get PROVIDER's data (target: username) prep for update
   const userProviderResponse = await axios.get(`http://localhost:8080/users/${userProviderID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+  // Provider data, used for auto filling up email and password field, only then we match the JSON payload
+  const userProvider = userProviderResponse.data;
 
-    // Get the rest for the data, used for auto filling up email and password field, only then we match the JSON payload
-    const userProvider = userProviderResponse.data;
 
-  // Add any other fields as needed
+  // Get LISTING's data (target: name) prep for update
+  const listingResponse = await axios.get(`http://localhost:8080/listings/listing/${currentListingID}`);
+  // Listing data, used for auto filling up listing_id, user_id, price_per_hour, address_link, pictures, availability, description, capacity, stripeProductId field, only then we match the JSON payload
+  const listingDatabyID = listingResponse.data
+  console.log(`Listing Data from DB`,listingDatabyID);
+
+  
+  // Get PAYMENT's data (target: status) prep for update
+  const paymentResponse = await axios.get(`http://localhost:8080/payment/payment/${currentPaymentID}`)
+  // Payment data, used for auto filling up listing_id, user_id, price_per_hour, address_link, pictures, availability, description, capacity, stripeProductId field, only then we match the JSON payload
+  const paymentDatabyID = paymentResponse.data
+  console.log(`Payment Data from DB`, paymentDatabyID);
+
+  // Get BOOKING's data (target: status) prep for update
+  const bookingResponse = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+  // Booking data, used for auto filling up email and password field, only then we match the JSON payload
+  const bookingDatabyID = bookingResponse.data
+  console.log(`Booking Data from DB`, bookingDatabyID);
+
+  // Get TIMESLOT's data (target: check_in and check out) prep for update
+  // Booking data, used for auto filling up user_id and booking_id, only then we match the JSON payload
+  const timeslotResponse = await axios.get(`http://localhost:8080/timeslot/timeslot/${currentTimeslotID}`)
+
   try {
-   
- 
     // UPDATE Musician's username
     // Construct the data object to send to the server
     const userDataMusician = {
-      user_id: userMusicianID,
-      username: provider.value,
+      user_id: userMusician.user_id, // AUTO FILLED original data from DB
+      username: provider.value, // 𝌡
       email: userMusician.email, // AUTO FILLED original data from DB
       password: userMusician.password, // AUTO FULLED original data from DB
-      role: 'musician', 
+      role: userMusician.role, // AUTO FILLED original data from DB
     };
 
     // UPDATE Provider's username
     // Construct the data object to send to the server
     const userDataProvider = {
-      user_id: userProviderID,
-      username: musician.value,
+      user_id: musician.user_id, // AUTO FILLED original data from DB
+      username: musician.value, // 𝌡
       email: userProvider.email, // AUTO FILLED original data from DB
       password: userProvider.password, // AUTO FULLED original data from DB
-      role: 'provider', 
+      role: userProvider.role, // AUTO FILLED original data from DB
     };
 
+    // UPDATE Listing's name
+     // Construct the data object to send to the server
+    const newlistingData = {
+      listing_id: listingDatabyID.listing_id, // AUTO FILLED original data from DB
+      user_id: listingDatabyID.user_id,  // AUTO FILLED original data from DB
+      price_per_hour: listingDatabyID.price_per_hour, // AUTO FILLED original data from DB
+      address_link: listingDatabyID.address_link, // AUTO FILLED original data from DB
+      pictures: listingDatabyID.pictures, // AUTO FILLED original data from DB
+      availability: listingDatabyID.availability, // AUTO FILLED original data from DB
+      name: listing.value, // 𝌡
+      description: listingDatabyID.description, // AUTO FILLED original data from DB
+      capacity: listingDatabyID.capacity, // AUTO FILLED original data from DB
+      stripeProductId: listingDatabyID.stripeProductId // AUTO FILLED original data from DB
+    };
+
+    // UPDATE Payment's status
+     // Construct the data object to send to the server
+     const newPaymentData = {
+    booking_id: paymentDatabyID.booking_id, // AUTO FILLED original data from DB
+    amount: paymentDatabyID.amount, // AUTO FILLED original data from DB
+    amount_total: paymentDatabyID.amount_total, // AUTO FILLED original data from DB
+    payment_method: paymentDatabyID.payment_method, // AUTO FILLED original data from DB
+    payment_method_types: paymentDatabyID.payment_method_types, // AUTO FILLED original data from DB
+    status: paymentStatus.value // 𝌡
+     }
+
+     // UPDATE Booking's status
+     // Construct the data object to send to the server
+     const newBookingData = {
+      listing_id: bookingDatabyID.listing_id, // AUTO FILLED original data from DB
+      user_id: bookingDatabyID.user_id, // AUTO FILLED original data from DB
+      status: bookingStatus.value, // 𝌡
+      reminder: bookingDatabyID.reminder, // AUTO FILLED original data from DB
+      check_in: check_in.value, // MUST BE IN SYNC WITH TIMESLOT
+      check_out: check_out.value, // MUST BE IN SYNC WITH TIMESLOT
+      required_equipments: bookingDatabyID.required_equipments, // AUTO FILLED original data from DB
+      other_remarks: bookingDatabyID.other_remarks, // AUTO FILLED original data from DB
+      purpose: bookingDatabyID.purpose, // AUTO FILLED original data from DB
+      first_instrument: bookingDatabyID.first_instrument, // AUTO FILLED original data from DB
+      capacity: bookingDatabyID.capacity // AUTO FILLED original data from DB
+     }
 
 
-   // Make the PUT request to update the musician username
+   // Make PUT request to update the musician username
     const responseMusician = await axios.put(`http://localhost:8080/users/${userMusicianID}`, userDataMusician, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
-     // Make the PUT request to update the provider username
+     // Make PUT request to update the provider username
      const responseProvider = await axios.put(`http://localhost:8080/users/${userProviderID}`, userDataProvider, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
-    // Check if the update was successful
-    if (responseMusician.status === 200 && responseProvider.status ===200) { 
+    // Make PUT request to update lising's name
+    const responseListing = await axios.put(`http://localhost:8080/listings/listing/${currentListingID}`, newlistingData);
+
+    // Make PUT request to update payment's status
+    const responsePayment = await axios.put(`http://localhost:8080/payment/payment/${currentPaymentID}`, newPaymentData);
+
+    // Make PUT request to update booking's status
+    const responseBooking = await axios.put(`http://localhost:8080/bookings/bookings/${currentBookingID}`, newBookingData);
+    
+      // Check if the update was successful
+    if (responseMusician.status === 200 && responseProvider.status === 200 && responseListing.status === 200 && responsePayment.status === 200 && responseBooking.status === 200) { 
       console.log('User data updated successfully:', responseMusician.data, responseProvider.data);
+      console.log('Listing data updated successfully:', responseListing.data);
+      console.log('Payment data updated successfully:', responsePayment.data);
+      console.log('Booking data updated successfully:', responseBooking.data);
+      console.log('check in and check out updated on Booking DB, currently not in sync with Timeslot DB');
       // Add any additional logic or notifications for a successful update
     } else {
       console.error('Failed to update user data:', responseMusician.data, responseProvider.data);
+      console.log('Failed to update listing data', responseListing.data);
+      console.log('Failed to update payment data', responsePayment.data);
+      console.log('Failed to update booking data', responseBooking.data);
       // Handle the error, show a notification, or redirect the user
     }
   } catch (error) {
     console.error('Error updating user data:', error);
+    console.error('Error updating listing data:', error);
+    console.error('Error updating payment data:', error);
+    console.error('Error updating booking data:', error);
     // Handle the error, show a notification, or redirect the user
      // Log the entire Axios error object
      if (error.isAxiosError) {
@@ -210,6 +301,7 @@ const updateData = async () => {
 
 <template>
   <Navbar />
+  <DropdownMenu2/>
 
 
   <v-sheet class="mt-2" width="350" style="margin: auto; margin-top: auto; margin-bottom: auto;">
@@ -369,105 +461,3 @@ const updateData = async () => {
 
 
 
-
-<!-- <template> -->
-
-    <!-- <Navbar/> -->
-
-    <!-- <div>{{ JSON.stringify(listingStore.currentListings) }}</div> -->
-   
-  
-
-    <!-- <div>{{ formData.listing_id }}</div> -->
-
-    <!-- <div>{{ userId }}</div> -->
-
-    <!-- <div>{{ console.log('Listing ID in template:',  listingStore.currentListings?.listing_id) }}</div> -->
-
-
-
-
-    
-    <!-- <v-sheet class="mt-2" width="300" style="margin: auto; margin-top: auto; margin-bottom: auto;"> -->
-     <!-- <img
-      class="mx-auto mt-10 mb-10"
-      width="100"
-      height="100"
-      src="/src/assets/IMG_0912.JPG"
-      alt="space"
-      loading="lazy"
-    /> -->
-
-    <!-- <div class="mb-10">CREATE LISTING PAGE (for space provider)</div> -->
-   
-
-      <!-- <v-form> -->
-        <!-- <v-text-field v-model="userId" label="User ID" :readonly="true"></v-text-field> -->
-        
-        <!-- <v-text-field v-model="formData.listing_id" label="Listing ID"></v-text-field> -->
-
-        <!-- <v-text-field v-model="listingId" label="Listing ID"></v-text-field> -->
-        <!-- <v-text-field v-model="computedListingId" label="Listing ID" :readonly="true"></v-text-field> -->
-        <!-- <v-text-field label="Lisitng ID" :readonly="true">{{ console.log('Listing ID in template:', listingId) }}</v-text-field> -->
-        <!-- <v-text-field v-model="listingId" label="Listing ID"></v-text-field> -->
-
-
-        <!-- <v-text-field v-model="formData.name" label="Name for your space"></v-text-field> -->
-  
-        <!-- <v-text-field v-model="formData.description" label="Description"></v-text-field> -->
-  
-        <!-- <v-text-field
-          v-model="formData.capacity"
-          label="Number of people preferred"
-        ></v-text-field> -->
-  
-        <!-- GOOGLE MAP API? -->
-        <!-- <v-text-field v-model="formData.address_link" label="Location"></v-text-field> -->
-  
-        <!-- <v-text-field v-model="formData.price_per_hour" label="Rate per hour"></v-text-field> -->
-  
-        <!-- Add v-model bindings for the remaining fields -->
-        <!-- <v-text-field v-model="formData.user_id" label="User ID"></v-text-field> -->
-        
-
-        <!-- Add v-model bindings for the other fields similarly -->
-        <!-- v-model="createStripeProductId.field_name" label="Field Label" -->
-  
-      
-
-        <!-- <div>
-          <v-file-input chips multiple label="Upload listing photo"></v-file-input>
-          <v-file-input
-            small-chips
-            multiple
-            label="Upload listing photo"
-          ></v-file-input>
-        </div> -->
-  
-        <!-- <div class="d-flex flex-column"> -->
-          <!-- <v-btn color="success" class="mt-4" block @click="createListing">
-            Create Listing
-          </v-btn> -->
-  
-          <!-- <v-btn
-            color="warning"
-            class="mt-4"
-            block
-            @click="updateListing()"
-          >
-            Update Listing
-          </v-btn> -->
-  
-          <!-- <v-btn color="error" class="mt-4" block @click="deleteListing">
-            Delete Listing
-          </v-btn> -->
-        <!-- </div> -->
-      <!-- </v-form> -->
-  
-    <!-- </v-sheet> -->
-
-    <!-- <Footer/> -->
-
-   
-  <!-- </template> -->
-  

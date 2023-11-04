@@ -105,7 +105,9 @@ onMounted(async () => {
     await authStore.getCurrentUser();
 
     // Now, log the user data
-    console.log('CurrentUser:', authStore.currentUser);
+    console.log('Current User:', authStore.currentUser);
+      // Now, log the user data role
+      console.log(`Current User's Role:`, authStore.currentUser.role);
   } catch (error) {
     console.error('Error fetching user data:', error);
   }
