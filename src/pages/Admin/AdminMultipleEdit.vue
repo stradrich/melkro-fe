@@ -176,7 +176,7 @@ const updateData = async () => {
 
   // Get TIMESLOT's data (target: check_in and check out) prep for update
   // Booking data, used for auto filling up user_id and booking_id, only then we match the JSON payload
-  const timeslotResponse = await axios.get(`http://localhost:8080/timeslot/timeslot/${currentTimeslotID}`)
+  // const timeslotResponse = await axios.get(`http://localhost:8080/timeslot/timeslot/${currentTimeslotID}`)
 
   try {
     // UPDATE Musician's username
@@ -272,6 +272,7 @@ const updateData = async () => {
       console.log('Payment data updated successfully:', responsePayment.data);
       console.log('Booking data updated successfully:', responseBooking.data);
       console.log('check in and check out updated on Booking DB, currently not in sync with Timeslot DB');
+      router.push('/adminDashboard')
       // Add any additional logic or notifications for a successful update
     } else {
       console.error('Failed to update user data:', responseMusician.data, responseProvider.data);
