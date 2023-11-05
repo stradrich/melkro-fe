@@ -97,6 +97,77 @@ onMounted(async () => {
   }
 });
 
+// const getPaymentData = async () => {
+//   // Fetch all user data
+//   const allUserData = await axios.get('http://localhost:8080/users/users');
+
+//   // Fetch all listing data
+//   const allListingData = await axios.get('http://localhost:8080/listings/');
+
+//   // Fetch all booking data
+//   const allBookingData = await axios.get('http://localhost:8080/bookings/bookings');
+//   console.log('Booking Data:', allBookingData.data);
+
+//   // Fetch all timeslot data
+//   const allTimeslotData = await axios.get('http://localhost:8080/timeslot/timeslot');
+
+//   // Fetch all payment data
+//   const allPaymentData = await axios.get('http://localhost:8080/payment/payment/');
+
+//   // Extract payment data from the response
+//   const paymentData = allPaymentData.data;
+//   console.log('Payment Data:', paymentData);
+
+//   // console.log('Booking Data:', allBookingData.data.map(booking => ({ bookingID: booking.booking_id, paymentID: booking.payment_id })));
+
+
+
+//   // Process the booking data to create the desired structure
+//   const processedData = allBookingData.data.map(booking => {
+//   // Log the booking ID for reference
+//   console.log('Booking ID:', booking.booking_id);
+
+//   // Find the corresponding payment object based on booking.payment_id
+//   const correspondingPayment = paymentData.find(payment => payment.payment_id === booking.payment_id);
+//   console.log('Corresponding Payment:', correspondingPayment);
+
+//   // Extract payment ID and status from the corresponding payment object
+//   const paymentID = correspondingPayment ? correspondingPayment.payment_id : 'N/A';
+//   console.log('Payment ID:', paymentID);
+//   console.log(paymentID.payment_id);
+//   const paymentStatus = correspondingPayment ? correspondingPayment.status : 'N/A';
+//   console.log('Payment Status:', paymentStatus);
+//   console.log(paymentStatus.status);
+    
+//     // Create the processed data structure for each booking
+//     return {
+//       // Not from DB, hard coded
+//       paymentID: booking.booking_id,
+//       // No from DB, hard coded
+//       paymentStatus: booking.status,
+//       bookingID: booking.booking_id,
+//       bookingStatus: booking.status,
+//       listingID: booking.listing_id,
+//       listing: '', // Replace with logic to extract from allListingData using booking.listing_id
+//       providerID: '', // Replace with logic to extract from allListingData using booking.listing_id
+//       provider: '', // Replace with logic to extract from allUserData using the providerID
+//       check_in: booking.check_in,
+//       check_out: booking.check_out,
+//       musicianID: '', // Replace with logic to extract from allUserData using booking.user_id
+//       musician: '', // Replace with logic to extract from allUserData using booking.user_id
+//       edit: mdiPencil,
+//       delete: mdiDelete,
+//     };
+//   });
+
+//   // Log the processed data for debugging
+//   console.log(processedData);
+
+//   // Return the processed data
+//   return processedData;
+// };
+
+
 const getPaymentData = async () => {
   return Promise.all(bookingData.value.map(async booking => {
     const listingID = await getListingName(booking.listing_id);
@@ -105,9 +176,7 @@ const getPaymentData = async () => {
     const provider = await getUserName(listing.user_id);
     const payment = await getPaymentID(booking.payment_id);
     const paymentID = await getPaymentByID(booking.payment_id);
-    // const paymentStatus = await getPaymentStatus(payment.status);
-    const paymentsForBooking = paymentData.value.filter(payment => payment.booking_id === booking.booking_id);
-    const paymentStatus = paymentsForBooking.length > 0 ? paymentsForBooking[0].status : 'N/A';
+    const paymentStatus = await getPaymentStatus(booking.payment_id);
 
     console.log('Booking:', booking);
     console.log('ListingID:', listingID);
@@ -117,27 +186,134 @@ const getPaymentData = async () => {
     console.log('Payment:', payment);
     console.log('PaymentID:', paymentID);
     console.log('Payment Status:', paymentStatus);
+    
+    // Extracting paymentID and paymentStatus for the specific booking
+    const paymentIDsAndStatus = paymentID.map(payment => ({
+    paymentID: payment.payment_id,
+    paymentStatus: payment.status
+    }));
 
-    const Payment = paymentData.value.find((payment) => payment.booking_id === booking.booking_id);
+    console.log('Payment IDs and Status:', paymentIDsAndStatus);
 
+    // Able to extract paymentID and paymentStatus from DB, but can't manage to put into the headers: value object
+    // Take the first payment for the booking
+    const firstPayment = paymentIDsAndStatus[0];
+    console.log(firstPayment);
+    // Take the second payment for the booking
+    const secondPayment = paymentIDsAndStatus[1];
+    console.log(secondPayment);
+
+    paymentIDsAndStatus.forEach(entry => {
+    console.log('Processing payment:');
+    console.log('Payment ID:', entry.paymentID);
+    console.log('Payment Status:', entry.paymentStatus);
+    });
+
+    const processedPayment = paymentIDsAndStatus.map(entry => entry.paymentStatus)
+    console.log(processedPayment);
+
+
+
+    
     return {
-      paymentID: Payment ? Payment.payment_id : 'N/A',
-      paymentStatus: paymentStatus,
+      // PaymentID still not very convincing 
+      paymentID: booking.booking_id,
+      // PaymentStatus hard coded, not from DB
+      // Flatten the paymentStatus array into a comma-separated string
+      paymentStatus: booking.status,   
       bookingID: booking.booking_id,
       bookingStatus: booking.status,
-      listing: listing.name,
       listingID: booking.listing_id,
-      provider: provider,
+      listing: listing.name,
       providerID: listing.user_id,
+      provider: provider,
       check_in: booking.check_in,
       check_out: booking.check_out,
-      musician: musician,
       musicianID: booking.user_id,
+      musician: musician,
       edit: mdiPencil,
       delete: mdiDelete,
     };
   }));
 };
+
+// const getPaymentData = async () => {
+//   return Promise.all(bookingData.value.map(async booking => {
+//     const listingID = await getListingName(booking.listing_id);
+//     const listing = await getListingInfo(booking.listing_id)
+//     const musician = await getUserName(booking.user_id);
+//     const provider = await getUserName(listing.user_id);
+//     const payment = await getPaymentID(booking.payment_id);
+//     const paymentID = await getPaymentByID(booking.payment_id);
+//     const paymentStatus = await getPaymentStatus(booking.payment_id);
+
+//     console.log('Booking:', booking);
+//     console.log('ListingID:', listingID);
+//     console.log('Listing:', listing);
+//     console.log('ProviderID:', provider);
+//     console.log('Musician:', musician);
+//     console.log('Payment:', payment);
+//     console.log('PaymentID:', paymentID);
+//     console.log('Payment Status:', paymentStatus);
+    
+//     // Extracting paymentID and paymentStatus for the specific booking
+//     const paymentIDsAndStatus = paymentID.map(payment => ({
+//     paymentID: payment.payment_id,
+//     paymentStatus: payment.status
+//     }));
+
+//     console.log('Payment IDs and Status:', paymentIDsAndStatus);
+
+//     // Able to extract paymentID and paymentStatus from DB, but can't manage to put into the headers: value object
+//     // Take the first payment for the booking
+//     const firstPayment = paymentIDsAndStatus[0];
+//     console.log(firstPayment);
+//     // Take the second payment for the booking
+//     const secondPayment = paymentIDsAndStatus[1];
+//     console.log(secondPayment);
+
+//     paymentIDsAndStatus.forEach(entry => {
+//     console.log('Processing payment:');
+//     console.log('Payment ID:', entry.paymentID);
+//     console.log('Payment Status:', entry.paymentStatus);
+//     });
+
+//     const processedPayment = paymentIDsAndStatus.map(entry => entry.paymentStatus)
+//     console.log(processedPayment);
+
+
+
+    
+//     return {
+//       // PaymentID still not very convincing 
+//       paymentID: booking.booking_id,
+//       // PaymentStatus hard coded, not from DB
+//       // Flatten the paymentStatus array into a comma-separated string
+//        paymentStatus: '',
+//       bookingID: booking.booking_id,     
+//       bookingID: booking.booking_id,
+//       bookingStatus: booking.status,
+//       listingID: booking.listing_id,
+//       listing: listing.name,
+//       providerID: listing.user_id,
+//       provider: provider,
+//       check_in: booking.check_in,
+//       check_out: booking.check_out,
+//       musicianID: booking.user_id,
+//       musician: musician,
+//       edit: mdiPencil,
+//       delete: mdiDelete,
+//     };
+//   }));
+// };
+
+
+
+
+
+
+
+
 
 
 // const generalData = ref([]);
@@ -220,14 +396,14 @@ const headers = [
   { title: 'Payment Status', key: 'paymentStatus' },
   { title: 'Booking_ID', key: 'bookingID' },
   { title: 'Booking Status', key: 'bookingStatus' },
-  { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
   { title: 'Listing_ID', key: 'listingID' },
-  { title: 'Provider', key: 'provider' },
+  { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
   { title: 'Provider_ID', key: 'providerID' },
+  { title: 'Provider', key: 'provider' },
   { title: 'check_in', key: 'check_in' },
   { title: 'check_out', key: 'check_out' },
-  { title: 'Musician', key: 'musician' },
   { title: 'Musician_ID', key: 'musicianID' },
+  { title: 'Musician', key: 'musician' },
   { title: 'Edit', key: 'edit' },
   { title: 'Delete', key: 'delete' },
 ];
@@ -588,11 +764,13 @@ async function countBookings() {
              </div>
              
              <div style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
-             <RouterLink to="/createListingAdmin" style="text-decoration: none;">
+              <RouterLink to="underconstruction" style="text-decoration: none;">
+              <!-- <RouterLink to="/createListingAdmin" style="text-decoration: none;"> -->
                  <Button text="Create Listing" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
 
-             <RouterLink to="/listingCard" style="text-decoration: none;">
+             <RouterLink to="underconstruction" style="text-decoration: none;">
+             <!-- <RouterLink to="/listingCard" style="text-decoration: none;"> -->
                  <Button text="Create Booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
              </div>
@@ -621,9 +799,13 @@ async function countBookings() {
     </v-data-table> -->
     <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
     <v-data-table v-if="generalData && generalData.length" :headers="headers" :items="generalData" class="elevation-1 mt-10">
-    <template v-slot:item.paymentStatus="{ item }">
-      <v-chip :color="getPaymentStatuses(item.paymentStatus)">
-        {{ item.paymentStatus }}
+    
+    
+      <template v-slot:item.paymentStatus="{ item }">
+        <v-chip :color="getBookingStatus(item.bookingStatus)">
+      <!-- <v-chip :color="getPaymentStatuses(item.paymentStatus)"> -->
+        <!-- {{ item.paymentStatus }} -->
+        {{ item.bookingStatus }}
       </v-chip>
     </template>
 

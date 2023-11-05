@@ -373,17 +373,17 @@ async function createPayment() {
             timeslot_datetime_end: checkOutBooking // AUTO FILLED original data from DB
         };
 
-        // Make PUT request to CREATE timeslot data
-        const responseTimeslot = await axios.post(`http://localhost:8080/timeslot/timeslot`, timeslotBookingData);
+        // Make PUT request to CREATE timeslot data (maybe consider linking to listing ID?)
+        // const responseTimeslot = await axios.post(`http://localhost:8080/timeslot/timeslot`, timeslotBookingData);
 
-        console.log(responseTimeslot.data);
+        // console.log(responseTimeslot.data);
        
 
         // Open a new tab with the Stripe checkout session URL
         window.open(checkoutSessionUrl, '_blank');
 
         // ... (remaining logic)
-        // router.push('/')
+        router.push('/')
 
     } catch (error) {
         console.error('Error creating payment:', error);

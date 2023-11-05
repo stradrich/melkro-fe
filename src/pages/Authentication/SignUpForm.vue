@@ -18,6 +18,9 @@ const isValid = ref(false);
 const isLoading = ref(false);
 const password = ref(undefined);
 const selectedRole = ref(null); 
+const firstName = ''
+const lastName = ''
+const major = ''
 
 const rules = {
   username: [
@@ -39,7 +42,7 @@ const submitForm = async () => {
   try {
     // Call your registerUser function from the pinia store
     // await authStore.registerUser(username.value, email.value, password.value, selectedRole.value);
-    await authStore.registerUser(username.value, undefined, undefined, email.value, password.value, undefined, selectedRole.value);
+    await authStore.registerUser(username.value,  email.value, password.value, selectedRole.value, firstName, lastName,  major );
 
     router.push('/login')
   } catch (error) {
