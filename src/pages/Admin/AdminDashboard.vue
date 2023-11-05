@@ -97,77 +97,6 @@ onMounted(async () => {
   }
 });
 
-// const getPaymentData = async () => {
-//   // Fetch all user data
-//   const allUserData = await axios.get('http://localhost:8080/users/users');
-
-//   // Fetch all listing data
-//   const allListingData = await axios.get('http://localhost:8080/listings/');
-
-//   // Fetch all booking data
-//   const allBookingData = await axios.get('http://localhost:8080/bookings/bookings');
-//   console.log('Booking Data:', allBookingData.data);
-
-//   // Fetch all timeslot data
-//   const allTimeslotData = await axios.get('http://localhost:8080/timeslot/timeslot');
-
-//   // Fetch all payment data
-//   const allPaymentData = await axios.get('http://localhost:8080/payment/payment/');
-
-//   // Extract payment data from the response
-//   const paymentData = allPaymentData.data;
-//   console.log('Payment Data:', paymentData);
-
-//   // console.log('Booking Data:', allBookingData.data.map(booking => ({ bookingID: booking.booking_id, paymentID: booking.payment_id })));
-
-
-
-//   // Process the booking data to create the desired structure
-//   const processedData = allBookingData.data.map(booking => {
-//   // Log the booking ID for reference
-//   console.log('Booking ID:', booking.booking_id);
-
-//   // Find the corresponding payment object based on booking.payment_id
-//   const correspondingPayment = paymentData.find(payment => payment.payment_id === booking.payment_id);
-//   console.log('Corresponding Payment:', correspondingPayment);
-
-//   // Extract payment ID and status from the corresponding payment object
-//   const paymentID = correspondingPayment ? correspondingPayment.payment_id : 'N/A';
-//   console.log('Payment ID:', paymentID);
-//   console.log(paymentID.payment_id);
-//   const paymentStatus = correspondingPayment ? correspondingPayment.status : 'N/A';
-//   console.log('Payment Status:', paymentStatus);
-//   console.log(paymentStatus.status);
-    
-//     // Create the processed data structure for each booking
-//     return {
-//       // Not from DB, hard coded
-//       paymentID: booking.booking_id,
-//       // No from DB, hard coded
-//       paymentStatus: booking.status,
-//       bookingID: booking.booking_id,
-//       bookingStatus: booking.status,
-//       listingID: booking.listing_id,
-//       listing: '', // Replace with logic to extract from allListingData using booking.listing_id
-//       providerID: '', // Replace with logic to extract from allListingData using booking.listing_id
-//       provider: '', // Replace with logic to extract from allUserData using the providerID
-//       check_in: booking.check_in,
-//       check_out: booking.check_out,
-//       musicianID: '', // Replace with logic to extract from allUserData using booking.user_id
-//       musician: '', // Replace with logic to extract from allUserData using booking.user_id
-//       edit: mdiPencil,
-//       delete: mdiDelete,
-//     };
-//   });
-
-//   // Log the processed data for debugging
-//   console.log(processedData);
-
-//   // Return the processed data
-//   return processedData;
-// };
-
-
 const getPaymentData = async () => {
   return Promise.all(bookingData.value.map(async booking => {
     const listingID = await getListingName(booking.listing_id);
@@ -237,159 +166,6 @@ const getPaymentData = async () => {
   }));
 };
 
-// const getPaymentData = async () => {
-//   return Promise.all(bookingData.value.map(async booking => {
-//     const listingID = await getListingName(booking.listing_id);
-//     const listing = await getListingInfo(booking.listing_id)
-//     const musician = await getUserName(booking.user_id);
-//     const provider = await getUserName(listing.user_id);
-//     const payment = await getPaymentID(booking.payment_id);
-//     const paymentID = await getPaymentByID(booking.payment_id);
-//     const paymentStatus = await getPaymentStatus(booking.payment_id);
-
-//     console.log('Booking:', booking);
-//     console.log('ListingID:', listingID);
-//     console.log('Listing:', listing);
-//     console.log('ProviderID:', provider);
-//     console.log('Musician:', musician);
-//     console.log('Payment:', payment);
-//     console.log('PaymentID:', paymentID);
-//     console.log('Payment Status:', paymentStatus);
-    
-//     // Extracting paymentID and paymentStatus for the specific booking
-//     const paymentIDsAndStatus = paymentID.map(payment => ({
-//     paymentID: payment.payment_id,
-//     paymentStatus: payment.status
-//     }));
-
-//     console.log('Payment IDs and Status:', paymentIDsAndStatus);
-
-//     // Able to extract paymentID and paymentStatus from DB, but can't manage to put into the headers: value object
-//     // Take the first payment for the booking
-//     const firstPayment = paymentIDsAndStatus[0];
-//     console.log(firstPayment);
-//     // Take the second payment for the booking
-//     const secondPayment = paymentIDsAndStatus[1];
-//     console.log(secondPayment);
-
-//     paymentIDsAndStatus.forEach(entry => {
-//     console.log('Processing payment:');
-//     console.log('Payment ID:', entry.paymentID);
-//     console.log('Payment Status:', entry.paymentStatus);
-//     });
-
-//     const processedPayment = paymentIDsAndStatus.map(entry => entry.paymentStatus)
-//     console.log(processedPayment);
-
-
-
-    
-//     return {
-//       // PaymentID still not very convincing 
-//       paymentID: booking.booking_id,
-//       // PaymentStatus hard coded, not from DB
-//       // Flatten the paymentStatus array into a comma-separated string
-//        paymentStatus: '',
-//       bookingID: booking.booking_id,     
-//       bookingID: booking.booking_id,
-//       bookingStatus: booking.status,
-//       listingID: booking.listing_id,
-//       listing: listing.name,
-//       providerID: listing.user_id,
-//       provider: provider,
-//       check_in: booking.check_in,
-//       check_out: booking.check_out,
-//       musicianID: booking.user_id,
-//       musician: musician,
-//       edit: mdiPencil,
-//       delete: mdiDelete,
-//     };
-//   }));
-// };
-
-
-
-
-
-
-
-
-
-
-// const generalData = ref([]);
-
-// onMounted(async () => {
-//   try {
-//     const fetchData = async (url, targetRef, targetName) => {
-//       const response = await axios.get(url);
-//       targetRef.value = response.data;
-//       console.log(`Fetched ${targetName} data:`, targetRef.value);
-//     };
-
-//     // Fetch data from different tables
-//     await Promise.all([
-//       fetchData('http://localhost:8080/users/users', userData, 'users'),
-//       fetchData('http://localhost:8080/listings/', listingsData, 'space listings'),
-//       fetchData('http://localhost:8080/bookings/bookings', bookingData, 'bookings'),
-//       fetchData('http://localhost:8080/timeslot/timeslot', timeslotData, 'timeslots'),
-//       fetchData('http://localhost:8080/payment/payment/', paymentData, 'payments'),
-//     ]);
-
-//     // Populate generalData after fetching all necessary data
-//     const dataPromises = bookingData.value.map(async booking => {
-//       const listing = await getListingName(booking.listing_id);
-//       const provider = await getUserName(booking.user_id);
-//       const musician = await getUserName(booking.musician_id);
-//       const paymentStatus = await getPaymentStatus(booking.payment_id);
-
-//       return {
-//         bookingID: booking.booking_id,
-//         paymentID: booking.payment_id,
-//         status: paymentStatus,
-//         listing: listing,
-//         listingID: booking.listing_id,
-//         provider: provider,
-//         providerID: booking.user_id,
-//         check_in: booking.check_in,
-//         check_out: booking.check_out,
-//         musician: musician,
-//         musicianID: booking.musician_id,
-//         edit: mdiPencil,
-//         delete: mdiDelete,
-//       };
-//     });
-
-//     // Wait for all promises to resolve
-//     generalData.value = await Promise.all(dataPromises);
-
-//     console.log('General Data:', generalData.value);
-
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
-
-// onMounted(async () => {
-//   try {
-//     const fetchData = async (url, targetRef, targetName) => {
-//       const response = await axios.get(url);
-//       targetRef.value = response.data;
-//       console.log(`Fetched ${targetName} data:`, targetRef.value);
-//     };
-
-//     // Fetch data from different tables
-//     await Promise.all([
-//       fetchData('http://localhost:8080/users/users', userData, 'users'),
-//       fetchData('http://localhost:8080/listings/', listingsData, 'space listings'),
-//       fetchData('http://localhost:8080/bookings/bookings', bookingData, 'bookings'),
-//       fetchData('http://localhost:8080/timeslot/timeslot', timeslotData, 'timeslots'),
-//       fetchData('http://localhost:8080/payment/payment/', paymentData, 'payments'),
-//     ]);
-
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
 
 const headers = [
   { title: 'Payment_ID', key: 'paymentID' },
@@ -457,39 +233,13 @@ const dummyData = [
             check_in: '00:00',
             check_out: '00:00',
             musician: 'stradrich',
-              musicianID: 1,
+            musicianID: 1,
             edit: 'mdiPencil',
             delete: 'mdiDelete'
             
           },
  ];
 
-//  const generalData = computed(() => {
-//   return bookingData.value.map(async booking => {
-//     const listing = await getListingName(booking.listing_id);
-//     const provider = await getUserName(booking.user_id);
-//     const musician = await getUserName(booking.musician_id);
-//     const paymentStatus = await getPaymentStatus(booking.payment_id);
-
-//     return {
-//       bookingID: booking.booking_id,
-//       paymentID: booking.payment_id,
-//       status: paymentStatus,
-//       listing: listing,
-//       listingID: booking.listing_id,
-//       provider: provider,
-//       providerID: booking.user_id,
-//       check_in: booking.check_in,
-//       check_out: booking.check_out,
-//       musician: musician,
-//       musicianID: booking.musician_id,
-//       edit: mdiPencil,
-//       delete: mdiDelete,
-//     };
-//   });
-// });
-
-// console.log('General Data:', generalData.value);
 
 
 const getListingName = async (listingId) => {
@@ -541,13 +291,6 @@ const getPaymentStatus = async (bookingId) => {
 
 
 
-
-
-
-
-
-
-
 function editItem(item) {
       // Handle edit action
       console.log('Edit item:', item);
@@ -582,91 +325,6 @@ const getBookingStatus = (bookingStatus) => {
 
 
 
-
-
-
-// onMounted(async () => {
-//   try {
-//     //fetch data from user sql table
-//     //fetch data from space_listings sql table
-//     //fetch data from bookings sql table
-//     //fetch data from timeslot sql table
-//     //fetch data from payment sql table
-  
-   
-
-    
-//   } catch (error) {
-//     console.error(error);
-//   }
-// })
-// const getCounts = async () => {
-//   try {
-//     const [userData, listingsData, bookingData, timeslotData, paymentData] = await Promise.all([
-//       axios.get('http://localhost:8080/users/users'),
-//       axios.get('http://localhost:8080/listings/'),
-//       axios.get('http://localhost:8080/bookings/bookings'),
-//       axios.get('http://localhost:8080/timeslot/timeslot'),
-//       axios.get('http://localhost:8080/payment/payment/'),
-//     ]);
-
-//     console.log('Fetched users data:', userData.data);
-//     console.log('Fetched space listings data:', listingsData.data);
-//     console.log('Fetched bookings data:', bookingData.data);
-//     console.log('Fetched timeslots data:', timeslotData.data);
-//     console.log('Fetched payments data:', paymentData.data);
-
-// const providerCount = userData.data.filter(item => item.status === 'provider').length;
-// const musicianCount = userData.data.filter(item => item.status === 'musician').length;
-// const listingCount = listingsData.data.filter(item => item.status === 'listing').length;
-// const bookingCount = bookingData.data.filter(item => item.status === 'booking').length;
-
-
-//     console.log('Provider Count:', providerCount);
-//     console.log('Musician Count:', musicianCount);
-//     console.log('Listing Count:', listingCount);
-//     console.log('Booking Count:', bookingCount);
-
-//     return {
-//       providerCount,
-//       musicianCount,
-//       listingCount,
-//       bookingCount,
-//     };
-//   } catch (error) {
-//     console.error(error);
-//     throw error; // Handle the error as needed
-//   }
-// };
-
-// // Example usage
-// const counts = await getCounts();
-
-
-// const getCounts = () => {
-// console.log('Fetched users data:', userDataResponse.data);
-// console.log('Fetched space listings data:', listingsDataResponse.data);
-// console.log('Fetched bookings data:', bookingDataResponse.data);
-// console.log('Fetched timeslots data:', timeslotDataResponse.data);
-// console.log('Fetched payments data:', paymentDataResponse.data);
-
-//   const providerCount = generalData.value.filter(item => item.status === 'provider').length;
-//   const musicianCount = generalData.value.filter(item => item.status === 'musician').length;
-//   const listingCount = generalData.value.filter(item => item.status === 'listing').length;
-//   const bookingCount = generalData.value.filter(item => item.status === 'booking').length;
-
-//   console.log(providerCount);
-//   console.log(musicianCount);
-//   console.log(listingCount);
-//   console.log(bookingCount);
-
-//   return {
-//     providerCount,
-//     musicianCount,
-//     listingCount,
-//     bookingCount,
-//   };
-// };
 async function countProviders() {
   try {
     const response = await axios.get('http://localhost:8080/users/users');
@@ -733,7 +391,7 @@ async function countBookings() {
         </div>
 
         <div class="mt-10 mb-5 ml-5">
-          <v-btn class="mx-2">Edit Profile</v-btn>
+          <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
           <v-btn class="mx-2">Delete Account</v-btn>
         </div>
        
@@ -801,7 +459,7 @@ async function countBookings() {
     <v-data-table v-if="generalData && generalData.length" :headers="headers" :items="generalData" class="elevation-1 mt-10">
     
     
-      <template v-slot:item.paymentStatus="{ item }">
+    <template v-slot:item.paymentStatus="{ item }">
         <v-chip :color="getBookingStatus(item.bookingStatus)">
       <!-- <v-chip :color="getPaymentStatuses(item.paymentStatus)"> -->
         <!-- {{ item.paymentStatus }} -->

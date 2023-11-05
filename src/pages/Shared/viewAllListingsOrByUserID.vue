@@ -482,7 +482,7 @@ const createBooking = async (clickedListingId, ownerId) => {
 
       
       <!-- <img :src="listing.src" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;"> -->
-        <img src="/src/assets/IMG_1280.PNG" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
+        <!-- <img src="/src/assets/IMG_1280.PNG" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;"> -->
 
       
         <div v-if="currentUser && currentUser.role === 'admin' || currentUser.role === 'provider'  " style="display: flex; justify-content: space-evenly;">
