@@ -4,7 +4,7 @@ import { useAuthStores } from '../../stores/auth';
 import { useRouter } from 'vue-router';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
-
+import axios from 'axios';
 const router = useRouter();
 const authStore = useAuthStores();
 
@@ -53,10 +53,58 @@ const login = async () => {
 };
 
 
-const forgotPassword = () => {
-  // Add logic for handling forgot password
-  console.log('Forgot Password? Clicked');
+const forgotPassword = async () => {
+  try {
+    // Prompt the user for their email
+    const userEmail = prompt('Enter your email:');
+    
+    if (!userEmail) {
+      console.log('Email input canceled or empty. Forgot Password request aborted.');
+      return;
+    }
+
+    console.log('Forgot Password? Clicked');
+
+    // Send a POST request to the forgot password endpoint with the user's email
+    const response = await axios.post('http://localhost:8080/auth/forgotPwd', {
+      email: userEmail,
+    });
+
+    // Add logic for handling the response, e.g., showing a success message to the user
+    alert('Password reset request successful. Check your email for further instructions.');
+
+    // Ask the user if they want to reset their password immediately
+    const resetConfirmed = confirm('Do you want to reset your password now?');
+
+    if (resetConfirmed) {
+      // Prompt the user to enter a new password
+      const newPassword = prompt('Enter your new password:');
+
+      if (newPassword) {
+        // Get the reset token from the response or other source
+        const resetToken = response.data.resetToken;
+
+        // Send a POST request to reset the password with the new password and reset token
+        await axios.post('http://localhost:8080/auth/resetPwd', {
+          newPassword,
+          resetToken,
+        });
+
+        // Add logic for handling the reset success, e.g., showing a success message
+        alert('Password reset successful. You can now login with your new password.');
+      } else {
+        // Handle the case where the user canceled or entered an empty password
+        alert('Password reset canceled or empty password entered.');
+      }
+    }
+  } catch (error) {
+    alert('Password reset request failed:', error);
+    // Add logic for handling errors, e.g., showing an error message to the user
+  }
 };
+
+
+
 
 const signUp = () => {
   // Add logic for handling sign up

@@ -222,6 +222,14 @@ const routes = [
         component: () => import('../../src/pages/Musician/UpdateBooking.vue')
     }, 
     {
+        path: '/updateProfile',
+        name: 'Update Profile',
+        meta: {
+            title: 'Update Profile'
+        },
+        component: () => import('../pages/Shared/editProfile.vue')
+    },
+    {
         path: '/stripePaymentLink',
         name: 'Stripe Payment Link',
         meta: {

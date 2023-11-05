@@ -12,37 +12,188 @@ import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import Button from '../../components/Button.vue';
 // import CreateListingForm from '../../pages/Provider/CreateListingForm.vue'
 // import UserIcon from '../../components/icons/UserIcon'
+
 import { useAuthStores } from '../../stores/auth';
+import { useUserStores } from '../../stores/user';
 import { useListingStores } from '../../stores/listing';
+import { useBookingStores } from '../../stores/booking';
+import { usePaymentStores } from '../../stores/payment'
+import { useAdminStores } from '../../stores/admin'
 
 
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
 const router = useRouter();
 
+import axios from 'axios';
+
 const authStore = useAuthStores();
+const userStore = useUserStores();
 const listingStore = useListingStores();
+const bookingStore = useBookingStores();
+const paymentStore = usePaymentStores();
+const adminStore = useAdminStores();
+
+const userData = ref([]);
+// console.log(`User Data:`,userData);
+const listingsData = ref([]);
+// console.log(`Listing Data`,listingsData);
+const bookingData = ref([]); 
+// console.log(`Booking Data`, bookingData);
+const timeslotData = ref([]);
+// console.log(`Timeslot Data`,timeslotData);
+const paymentData = ref([]);
+// console.log(`Payment Data`, paymentData);
+
+const generalData = ref([]);
+
+const fetchData = async () => {
+  const [userDataResponse, listingsDataResponse, bookingDataResponse, timeslotDataResponse, paymentDataResponse] = await Promise.all([
+    axios.get('http://localhost:8080/users/users'),
+    axios.get('http://localhost:8080/listings/'),
+    axios.get('http://localhost:8080/bookings/bookings'),
+    axios.get('http://localhost:8080/timeslot/timeslot'),
+    axios.get('http://localhost:8080/payment/payment/'),
+  ]);
+
+  userData.value = userDataResponse.data;
+  listingsData.value = listingsDataResponse.data;
+  bookingData.value = bookingDataResponse.data;
+  timeslotData.value = timeslotDataResponse.data;
+  paymentData.value = paymentDataResponse.data;
+
+  // console.log('Fetched users data:', userData.value);
+  // console.log('Fetched space listings data:', listingsData.value);
+  // console.log('Fetched bookings data:', bookingData.value);
+  // console.log('Fetched timeslots data:', timeslotData.value);
+  // console.log('Fetched payments data:', paymentData.value);
+};
+
+const realData = ref([]);
+
+// onMounted(async () => {
+//   try {
+
+//     // await fetchData();
+
+//     // Populate generalData after fetching all necessary data
+//     generalData.value = await getGeneralData();
+
+//     console.log('General Data:', generalData.value);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
+onMounted(async () => {
+  try {
+    // Fetch data and populate generalData
+    await fetchData();
+
+    // Populate generalData after fetching all necessary data
+    generalData.value = await getGeneralData();
+    console.log('Type of generalData.value:', typeof generalData.value);
+    console.log('General Data:', generalData.value);
+
+   
+
+    // Manipulate the data as needed and update realData
+    realData.value = generalData.value.bookingData.map(item => ({
+    paymentID: item.paymentData,
+    paymentStatus: item.paymentStatus,
+    bookingID: item.booking_id,
+    listing: item.listing,
+    // check_in: new Date(item.check_in).toLocaleString(),
+    // check_out: new Date(item.check_out).toLocaleString(),
+    check_in: item.check_in,
+    check_out: item.check_out,
+    musician: item.musician,
+    musicianID: item.musicianID,
+    edit: mdiPencil,
+    delete: mdiDelete,
+  }));
+
+
+    console.log('Real Data:', realData.value);
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+const getGeneralData = async () => {
+  try {
+    await fetchData();
+
+    console.log('Fetched users data:', userData.value);
+    console.log('Fetched space listings data:', listingsData.value);
+    console.log('Fetched bookings data:', bookingData.value);
+    console.log('Fetched timeslots data:', timeslotData.value);
+    console.log('Fetched payments data:', paymentData.value);
+
+    // Additional data fetching or actions
+    // const additionalData1 = await axios.get('http://localhost:8080/additionalData1');
+    // const additionalData2 = await axios.get('http://localhost:8080/additionalData2');
+
+    // console.log('Fetched additional data 1:', additionalData1.data);
+    // console.log('Fetched additional data 2:', additionalData2.data);
+
+    // Perform additional actions with the data if needed
+
+    // Combine all data into a single object if needed
+    const combinedData = {
+      userData: userData.value,
+      listingsData: listingsData.value,
+      bookingData: bookingData.value,
+      timeslotData: timeslotData.value,
+      paymentData: paymentData.value,
+    };
+
+    return combinedData;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 
 const headers = [
-  { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
+  { title: 'Payment_ID', key: 'paymentID' },
+  { title: 'Payment Status', key: 'paymentStatus'},
   { title: 'Booking_ID', key: 'bookingID' },
+  { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'check_in', key: 'check_in' },
   { title: 'check_out', key: 'check_out' },
+  { title: 'Musician_ID', key: 'musicianID'},
   { title: 'Musician', key: 'musician' },
-  { title: 'Payment_ID', key: 'paymentID' },
-  { title: 'Status', key: 'status' },
   { title: 'Edit', key: 'edit' },
   { title: 'Delete', key: 'delete' },
 ];
 
-const bookingData = [
+// template for realData
+// const realData = [
+//   {
+//     paymentID: '',
+//     paymentStatus: '',
+//     bookingID: '',
+//     listing: '',
+//     check_in: '00:00',
+//     check_out: '00:00',
+//     musician: '',
+//     musicianID: '',
+//     edit: 'mdiPencil',
+//     delete: 'mdiDelete'
+//   },
+// ];
+
+const dummyData = [
   {
-    listing: `Melkro TEST`,
+    paymentID: 'not found',
+    paymentStatus: 'pending',
     bookingID: 1,
+    listing: `Melkro TEST`,
     check_in: '00:00',
     check_out: '00:00',
     musician: 'test',
-    paymentID: 'not found',
-    status: 'pending',
+    musicianID: 1,
     edit: 'mdiPencil',
     delete: 'mdiDelete'
   },
@@ -136,7 +287,7 @@ onMounted(async () => {
         </div>
 
         <div class="mt-10 mb-5 ml-5">
-          <v-btn class="mx-2">Edit Profile</v-btn>
+          <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
           <v-btn class="mx-2">Delete Account</v-btn>
         </div>
 
@@ -201,11 +352,61 @@ onMounted(async () => {
       </template>
     </v-data-table> -->
 
-    <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
-    <template v-slot:item.status="{ value }">
+    <v-data-table :headers="headers" :items="realData" class="elevation-1 mt-10">
+    <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
+    <!-- <template v-slot:item.status="{ value }">
       <v-chip :color="getStatus(value)">
         {{ value }}
       </v-chip>
+    </template> -->
+    <template v-slot:item.paymentID="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.payment_id }}
+      </td>
+    </template>
+
+    <template v-slot:item.paymentStatus="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.paymentStatus }}
+      </td>
+    </template>
+
+    <template v-slot:item.bookingID="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.bookingID }}
+      </td>
+    </template>
+
+    <template v-slot:item.listing="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.listing }}
+      </td>
+    </template>
+
+    <template v-slot:item.check_in="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.check_in }}
+        <!-- {{ new Date(it  em.check_in).toLocaleString() }} -->
+      </td>
+    </template>
+
+    <template v-slot:item.check_out="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.check_out }}
+        <!-- {{ new Date(item.check_out).toLocaleString() }} -->
+      </td>
+    </template>
+
+    <template v-slot:item.musician="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.musician }}
+      </td>
+    </template>
+
+    <template v-slot:item.musicianID="{ item }">
+      <td class="v-data-table__td v-data-table-column--align-start">
+        {{ item.musicianID }}
+      </td>
     </template>
 
     <template v-slot:item.edit="{ item }">
