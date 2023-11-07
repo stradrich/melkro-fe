@@ -34,7 +34,10 @@ const bookingStore = useBookingStores();
 const paymentStore = usePaymentStores();
 const adminStore = useAdminStores();
 
+const userMajor = ref('');
 const generalData = ref([]);
+
+
 
 onMounted(async () => {
   try {
@@ -54,16 +57,22 @@ onMounted(async () => {
     console.log(`Timeslot Data`, timeslotsData);
     console.log(`Payment Data`, paymentsData);
 
+    // Fetch user major
+    userMajor.value = await getUserMajor(authStore.currentUser?.id, usersData);
+
     let filteredBookingsData = [];
 
     const userRole = authStore.currentUser?.role;
+    const userCurrentID = authStore.currentUser?.id;
 
     if (userRole === 'musician') {
-      const musicianBookings = bookingsData.filter(b => b.user_id === authStore.currentUser?.id);
-      filteredBookingsData = [...musicianBookings];
+      // If the user is a musician, filter bookings by their user_id
+      filteredBookingsData = bookingsData.filter(b => b.user_id === userCurrentID);
     } else {
+      // If the user is an admin or provider, fetch all bookings
       filteredBookingsData = [...bookingsData];
     }
+
 
     const generalDataPromises = filteredBookingsData.map(async (booking) => {
       const listing = listingsData.find(l => l.listing_id === booking.listing_id);
@@ -363,11 +372,6 @@ const getUserNameByUserId = async (userProviderId) => {
 };
 
 
-
-
-
-
-
 const getAllUsers = async () => {
   try {
     const response = await axios.get(`http://localhost:8080/users/users`);
@@ -377,6 +381,20 @@ const getAllUsers = async () => {
     return [];
   }
 };
+
+const getUserMajor = async (userId) => {
+  try {
+    const userData = await getAllUsers();
+    const user = userData.find(user => user.user_id === userId);
+    return user ? user.major : 'N/A';
+  } catch (error) {
+    console.error('Error fetching user major:', error);
+    return 'N/A';
+  }
+};
+
+
+
 
 const getAllListings = async () => {
   try {
@@ -492,7 +510,7 @@ async function countBookingsByLoggedInUser() {
         </div>
         <div class="mt-2 ml-5 mb-5">
             <span class="mr-2">Major:</span>
-            <!-- <span>{{  authStore.currentUser?.role}}</span> -->
+            <span>{{ userMajor  }}</span>
         </div>
 
         <div class="mt-10 mb-5 ml-5">
