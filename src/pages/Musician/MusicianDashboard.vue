@@ -12,50 +12,258 @@ import Button from '../../components/Button.vue';
 // import { mdiAccount } from '@mdi/js'
 // import { aliases, mdi } from 'vuetify/iconsets/mdi'
 // import UserIcon from '../../components/icons/UserIcon'
-import { useAuthStores } from '../../stores/auth';
-import { useBookingStores } from '../../stores/booking';
 
-const authStore = useAuthStores();
-const bookingStore = useBookingStores();
+
+import { useAuthStores } from '../../stores/auth';
+import { useUserStores } from '../../stores/user';
+import { useListingStores } from '../../stores/listing';
+import { useBookingStores } from '../../stores/booking';
+import { usePaymentStores } from '../../stores/payment'
+import { useAdminStores } from '../../stores/admin'
 
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
-const action = route.query.action;
+
+import axios from 'axios';
+
+const authStore = useAuthStores();
+const userStore = useUserStores();
+const listingStore = useListingStores();
+const bookingStore = useBookingStores();
+const paymentStore = usePaymentStores();
+const adminStore = useAdminStores();
+
+const generalData = ref([]);
+
+onMounted(async () => {
+  try {
+    const count = await countBookingsByLoggedInUser();
+    numberOfBookings.value = count;
+    console.log(`The logged-in user has ${count} bookings.`);
+
+    const usersData = await getAllUsers();
+    const listingsData = await getAllListings();
+    const bookingsData = await getAllBookings();
+    const timeslotsData = await getAllTimeslots();
+    const paymentsData = await getAllPayments();
+
+    console.log(`User Data`, usersData);
+    console.log(`Listing Data`, listingsData);
+    console.log(`Booking Data`, bookingsData);
+    console.log(`Timeslot Data`, timeslotsData);
+    console.log(`Payment Data`, paymentsData);
+
+    let filteredBookingsData = [];
+
+    const userRole = authStore.currentUser?.role;
+
+    if (userRole === 'musician') {
+      const musicianBookings = bookingsData.filter(b => b.user_id === authStore.currentUser?.id);
+      filteredBookingsData = [...musicianBookings];
+    } else {
+      filteredBookingsData = [...bookingsData];
+    }
+
+    const generalDataPromises = filteredBookingsData.map(async (booking) => {
+      const listing = listingsData.find(l => l.listing_id === booking.listing_id);
+
+      const userProviderId = getuserIDbyListingID(listing.listing_id, listingsData);
+      console.log('Listing ID:', listing.listing_id);
+      console.log('Provider ID:', userProviderId);
+
+      console.log('All Users:', usersData);
+
+      let providerName;
+      try {
+        // Assuming you want to get the username using userProviderId
+        providerName = await getUserNameByUserId(userProviderId);
+        console.log('Provider ID:', userProviderId);
+        console.log('Provider name:', providerName);
+      } catch (error) {
+        console.error(error);
+      }
+
+      const paymentID = getPaymentIDByBookingID(booking.booking_id, paymentsData);
+      console.log('Payment ID:', paymentID);
+      const payment = paymentID !== 'N/A' ? await getPaymentByID(paymentID, paymentsData) : {};
+      console.log('Payment details:', payment);
+
+
+      const paymentStatus = getPaymentStatus(booking.booking_id, paymentsData);
+      
+
+      return {
+        paymentID: payment.payment_id || 'N/A',
+        paymentStatus: paymentStatus,
+        bookingID: booking.booking_id,
+        listing: listing ? listing.name : 'N/A',
+        check_in: booking.check_in,
+        check_out: booking.check_out,
+        ownerID: listing.user_id,
+        owner: providerName || 'N/A',
+        bookingStatus: booking.status,
+        edit: 'mdiPencil',
+        delete: 'mdiDelete',
+      };
+    });
+
+    generalData.value = await Promise.all(generalDataPromises);
+
+    console.log(`General Data`, generalData);
+    console.log(authStore.currentUser);
+    console.log(numberOfBookings.value);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+});
+
+
+// onMounted(async () => {
+//   try {
+//     const count = await  countBookingsByLoggedInUser();
+//     numberOfBookings.value = count;
+//     console.log(`The logged-in user has ${count} bookings.`);
+
+
+//     const usersData = await getAllUsers();
+//     const listingsData = await getAllListings();
+//     const bookingsData = await getAllBookings();
+//     const timeslotsData = await getAllTimeslots();
+//     const paymentsData = await getAllPayments();
+
+//     console.log(`User Data`, usersData);
+//     console.log(`Listing Data`,listingsData);
+//     console.log(`Booking Data`, bookingsData);
+//     console.log(`Timeslot Data`, timeslotsData);
+//     console.log(`Payment Data`, paymentsData);
+
+//     let filteredBookingsData = [];
+
+//     // Check the role of the logged-in user
+//     const userRole = authStore.currentUser?.role;
+
+//     if (userRole === 'musician') {
+//       // If the user is a musician, filter bookings by their user_id
+//       const musicianBookings = bookingsData.filter(b => b.user_id === authStore.currentUser?.id);
+//       filteredBookingsData = [...musicianBookings];
+//     } else {
+//       // If the user is an admin or provider, fetch all bookings
+//       filteredBookingsData = [...bookingsData];
+//     }
+
+ 
+//   generalData.value = filteredBookingsData.map(booking => {
+//   // const user = usersData.find(u => u.user_id === booking.user_id);
+//      const listing = listingsData.find(l => l.listing_id === booking.listing_id);
+     
+//      const userMusicianId = getuserIDbyListingID(listing.listing_id, bookingsData);
+//       console.log('Listing ID:', listing.listing_id);
+//       console.log('Musician ID:', userMusicianId);
+      
+//       const userProviderId = getuserIDbyListingID(listing.listing_id, listingsData);
+//       console.log('Listing ID:', listing.listing_id);
+//       console.log('Provider ID:', userProviderId);
+
+//       console.log('All Users:', usersData);
+      
+//       let providerName;
+//       try {
+//         // Assuming you want to get the username using userMusicianId
+//         providerName = getUserNameByUserId(userProviderId);
+//         console.log('Provider name:', providerName);
+//       } catch (error) {
+//         console.error(error);
+//         // Handle the error as needed...
+//       }
+
+      
+//       // const userMusician = usersData.find(u => u.userMusicianId  === userMusicianId);
+//       // const userProvider= usersData.find(u => u.userProviderId === userProviderId);
+      
+
+
+//       // Use getPaymentIDByBookingID to get the paymentID
+//       const paymentID = getPaymentIDByBookingID(booking.booking_id, paymentsData);
+
+//       // Use the paymentID to get payment details
+//       const payment = paymentID !== 'N/A' ? getPaymentByID(paymentID, paymentsData) : {};
+
+//       const paymentStatus = getPaymentStatus(booking.booking_id, paymentsData);
+//   // const timeslot = timeslotsData.find(t => t.timeslot_id === booking.timeslot_id);
+
+
+//   return {
+//     paymentID: payment.payment_id || 'N/A',
+//     paymentStatus: paymentStatus,
+//     bookingID: booking.booking_id,
+//     listing: listing ? listing.name : 'N/A',
+//     check_in: booking.check_in,
+//     check_out: booking.check_out,
+//     // ownerID: user ? user.user_id : 'N/A',
+//     ownerID: listing.user_id,
+//     // owner: user ? user.username : 'N/A',
+//     owner: userProviderId,
+//     bookingStatus: paymentStatus,
+//     edit: 'mdiPencil',
+//     delete: 'mdiDelete',
+//   };
+// });
+
+
+
+//     console.log(`General Data`, generalData);
+//     console.log(authStore.currentUser);
+//     console.log(numberOfBookings.value);
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//   }
+// });
 
 const headers = [
-  { title: 'Listing', align: 'start', sortable: false, key: 'listing' },
+  { title: 'Payment_ID', key: 'paymentID' },
+  { title: 'Payment Status', key: 'paymentStatus'},
   { title: 'Booking_ID', key: 'bookingID' },
+  { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'check_in', key: 'check_in' },
   { title: 'check_out', key: 'check_out' },
+  { title: 'OwnerID', key: 'ownerID' },
   { title: 'Owner', key: 'owner' },
-  { title: 'Payment_ID', key: 'paymentID' },
-  { title: 'Status', key: 'status' },
+  { title: 'Confirmation Status', key: 'bookingStatus' },
   { title: 'Edit', key: 'edit' },
   { title: 'Delete', key: 'delete' },
   // { title: 'Edit', key: 'edit', slot: 'editColumn' },
 ];
 
 // Dummy Data, keep it here!
-const bookingData = [
+const dummyData = [
   {
-    listing: `Melkro TEST`,
+    paymentID: 'not found',
+    paymentStatus: 'incomplete',
     bookingID: 1,
+    listing: `Melkro TEST`,
     check_in: '00:00',
     check_out: '00:00',
     owner: 'test',
-    paymentID: 'not found',
-    status: 'pending',
+    ownerID: 1,
+    bookingStatus: 'pending',
     edit: 'mdiPencil',
     delete: 'mdiDelete'
-    // edit: 'mdi-pencil'
-
   },
 ];
+
+
 
 function editItem(item) {
       // Handle edit action
       console.log('Edit item:', item);
+      adminStore.setSelectedItem(item);
+      
+      if (router) {
+        router.push({ name: 'Admin Multiple Edit' });
+      } else {
+        console.error('Router instance is not available.');
+      }
     }
     
 function  deleteItem(item) {
@@ -63,23 +271,166 @@ function  deleteItem(item) {
       console.log('Delete item:', item);
     }
 
-const getStatus = (status) => {
-  if (status === 'declined') return 'red';
-  else if (status === 'pending') return 'orange';
-  else return 'green';
+const getUserName = (userId, usersData) => {
+const user = usersData.find(item => item.user_id === userId);
+return user ? user.username : 'N/A';
 };
 
-const currentUserEmail = ref('');
 
-// Watch for changes in authStore.currentUser
-// watch(() => authStore.currentUser, async (newUser) => {
-//   try {
-//     await authStore.getCurrentUser(); // Assuming getCurrentUser is an async method
-//     currentUserEmail.value = authStore.currentUser.email;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
+
+const getProviderNameByListingId = async (listingId) => {
+  try {
+    const allListings = await getAllListings();
+    const listing = allListings.find(listing => listing.listing_id === listingId);
+    return listing ? listing.providerName : null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const getListingInfo = (listingId, listingsData) => {
+const listing = listingsData.find(item => item.listing_id === listingId);
+return listing || {}; // Return an empty object if not found
+};
+
+
+
+
+const getPaymentID = (paymentData) => {
+// Assuming paymentData is an array of payments
+const paymentIDs = paymentData.map(payment => payment.payment_id);
+return paymentIDs.length > 0 ? paymentIDs : ['N/A'];
+};
+
+const getPaymentByID = async (paymentId, paymentData) => {
+// Implement logic to fetch payment details from paymentData
+// You should replace this with your actual implementation
+const payment = paymentData.find(payment => payment.payment_id === paymentId);
+return payment || {}; // Return an empty object if not found
+};
+
+const getPaymentIDByBookingID = (bookingID, paymentsData) => {
+  console.log('Input Parameters - Booking ID:', bookingID, 'Payments Data:', paymentsData);
+  const payment = paymentsData.find(payment => payment.booking_id === bookingID);
+  console.log('Found Payment:', payment);
+  return payment ? payment.payment_id : 'N/A';
+};
+
+
+
+const getPaymentStatus = (bookingId, paymentData) => {
+// Assuming bookingId is used to filter payments for a specific booking
+const paymentsForBooking = paymentData.filter(payment => payment.booking_id === bookingId);
+
+// Check if there are payments for the booking
+if (paymentsForBooking.length > 0) {
+  // Get the status from the first payment
+  return paymentsForBooking[0].status;
+} else {
+  return 'N/A';
+}
+};
+
+const getuserIDbyListingID = (listingId, bookingsData) => {
+  const booking = bookingsData.find(b => b.listing_id === listingId);
+  return booking ? booking.user_id : null;
+  
+};
+
+
+const getUserNameByUserId = async (userProviderId) => {
+  try {
+    const allUsers = await getAllUsers();
+    console.log('All Users:', allUsers);
+
+    const user = allUsers.find(user => {
+      console.log('Accessing User Data:', user);
+      console.log('User ID:', user.user_id); // access user_id
+      console.log('Requested ID:', userProviderId);
+      const isMatch = Number(user.user_id) === Number(userProviderId);
+      console.log('Match:', isMatch);
+      return isMatch;
+    });
+
+    console.log('Final User:', user);
+
+    return user ? user.username : null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+
+
+
+
+
+
+const getAllUsers = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/users/users`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getAllListings = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/listings/`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getAllBookings = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/bookings/bookings`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getAllTimeslots = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/timeslot/timeslot`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getAllPayments = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/payment/payment/`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+
+
+const getPaymentStatuses = (paymentStatus) => {
+if (paymentStatus === 'completed') return 'green';
+else if (paymentStatus === 'incomplete') return 'orange';
+else return 'red';
+};
+
+const getBookingStatus = (bookingStatus) => {
+if (bookingStatus === 'pending') return 'orange';
+else if (bookingStatus === 'confirmed') return 'green';
+else return 'red';
+};
 
 const numberOfBookings = ref(0);
 
@@ -105,15 +456,15 @@ async function countBookingsByLoggedInUser() {
   }
 }
 
-onMounted(async () => {
-  try {
-    const count = await  countBookingsByLoggedInUser();
-    numberOfBookings.value = count;
-    console.log(`The logged-in user has ${count} bookings.`);
-  } catch (error) {
-    console.error(error);
-  }
-});
+// onMounted(async () => {
+//   try {
+//     const count = await  countBookingsByLoggedInUser();
+//     numberOfBookings.value = count;
+//     console.log(`The logged-in user has ${count} bookings.`);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -122,6 +473,8 @@ onMounted(async () => {
       <Navbar/>
       <DropdownMenu2/>
 
+      <!-- {{ generalData }} -->
+    
       <div class="mt-10 flex border">
          <!-- <UserIcon/> -->
         <div class="mt-5 ml-5">
@@ -143,7 +496,7 @@ onMounted(async () => {
         </div>
 
         <div class="mt-10 mb-5 ml-5">
-          <v-btn class="mx-2">Edit Profile</v-btn>
+          <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
           <v-btn class="mx-2">Delete Account</v-btn>
         </div>
 
@@ -180,7 +533,7 @@ onMounted(async () => {
             </div>
 
             <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
-            <RouterLink  to="/UpdateBookingForm" style="text-decoration: none;">
+            <RouterLink  to="#" style="text-decoration: none;">
                 <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
             </RouterLink>
             </div>
@@ -211,9 +564,16 @@ onMounted(async () => {
     <!-- <v-icon @click="editItem(item)" style="color: red;">{{ mdiPencil }}</v-icon> -->
     <!-- <v-icon @click="deleteItem(item)" style="color: blue;">{{ mdiDelete }}</v-icon> -->
 
-  <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10">
-    <template v-slot:item.status="{ value }">
-      <v-chip :color="getStatus(value)">
+    <v-data-table v-if="generalData && generalData.length" :headers="headers" :items="generalData" class="elevation-1 mt-10">
+  <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
+    <template v-slot:item.paymentStatus="{ value }">
+      <v-chip :color="getPaymentStatuses(value)">
+        {{ value }}
+      </v-chip>
+    </template>
+
+    <template v-slot:item.bookingStatus="{ value }">
+      <v-chip :color="getBookingStatus(value)">
         {{ value }}
       </v-chip>
     </template>

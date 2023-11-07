@@ -62,62 +62,115 @@ const fetchData = async () => {
   timeslotData.value = timeslotDataResponse.data;
   paymentData.value = paymentDataResponse.data;
 
-  // console.log('Fetched users data:', userData.value);
-  // console.log('Fetched space listings data:', listingsData.value);
-  // console.log('Fetched bookings data:', bookingData.value);
-  // console.log('Fetched timeslots data:', timeslotData.value);
-  // console.log('Fetched payments data:', paymentData.value);
 };
 
-const realData = ref([]);
 
-// onMounted(async () => {
-//   try {
 
-//     // await fetchData();
 
-//     // Populate generalData after fetching all necessary data
-//     generalData.value = await getGeneralData();
 
-//     console.log('General Data:', generalData.value);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// });
 onMounted(async () => {
+ 
+  
   try {
     // Fetch data and populate generalData
     await fetchData();
 
     // Populate generalData after fetching all necessary data
-    generalData.value = await getGeneralData();
+    generalData.bookingData = await getGeneralData();
     console.log('Type of generalData.value:', typeof generalData.value);
     console.log('General Data:', generalData.value);
+    
 
-   
+   // Fetch specific data for rendering into v-data-table
+  const updatedBookings = await Promise.all(generalData.value.bookingData.map(async (item) => {
+  const paymentID = await getPaymentIdByBookingId(item.booking_id);
+  const listing = await getProviderNameByListingId(item.listing_id);
+  const musician = await getUserNameByUserId(item.user_id);
 
-    // Manipulate the data as needed and update realData
-    realData.value = generalData.value.bookingData.map(item => ({
-    paymentID: item.paymentData,
-    paymentStatus: item.paymentStatus,
+  return {
+    paymentID: paymentID,
+    paymentStatus: paymentID,
     bookingID: item.booking_id,
-    listing: item.listing,
-    // check_in: new Date(item.check_in).toLocaleString(),
-    // check_out: new Date(item.check_out).toLocaleString(),
+    listing,
     check_in: item.check_in,
     check_out: item.check_out,
-    musician: item.musician,
-    musicianID: item.musicianID,
+    musician,
+    musicianID: item.user_id,
     edit: mdiPencil,
     delete: mdiDelete,
-  }));
+  };
+}));
 
-
-    console.log('Real Data:', realData.value);
+    // Update bookingData with the fetched data
+    bookingData.value = updatedBookings;
+    console.log(updatedBookings)
   } catch (error) {
     console.error(error);
   }
 });
+
+const getAllPayments = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/payment/payment/`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getPaymentIdByBookingId = async (bookingId) => {
+  try {
+    const allPayments = await getAllPayments();
+    const payment = allPayments.find(payment => payment.booking_id === bookingId);
+    return payment ? payment.paymentId : null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const getAllListings = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/listings/`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getProviderNameByListingId = async (listingId) => {
+  try {
+    const allListings = await getAllListings();
+    const listing = allListings.find(listing => listing.listing_id === listingId);
+    return listing ? listing.providerName : null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const getAllUsers = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/users/users`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const getUserNameByUserId = async (userId) => {
+  try {
+    const allUsers = await getAllUsers();
+    const user = allUsers.find(user => user.userId === userId);
+    return user ? user.userName : null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
 
 const getGeneralData = async () => {
   try {
@@ -129,16 +182,6 @@ const getGeneralData = async () => {
     console.log('Fetched timeslots data:', timeslotData.value);
     console.log('Fetched payments data:', paymentData.value);
 
-    // Additional data fetching or actions
-    // const additionalData1 = await axios.get('http://localhost:8080/additionalData1');
-    // const additionalData2 = await axios.get('http://localhost:8080/additionalData2');
-
-    // console.log('Fetched additional data 1:', additionalData1.data);
-    // console.log('Fetched additional data 2:', additionalData2.data);
-
-    // Perform additional actions with the data if needed
-
-    // Combine all data into a single object if needed
     const combinedData = {
       userData: userData.value,
       listingsData: listingsData.value,
@@ -168,21 +211,6 @@ const headers = [
   { title: 'Delete', key: 'delete' },
 ];
 
-// template for realData
-// const realData = [
-//   {
-//     paymentID: '',
-//     paymentStatus: '',
-//     bookingID: '',
-//     listing: '',
-//     check_in: '00:00',
-//     check_out: '00:00',
-//     musician: '',
-//     musicianID: '',
-//     edit: 'mdiPencil',
-//     delete: 'mdiDelete'
-//   },
-// ];
 
 const dummyData = [
   {
@@ -260,6 +288,31 @@ onMounted(async () => {
   }
 });
 
+function deleteMe() {
+  console.log('deleteMe function called!');
+  // rest of your code
+}
+
+
+async function deleteAccount() {
+  console.log('Deleting account...');
+  try {
+    const userId = currentUser.id
+
+    // Make an API call or perform any necessary actions to delete the item
+    await axios.delete(`http://localhost:8080/bookings/${userId}`);
+
+    // Update the local bookingData array to reflect the deletion
+    // bookingData.value = bookingData.value.filter((booking) => booking.bookingID !== bookingId);
+
+    console.log('Item deleted successfully:', item);
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    // Handle error appropriately, show a message, etc.
+  }
+}
+
+
 
 </script>
 
@@ -287,11 +340,11 @@ onMounted(async () => {
         </div>
 
         <div class="mt-10 mb-5 ml-5">
-          <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
-          <v-btn class="mx-2">Delete Account</v-btn>
+          <v-btn to='#' class="mx-2">Edit Profile</v-btn>
+          <v-btn @click="deleteMe" class="mx-2">Delete Account</v-btn>
         </div>
-
-        </div>
+        
+      </div>
       
       <div class="mt-10">
          
@@ -352,7 +405,7 @@ onMounted(async () => {
       </template>
     </v-data-table> -->
 
-    <v-data-table :headers="headers" :items="realData" class="elevation-1 mt-10">
+    <v-data-table :headers="headers" :items="updatedBookings" class="elevation-1 mt-10">
     <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
     <!-- <template v-slot:item.status="{ value }">
       <v-chip :color="getStatus(value)">
@@ -361,7 +414,7 @@ onMounted(async () => {
     </template> -->
     <template v-slot:item.paymentID="{ item }">
       <td class="v-data-table__td v-data-table-column--align-start">
-        {{ item.payment_id }}
+        {{ item.payment_id}}
       </td>
     </template>
 
