@@ -537,7 +537,7 @@ const totalCost = computed(() => {
     </div>
 
     <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-        <p>Dear {{ authStore.currentUser.username }}</p> 
+        <p>Dear {{ authStore.currentUser.username}}</p> 
     </div>
 
     <div style="display: flex; justify-content: center;">
