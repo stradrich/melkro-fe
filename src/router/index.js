@@ -134,6 +134,14 @@ const routes = [
         },
         component: () => import('../pages/Provider/ProviderDashboard.vue')
     },
+    {
+        path: '/providerMultipleEdit',
+        name: 'Provider Multiple Edit',
+        meta: {
+            title: 'Provider Multiple Edit'
+        },
+        component: () => import('../pages/Provider/ProviderMultipleEdit.vue')
+    },
     // DASHBOARD (Musician)
     {
         path: '/musicianDashboard',
@@ -142,6 +150,14 @@ const routes = [
                 title: 'Musician Dashboard'
         },
         component: () => import('../pages/Musician/MusicianDashboard.vue')
+        },
+        {
+            path: '/musicianMultipleEdit',
+            name: 'Musician Multiple Edit',
+            meta: {
+                title: 'Musician Multiple Edit'
+            },
+            component: () => import('../pages/Musician/MusicianMultipleEdit.vue')
         },
     // // USERS
     // {

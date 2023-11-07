@@ -86,6 +86,7 @@ const updateProfile = async () => {
     );
 
     console.log('Update successful:', response.data);
+    router.push('/')
   } catch (error) {
     console.error('Update failed:', error);
   }

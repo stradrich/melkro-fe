@@ -52,6 +52,8 @@ const route = useRoute();
 const router = useRouter();
 const action = route.query.action;
 
+import axios from 'axios';
+
 const formData = ref({
   user_id: '',
   listing_id: '',
@@ -199,6 +201,32 @@ onMounted(async () => {
   console.log('Hello World, current user id is:', currentUser);
   // console.log('Listing Card', currentUser.value.role);
   await fetchListings(); // Fetch listings after getting the current user
+});
+
+const usernameMap = ref({}); 
+
+const getAllUsers = async () => {
+  try {
+    const response = await axios.get(`http://localhost:8080/users/users`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+// Populate the usernameMap with user data
+onMounted(async () => {
+  try {
+    const usersData = await getAllUsers();
+    console.log('User Data:', usersData);
+    usernameMap.value = usersData.reduce((map, user) => {
+      map[user.user_id] = user.username;
+      return map;
+    }, {});
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
 });
 
 
@@ -432,7 +460,10 @@ const createBooking = async (clickedListingId, ownerId) => {
     // console.log('Listing ID after navigation:', listingId.value);
 };
 
+const getUsernameById = (userId) => {
+  return usernameMap.value[userId] || 'N/A';
 
+};
 
 
 </script>
@@ -450,7 +481,7 @@ const createBooking = async (clickedListingId, ownerId) => {
     class="border mb-16"  
      v-for="(listing, index) in filteredListings"
     :key="index" 
-    style="width: 200px; margin: 10px;"
+    style="width: 280px; margin: 10px;"
     >
     <!-- @click="editDeleteOptions" -->
       <div class="mx-2">  
@@ -469,12 +500,13 @@ const createBooking = async (clickedListingId, ownerId) => {
       
         <img src="/src/assets/biro-teaching-and-learning-to-play-the-violin-1.png" :alt="listing.alt" style="width: 100%; height: 100%; object-fit: cover;">
         <h4 style="display: flex; align-items: center; ">
-          <b>{{ listing.name }}</b>
-          <p class="ml-16">Owned By: {{ listing.user_id }}</p>
+          <b class="mr-16">{{ listing.name }}</b>
+          <!-- <p class="ml-16">Owned By: {{ listing.user_id }}</p> -->
+          <p class="ml-8">owner: {{ getUsernameById(listing.user_id) }}</p>
         </h4>
         <div style="display: flex; justify-content: space-between;">
-          <p>{{ listing.description }}</p>
-          <p>{{ listing.price_per_hour }}</p>
+          <p>description: {{ listing.description }}</p>
+          <p>price: {{ listing.price_per_hour }}</p>
           
         </div>
       </div>

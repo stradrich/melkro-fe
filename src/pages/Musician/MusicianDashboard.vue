@@ -106,6 +106,7 @@ onMounted(async () => {
         paymentID: payment.payment_id || 'N/A',
         paymentStatus: paymentStatus,
         bookingID: booking.booking_id,
+        listingID: booking.listing_id,
         listing: listing ? listing.name : 'N/A',
         check_in: booking.check_in,
         check_out: booking.check_out,
@@ -233,6 +234,7 @@ const headers = [
   { title: 'Payment_ID', key: 'paymentID' },
   { title: 'Payment Status', key: 'paymentStatus'},
   { title: 'Booking_ID', key: 'bookingID' },
+  { title: 'Listing_ID', key: 'listingID' },
   { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'check_in', key: 'check_in' },
   { title: 'check_out', key: 'check_out' },
@@ -269,7 +271,7 @@ function editItem(item) {
       adminStore.setSelectedItem(item);
       
       if (router) {
-        router.push({ name: 'Admin Multiple Edit' });
+        router.push({ name: 'Musician Multiple Edit' });
       } else {
         console.error('Router instance is not available.');
       }
@@ -550,11 +552,11 @@ async function countBookingsByLoggedInUser() {
               <img :src="'/src/assets/atomic-music.png'" alt="">
             </div>
 
-            <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
+            <!-- <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
             <RouterLink  to="#" style="text-decoration: none;">
                 <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
             </RouterLink>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

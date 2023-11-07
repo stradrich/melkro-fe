@@ -319,6 +319,13 @@ const dummyData = [
 function editItem(item) {
       // Handle edit action
       console.log('Edit item:', item);
+      adminStore.setSelectedItem(item);
+      
+      if (router) {
+        router.push({ name: 'Provider Multiple Edit' });
+      } else {
+        console.error('Router instance is not available.');
+      }
     }
     
 function  deleteItem(item) {
