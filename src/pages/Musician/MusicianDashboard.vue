@@ -34,7 +34,10 @@ const bookingStore = useBookingStores();
 const paymentStore = usePaymentStores();
 const adminStore = useAdminStores();
 
+const userMajor = ref('');
 const generalData = ref([]);
+
+
 
 onMounted(async () => {
   try {
@@ -54,16 +57,22 @@ onMounted(async () => {
     console.log(`Timeslot Data`, timeslotsData);
     console.log(`Payment Data`, paymentsData);
 
+    // Fetch user major
+    userMajor.value = await getUserMajor(authStore.currentUser?.id, usersData);
+
     let filteredBookingsData = [];
 
     const userRole = authStore.currentUser?.role;
+    const userCurrentID = authStore.currentUser?.id;
 
     if (userRole === 'musician') {
-      const musicianBookings = bookingsData.filter(b => b.user_id === authStore.currentUser?.id);
-      filteredBookingsData = [...musicianBookings];
+      // If the user is a musician, filter bookings by their user_id
+      filteredBookingsData = bookingsData.filter(b => b.user_id === userCurrentID);
     } else {
+      // If the user is an admin or provider, fetch all bookings
       filteredBookingsData = [...bookingsData];
     }
+
 
     const generalDataPromises = filteredBookingsData.map(async (booking) => {
       const listing = listingsData.find(l => l.listing_id === booking.listing_id);
@@ -97,6 +106,7 @@ onMounted(async () => {
         paymentID: payment.payment_id || 'N/A',
         paymentStatus: paymentStatus,
         bookingID: booking.booking_id,
+        listingID: booking.listing_id,
         listing: listing ? listing.name : 'N/A',
         check_in: booking.check_in,
         check_out: booking.check_out,
@@ -224,6 +234,7 @@ const headers = [
   { title: 'Payment_ID', key: 'paymentID' },
   { title: 'Payment Status', key: 'paymentStatus'},
   { title: 'Booking_ID', key: 'bookingID' },
+  { title: 'Listing_ID', key: 'listingID' },
   { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'check_in', key: 'check_in' },
   { title: 'check_out', key: 'check_out' },
@@ -260,7 +271,7 @@ function editItem(item) {
       adminStore.setSelectedItem(item);
       
       if (router) {
-        router.push({ name: 'Admin Multiple Edit' });
+        router.push({ name: 'Musician Multiple Edit' });
       } else {
         console.error('Router instance is not available.');
       }
@@ -363,11 +374,6 @@ const getUserNameByUserId = async (userProviderId) => {
 };
 
 
-
-
-
-
-
 const getAllUsers = async () => {
   try {
     const response = await axios.get(`http://localhost:8080/users/users`);
@@ -377,6 +383,20 @@ const getAllUsers = async () => {
     return [];
   }
 };
+
+const getUserMajor = async (userId) => {
+  try {
+    const userData = await getAllUsers();
+    const user = userData.find(user => user.user_id === userId);
+    return user ? user.major : 'N/A';
+  } catch (error) {
+    console.error('Error fetching user major:', error);
+    return 'N/A';
+  }
+};
+
+
+
 
 const getAllListings = async () => {
   try {
@@ -492,7 +512,7 @@ async function countBookingsByLoggedInUser() {
         </div>
         <div class="mt-2 ml-5 mb-5">
             <span class="mr-2">Major:</span>
-            <!-- <span>{{  authStore.currentUser?.role}}</span> -->
+            <span>{{ userMajor  }}</span>
         </div>
 
         <div class="mt-10 mb-5 ml-5">
@@ -532,11 +552,11 @@ async function countBookingsByLoggedInUser() {
               <img :src="'/src/assets/atomic-music.png'" alt="">
             </div>
 
-            <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
+            <!-- <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
             <RouterLink  to="#" style="text-decoration: none;">
                 <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
             </RouterLink>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
