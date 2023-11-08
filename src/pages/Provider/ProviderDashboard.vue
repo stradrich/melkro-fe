@@ -121,6 +121,7 @@ onMounted(async () => {
           paymentID: paymentID,
           paymentStatus: paymentStatus,
           bookingID: bookingsForListing[0]?.booking_id,
+          listingID: bookingsForListing[0]?.listing_id,
           listing: listingName,
           check_in: bookingsForListing[0]?.check_in,
           check_out: bookingsForListing[0]?.check_out,
@@ -291,6 +292,7 @@ const headers = [
   { title: 'Payment_ID', key: 'paymentID' },
   { title: 'Payment Status', key: 'paymentStatus'},
   { title: 'Booking_ID', key: 'bookingID' },
+  { title: 'Listing_ID', key: 'listingID' },
   { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'check_in', key: 'check_in' },
   { title: 'check_out', key: 'check_out' },
@@ -329,10 +331,34 @@ function editItem(item) {
       }
     }
     
-function  deleteItem(item) {
-      // Handle delete action
-      console.log('Delete item:', item);
+    async function deleteItem(item) {
+  try {
+    // Prompt the user for confirmation
+    const userConfirmed = window.confirm('Are you sure you want to delete this booking?');
+
+    if (!userConfirmed) {
+      // If the user cancels, do nothing
+      return;
     }
+
+    const bookingID = item.bookingID;
+    const response = await axios.delete(`http://localhost:8080/bookings/bookings/${bookingID}`);
+    
+    if (response.status === 204) {
+      console.log('Booking deleted successfully.');
+      // Optionally, you can update the local state to reflect the deletion
+      const updatedGeneralData = filteredGeneralDataArray.value.filter(booking => booking.bookingID !== item.bookingID);
+      filteredGeneralDataArray.value = updatedGeneralData;
+    } else {
+      console.error('Failed to delete booking:', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+  }
+}
+
+
+
 
     const getUserName = (userId, usersData) => {
 const user = usersData.find(item => item.user_id === userId);
@@ -579,6 +605,7 @@ onMounted(async () => {
 
 function deleteMe() {
   console.log('Deleting account...');
+  router.push('/thankyouPage')
 }
 
 async function deleteAccount() {
@@ -593,6 +620,7 @@ async function deleteAccount() {
     // bookingData.value = bookingData.value.filter((booking) => booking.bookingID !== bookingId);
 
     console.log('Item deleted successfully:', item);
+    router.push('/thankyouPage')
   } catch (error) {
     console.error('Error deleting item:', error);
     // Handle error appropriately, show a message, etc.
@@ -627,7 +655,7 @@ async function deleteAccount() {
         </div>
 
         <div class="mt-10 mb-5 ml-5">
-          <v-btn to='#' class="mx-2">Edit Profile</v-btn>
+          <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
           <v-btn @click="deleteMe" class="mx-2">Delete Account</v-btn>
         </div>
         
