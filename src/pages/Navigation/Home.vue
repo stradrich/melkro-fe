@@ -51,7 +51,7 @@ const goToSignUp = () => {
 
 </script>
 
-<template>
+<template >
   
 
   <div>
