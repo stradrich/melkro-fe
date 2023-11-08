@@ -175,7 +175,7 @@ onMounted(async () => {
     id: user.id,
     username: user.username,
     email: user.email,
-    password: 'thisIsNotYourPWD',
+    password: user.password,
     firstName: user.firstName,
     lastName: user.lastName,
     major: user.major,

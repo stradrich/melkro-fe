@@ -45,7 +45,7 @@ const adminStore = useAdminStores();
 // const paymentData = ref([]);
 // console.log(`Payment Data`, paymentData);
 
-const generalData = ref([]);
+const filteredGeneralDataArray = ref([]);
 
 
 // const fetchData = async () => {
@@ -79,8 +79,6 @@ onMounted(async () => {
     console.log('Timeslot Data', timeslotsData);
     console.log('Payment Data', paymentsData);
 
-    let filteredBookingsData = [];
-
     const userRole = authStore.currentUser?.role;
     const userCurrentID = authStore.currentUser?.id;
 
@@ -90,7 +88,8 @@ onMounted(async () => {
 
     // Collect all listing_ids from bookingsData
     const listingIds = Array.from(new Set(bookingsData.map((booking) => booking.listing_id)));
-
+    
+    
     // Use Promise.all to wait for all async operations to complete
     const generalDataArray = await Promise.all(
       listingIds.map(async (listingId) => {
@@ -98,51 +97,53 @@ onMounted(async () => {
         const listing = listingsData.find((l) => l.listing_id === listingId);
         if (!listing) return null;
 
-        // Check if the user_id of the listing matches the current user
-        const isMatch = listing.user_id === userCurrentID;
+        // Use listing data to populate the fields
+        const listingName = listing.name;
+        const providerID = listing.user_id;
 
-        if (isMatch) {
-          // Use listing data to populate the fields
-          const listingName = listing.name;
-          const user_id = listing.user_id;
+        // Use providerID to find provider's username in user data
+        const provider = usersData.find((user) => user.user_id === providerID)?.username || 'N/A';
 
-          // Use user_id to find username in user data
-          const musician = usersData.find((user) => user.user_id === user_id)?.username || 'N/A';
+        // Use listing_id to find all bookings for this listing
+        const bookingsForListing = bookingsData.filter((booking) => booking.listing_id === listingId);
 
-          // Use listing_id to find all bookings for this listing
-          const bookingsForListing = bookingsData.filter((booking) => booking.listing_id === listingId);
+        // Assuming the first booking in the list for simplicity
+        const musicianID = bookingsForListing[0]?.user_id;
 
-          // Use booking_id to get all payment_Id and status from payment data
-          const paymentID = getPaymentIDByBookingID(bookingsForListing[0].booking_id, paymentsData);
-          const paymentStatus = getPaymentStatus(bookingsForListing[0].booking_id, paymentsData);
+        // Use musicianID to find musician's username in user data
+        const musician = usersData.find((user) => user.user_id === musicianID)?.username || 'N/A';
 
-          return {
-            paymentID: paymentID,
-            paymentStatus: paymentStatus,
-            bookingID: bookingsForListing[0].booking_id,
-            listing: listingName,
-            check_in: bookingsForListing[0].check_in,
-            check_out: bookingsForListing[0].check_out,
-            musicianID: user_id,
-            musician: musician,
-            bookingStatus: bookingsForListing[0].status,
-            edit: 'mdiPencil',
-            delete: 'mdiDelete',
-          };
-        }
+        // Use booking_id to get all payment_Id and status from payment data
+        const paymentID = getPaymentIDByBookingID(bookingsForListing[0]?.booking_id, paymentsData);
+        const paymentStatus = getPaymentStatus(bookingsForListing[0]?.booking_id, paymentsData);
 
-        return null;
+        return {
+          paymentID: paymentID,
+          paymentStatus: paymentStatus,
+          bookingID: bookingsForListing[0]?.booking_id,
+          listing: listingName,
+          check_in: bookingsForListing[0]?.check_in,
+          check_out: bookingsForListing[0]?.check_out,
+          providerID: providerID,
+          provider: provider,
+          musicianID: musicianID,
+          musician: musician,
+          bookingStatus: bookingsForListing[0]?.status,
+          edit: 'mdiPencil',
+          delete: 'mdiDelete',
+        };
       })
     );
 
     // Remove null values (listings that don't match the current user)
-    generalData.value = generalDataArray.filter((item) => item !== null);
+    filteredGeneralDataArray.value = generalDataArray.filter((item) => item !== null);
 
-    console.log('General Data', generalData.value);
+    console.log('General Data', filteredGeneralDataArray);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 });
+
 
 
 
@@ -691,7 +692,7 @@ async function deleteAccount() {
       </template>
     </v-data-table> -->
 
-    <v-data-table :headers="headers" :items="generalData" class="elevation-1 mt-10">
+    <v-data-table :headers="headers" :items="filteredGeneralDataArray" class="elevation-1 mt-10">
     <!-- <v-data-table :headers="headers" :items="dummyData" class="elevation-1 mt-10"> -->
     <!-- <template v-slot:item.status="{ value }">
       <v-chip :color="getStatus(value)">

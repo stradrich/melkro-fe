@@ -122,7 +122,7 @@ console.log(userResponse.data.role);
         check_in.value = selectedItem.check_in;
         check_out.value = selectedItem.check_out;
 
-        musician.value = userResponse.data.username
+        musician.value = userName
         musicianID.value = userID
 
         // musician.value = selectedItem.musician;
@@ -229,8 +229,8 @@ console.log(userResponse.data.role);
     // UPDATE Musician's username
     // Construct the data object to send to the server
     const userDataMusician = {
-      user_id: userResponse.data.user_id, // AUTO FILLED but data depending who is logging in
-      username: userResponse.data.username, // 𝌡
+      user_id: userID, // AUTO FILLED but data depending who is logging in
+      username: userName, // 𝌡
       email: userResponse.data.email, // AUTO FILLED but data depending who is logging in
       password: userResponse.data.password, // AUTO FULLED original but data depending who is logging in
       role: userResponse.data.role // AUTO FILLED but data depending who is logging in
@@ -243,7 +243,7 @@ console.log(userResponse.data.role);
       username: musician.value, // 𝌡
       email: userProvider.email, // AUTO FILLED original data from DB
       password: userProvider.password, // AUTO FULLED original data from DB
-      role: userProvider.role, // AUTO FILLED original data from DB
+      role: 'musician' // AUTO FILLED original data from DB
     };
 
     // UPDATE Listing's name
@@ -290,7 +290,7 @@ console.log(userResponse.data.role);
 
 
    // Make PUT request to update the musician username
-    const responseMusician = await axios.put(`http://localhost:8080/users/${userMusicianID}`, userDataMusician, {
+    const responseMusician = await axios.put(`http://localhost:8080/users/${userID}`, userDataMusician, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -319,7 +319,7 @@ console.log(userResponse.data.role);
       console.log('Payment data updated successfully:', responsePayment.data);
       console.log('Booking data updated successfully:', responseBooking.data);
       console.log('check in and check out updated on Booking DB, currently not in sync with Timeslot DB');
-      router.push('/adminDashboard')
+      router.push('/musicianDashboard')
       // Add any additional logic or notifications for a successful update
     } else {
       console.error('Failed to update user data:', responseMusician.data, responseProvider.data);
