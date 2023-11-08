@@ -4,7 +4,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiPencil, mdiDelete, mdiAccount} from '@mdi/js';
 
-import { ref, watch, onMounted } from 'vue';
+import { ref, watchEffect, onMounted } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import DropdownMenu2 from '../../components/DropdownMenu2.vue';
@@ -38,8 +38,8 @@ const userMajor = ref('');
 const generalData = ref([]);
 
 
-
 onMounted(async () => {
+  
   try {
     const count = await countBookingsByLoggedInUser();
     numberOfBookings.value = count;
@@ -57,13 +57,22 @@ onMounted(async () => {
     console.log(`Timeslot Data`, timeslotsData);
     console.log(`Payment Data`, paymentsData);
 
+
+    const userId = authStore.currentUser?.id;
+    console.log('User ID:', userId);
+    userMajor.value = await getUserMajor(userId);
+    console.log('User Major:', userMajor.value);
+
     // Fetch user major
     userMajor.value = await getUserMajor(authStore.currentUser?.id, usersData);
+    console.log(userMajor);
+    
 
     let filteredBookingsData = [];
 
     const userRole = authStore.currentUser?.role;
     const userCurrentID = authStore.currentUser?.id;
+ 
 
     if (userRole === 'musician') {
       // If the user is a musician, filter bookings by their user_id
@@ -277,10 +286,23 @@ function editItem(item) {
       }
     }
     
-function  deleteItem(item) {
-      // Handle delete action
-      console.log('Delete item:', item);
+    async function deleteItem(item) {
+  try {
+    const bookingID = item.bookingID;
+    const response = await axios.delete(`http://localhost:8080/bookings/bookings/${bookingID}`);
+    
+    if (response.status === 204) {
+      console.log('Booking deleted successfully.');
+      // Optionally, you can update the local state to reflect the deletion
+      const updatedGeneralData = generalData.value.filter(booking => booking.bookingID !== item.bookingID);
+      generalData.value = updatedGeneralData;
+    } else {
+      console.error('Failed to delete booking:', response.statusText);
     }
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+  }
+}
 
 const getUserName = (userId, usersData) => {
 const user = usersData.find(item => item.user_id === userId);
@@ -377,23 +399,29 @@ const getUserNameByUserId = async (userProviderId) => {
 const getAllUsers = async () => {
   try {
     const response = await axios.get(`http://localhost:8080/users/users`);
+    console.log('Get All Users Response Status:', response.status);
+    console.log('Get All Users Response Data:', response.data);
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching all users:', error);
     return [];
   }
 };
+
 
 const getUserMajor = async (userId) => {
   try {
     const userData = await getAllUsers();
     const user = userData.find(user => user.user_id === userId);
+    console.log('User:', user);
     return user ? user.major : 'N/A';
   } catch (error) {
     console.error('Error fetching user major:', error);
     return 'N/A';
   }
 };
+
+
 
 
 
@@ -485,6 +513,11 @@ async function countBookingsByLoggedInUser() {
 //     console.error(error);
 //   }
 // });
+
+function deleteMe() {
+  console.log('Deleting account...');
+  router.push('/thankyouPage')
+}
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -513,11 +546,13 @@ async function countBookingsByLoggedInUser() {
         <div class="mt-2 ml-5 mb-5">
             <span class="mr-2">Major:</span>
             <span>{{ userMajor  }}</span>
+           
+             {{ console.log('User Major:', userMajor) }}
         </div>
 
         <div class="mt-10 mb-5 ml-5">
           <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
-          <v-btn class="mx-2">Delete Account</v-btn>
+          <v-btn @click="deleteMe" class="mx-2">Delete Account</v-btn>
         </div>
 
         </div>

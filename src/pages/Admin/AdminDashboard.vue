@@ -502,10 +502,26 @@ function editItem(item) {
       }
     }
     
-function  deleteItem(item) {
-      // Handle delete action
-      console.log('Delete item:', item);
+
+async function deleteItem(item) {
+  try {
+    const bookingID = item.bookingID;
+    const response = await axios.delete(`http://localhost:8080/bookings/bookings/${bookingID}`);
+    
+    if (response.status === 204) {
+      console.log('Booking deleted successfully.');
+      // Optionally, you can update the local state to reflect the deletion
+      const updatedGeneralData = generalData.value.filter(booking => booking.bookingID !== item.bookingID);
+      generalData.value = updatedGeneralData;
+    } else {
+      console.error('Failed to delete booking:', response.statusText);
     }
+  } catch (error) {
+    console.error('Error deleting booking:', error);
+  }
+}
+
+
 
 const getPaymentStatuses = (paymentStatus) => {
   if (paymentStatus === 'completed') return 'green';
@@ -566,6 +582,11 @@ async function countBookings() {
   }
 }
 
+function deleteMe() {
+  console.log('Deleting account...');
+  router.push('/thankyouPage')
+}
+
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -591,7 +612,7 @@ async function countBookings() {
 
         <div class="mt-10 mb-5 ml-5">
           <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
-          <v-btn class="mx-2">Delete Account</v-btn>
+          <v-btn @click="deleteMe" class="mx-2">Delete Account</v-btn>
         </div>
        
     </div>

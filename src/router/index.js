@@ -43,6 +43,14 @@ const routes = [
         component: () => import('../pages/Navigation/Underconstruction.vue')
     },
     {
+        path: '/thankyouPage',
+        name: 'thankyouPage',
+        meta: {
+            title: 'Thank You Page',
+        },
+        component: () => import('../pages/Shared/thankyouPage.vue')
+    },
+    {
         path: '/dummyListing',
         name: 'Dummy Listing',
         meta: {
