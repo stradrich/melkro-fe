@@ -260,8 +260,8 @@ onMounted(async () => {
         listing: listingName,
         providerID: ownerID,
         provider: owner ? owner.username : 'N/A',
-        check_in: booking.check_in,
-        check_out: booking.check_out,
+        check_in: new Date(booking.check_in).toLocaleString(),
+        check_out: new Date(booking.check_out).toLocaleString(),
         musicianID: musicianID,
         musician: musician ? musician.username : 'N/A',
         edit: 'mdiPencil',
@@ -587,6 +587,33 @@ function deleteMe() {
   router.push('/thankyouPage')
 }
 
+async function deleteAccount() {
+  console.log('Deleting account...');
+  const currentUser = await authStore.getCurrentUser()
+  const userID = currentUser.id
+  
+  try {
+    // Get the access token from localStorage
+    const accessToken = localStorage.getItem('access_token');
+    console.log(accessToken);
+    
+    // Make an API call with the authorization header
+    await axios.delete(`http://localhost:8080/users/${userID}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // Update the local data or perform other necessary actions
+    console.log('Account deleted successfully.');
+    router.push('/thankyouPage');
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    // Handle error appropriately, show a message, etc.
+  }
+}
+
+
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -612,14 +639,14 @@ function deleteMe() {
 
         <div class="mt-10 mb-5 ml-5">
           <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
-          <v-btn @click="deleteMe" class="mx-2">Delete Account</v-btn>
+          <v-btn @click="deleteAccount" class="mx-2">Delete Account</v-btn>
         </div>
        
     </div>
 
     <div class="mt-10">
          
-         <div style="flex: 1; display: flex; justify-content: center; margin-top: 10px;">
+         <div class="mb-10" style="flex: 1; display: flex; justify-content: center; margin-top: 10px;">
              <img :src="'/src/assets/bermuda-114.png'" alt="">
          </div>
          
@@ -641,15 +668,15 @@ function deleteMe() {
              <RouterLink to="/" style="flex: 1; text-align: center;">You have {{ numberOfBookings }} booking(s) </RouterLink>
              </div>
              
-             <div style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
+             <div class="mt-10 mb-5" style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
               <RouterLink to="underconstruction" style="text-decoration: none;">
               <!-- <RouterLink to="/createListingAdmin" style="text-decoration: none;"> -->
-                 <Button text="Create Listing" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
+                 <Button class="mr-5" text="Create Listing" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
 
              <RouterLink to="underconstruction" style="text-decoration: none;">
              <!-- <RouterLink to="/listingCard" style="text-decoration: none;"> -->
-                 <Button text="Create Booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
+                 <Button class="ml-5" text="Create Booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
              </div>
 

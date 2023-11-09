@@ -54,7 +54,7 @@ const submitForm = async () => {
 <template>
   <Navbar/>
      <div style="display: flex; justify-content: center; margin: 5rem;">
-    <img src="/src/assets/IMG_0918.JPG" alt="" style="width: 300px; height: 300px;">
+    <img src="/src/assets/IMG_0918.JPG" alt="" style="width: 500px; height: 300px;">
     </div>
 
     <v-card class="mx-auto" style="max-width: 500px;">

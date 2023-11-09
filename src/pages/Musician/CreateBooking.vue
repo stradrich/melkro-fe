@@ -195,7 +195,7 @@ const resetForm = () => {
       
     
     
-    <v-sheet class="mt-2" width="300" style="margin: auto; margin-top: auto; margin-bottom: auto;">
+    <v-sheet class="mx-auto mt-2" width="300" style="margin: auto; margin-top: auto; margin-bottom: auto;">
      <img
       class="mx-auto mt-10 mb-10"
       width="300"

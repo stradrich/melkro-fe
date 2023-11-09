@@ -5,7 +5,7 @@ import Logo from '../components/Logo.vue'
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-const { currentUser, logout } = useAuthStores();
+const { currentUser } = useAuthStores();
 import { useAuthStores } from '../stores/auth';
 import { useUserStores } from '../stores/user'
 
@@ -18,24 +18,43 @@ const useAuthStore = useAuthStores();
 //     userData.role = user.role
 // }
 
-const handleLogout = async () => {
-  await logout();
-  router.push('/login'); // Redirect to login page after logout
+// Check if there is an access token on mount
+const { accessToken, logout } = useAuthStores();
+
+const handleClick = () => {
+  if (accessToken) {
+    handleLogout();
+  } else {
+    router.push('/login');
+  }
 };
+
+const handleLogout = () => {
+router.push('/login');
+  logout();
+};
+
+
+
+// const handleLogout = async () => {
+//     useAuthStore.accessToken
+//   await logout();
+//   router.push('/login'); // Redirect to login page after logout
+// };
 
 </script>
 
     <!-- TEMPLATE 0: before login -->
     <!-- :user="getUserData()" -->
     <template>
-            <v-toolbar class=" bg-black justify-between"> 
-            <div class="mx-5">
+            <v-toolbar class=" bg-black justify-between"  id="v-toolbar__content"> 
+            <div class="mx-8">
                 <Logo/>
             </div>
             
         
             <v-toolbar-title>
-             <v-btn class="font-weight-light ml-5 mr-10" :to="'/'">
+             <v-btn style="font-size: 20px;" class="font-weight-light ml-2 mr-10" :to="'/'">
                   Melkro's
              </v-btn>
             </v-toolbar-title>
@@ -48,7 +67,15 @@ const handleLogout = async () => {
                     <p >About</p>
                 </v-btn>
 
-                <v-btn class='bg-white text-black mr-5' variant="outlined" to="/login">Sign In</v-btn>
+                <v-btn
+                    class="bg-white text-black mr-5"
+                    variant="outlined"
+                    @click="handleClick"
+                >
+                {{ accessToken ? 'Sign Out' : 'Sign In' }}
+                </v-btn>
+
+                <!-- <v-btn class='bg-white text-black mr-5' variant="outlined" to="/login">Sign In</v-btn> -->
                 <!-- <v-btn class='bg-white text-black mr-5' variant="outlined" @click="currentUser.id ? handleLogout : () => router.push('/login')">
                 {{ currentUser.id ? 'Sign Out' : 'Sign In' }}
                 </v-btn> -->
@@ -139,3 +166,8 @@ const handleLogout = async () => {
        <!-- <DropdownMenu/> -->
     <!-- </template> -->
     
+<style>
+    .v-toolbar__content {
+      padding-left: 0px;
+    }
+</style>

@@ -6,7 +6,7 @@ import Footer from '../../components/Footer.vue';
 <template>
     <Navbar/>
 
-    <div style="display: flex; justify-content: center; margin: auto; margin-top: 5rem;">
+    <div class="mt-10" style="display: flex; justify-content: center; margin: auto; margin-top: 5rem;">
     <img src="/src/assets/ikigai-artist-in-lotus-position-working-in-his-workshop.png" alt="" loading="lazy">
     </div>
 
