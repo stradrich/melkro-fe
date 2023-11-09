@@ -119,12 +119,12 @@ onMounted(async () => {
 
 <template>
   <Navbar/>
-  <div style="display: flex; justify-content: center; margin: 5rem;">
-    <img src="/src/assets/IMG_0917.PNG" alt="">
+  <div class="mt-10" style="display: flex; justify-content: center;">
+    <img style="width: 500px; height: 300px" src="/src/assets/IMG_0917.PNG" alt="">
   </div>
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="10">
-      <v-card class="mx-5">
+      <v-card class="mx-auto mt-5" style="max-width: 400px; margin: auto;">
         <v-row justify="center">
           <h1 class="mt-10" style="font-size: 3rem" >Login</h1>
         </v-row>

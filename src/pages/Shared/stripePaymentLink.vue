@@ -536,16 +536,16 @@ const totalCost = computed(() => {
              <img :src="'/src/assets/bao-meditation-in-garden-1.png'" alt="">
     </div>
 
-    <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+    <div class="mt-10 mb-10" style="display: flex; justify-content: center; margin-bottom: 1rem; font-size: 2rem;">
         <p>Dear {{ authStore.currentUser.username}}</p> 
     </div>
 
-    <div style="display: flex; justify-content: center;">
+    <div class="mb-5" style="display: flex; justify-content: center;">
         <p>You are booking {{ listingStore.currentListings.name }} provided by {{ userStore.user.username }} </p> 
     </div>
 
-    <div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
-        <div>
+    <div class="mb-10" style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 2rem;">
+        <div class="mr-16">
             <div style="display: flex; justify-content: center; margin-right; margin-right: 2rem;">
                 <p>From:</p> 
             </div>
@@ -555,7 +555,7 @@ const totalCost = computed(() => {
             </div>
         </div>
     
-        <div>
+        <div class="ml-16">
             <div style="display: flex; justify-content: center; margin-left: 2rem;">
                 To:
             </div>
@@ -652,7 +652,7 @@ const totalCost = computed(() => {
             </div>
 
             <!-- Without deployment: Run this ~/.npm-global/bin/ngrok http 8080 in backend -->
-            <div style="display: flex; justify-content: center;">
+            <div class="mt-10" style="display: flex; justify-content: center;">
                 <Button text="Pay Now" @click="createPayment" />
             </div>
             <!-- <v-btn type="submit" block class="mt-2">Submit</v-btn> -->

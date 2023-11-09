@@ -51,7 +51,7 @@ const goToSignUp = () => {
 
 </script>
 
-<template >
+<template>
   
 
   <div>
@@ -92,7 +92,7 @@ const goToSignUp = () => {
             </div>
           </v-card>
 
-          <img height=280, width=280 src="/src/assets/ikigai-girl-at-home-playing-a-stringed-musical-instrument-1.png" alt="" loading="lazy" class="flex-shrink-0" />
+          <img height=280, width=280 src="/src/assets/ikigai-girl-at-home-playing-a-stringed-musical-instrument-1.png" alt="" loading="lazy" class="flex-shrink-0 ml-auto mr-16" />
         </div>
       </template>
 

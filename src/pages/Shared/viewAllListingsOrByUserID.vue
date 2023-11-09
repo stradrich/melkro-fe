@@ -478,7 +478,7 @@ const getUsernameById = (userId) => {
   <!-- v-for="(listing, index) in dynamicListings"  -->
   <div style="display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 0; margin-top: 2rem; margin-bottom: 5rem;">
     <div 
-    class="border mb-16"  
+    class="border mb-16 mr-auto"  
      v-for="(listing, index) in filteredListings"
     :key="index" 
     style="width: 280px; margin: 10px;"

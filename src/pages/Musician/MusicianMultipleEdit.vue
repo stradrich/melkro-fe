@@ -352,7 +352,7 @@ console.log(userResponse.data.role);
   <DropdownMenu2/>
 
 
-  <v-sheet class="mt-2" width="350" style="margin: auto; margin-top: auto; margin-bottom: auto;">
+  <v-sheet class="mx-auto mt-2" width="350" style="margin: auto; margin-top: auto; margin-bottom: auto;">
     <div class="mx-16 mt-16 mb-5">
         <div style="font-size: 20px">Edit Multiple DB Tables</div>
     </div>

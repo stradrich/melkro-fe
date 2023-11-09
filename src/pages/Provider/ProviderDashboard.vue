@@ -331,7 +331,7 @@ function editItem(item) {
       }
     }
     
-    async function deleteItem(item) {
+   async function deleteItem(item) {
   try {
     // Prompt the user for confirmation
     const userConfirmed = window.confirm('Are you sure you want to delete this booking?');
@@ -610,19 +610,26 @@ function deleteMe() {
 
 async function deleteAccount() {
   console.log('Deleting account...');
+  const currentUser = await authStore.getCurrentUser()
+  const userID = currentUser.id
+  
   try {
-    const userId = currentUser.id
+    // Get the access token from localStorage
+    const accessToken = localStorage.getItem('access_token');
+    
+    // Make an API call with the authorization header
+    await axios.delete(`http://localhost:8080/users/${userID}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-    // Make an API call or perform any necessary actions to delete the item
-    await axios.delete(`http://localhost:8080/bookings/${userId}`);
-
-    // Update the local bookingData array to reflect the deletion
-    // bookingData.value = bookingData.value.filter((booking) => booking.bookingID !== bookingId);
-
-    console.log('Item deleted successfully:', item);
-    router.push('/thankyouPage')
+    // Update the local data or perform other necessary actions
+    console.log('Account deleted successfully.');
+    authStore.logout()
+    router.push('/thankyouPage');
   } catch (error) {
-    console.error('Error deleting item:', error);
+    console.error('Error deleting account:', error);
     // Handle error appropriately, show a message, etc.
   }
 }
@@ -656,7 +663,7 @@ async function deleteAccount() {
 
         <div class="mt-10 mb-5 ml-5">
           <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
-          <v-btn @click="deleteMe" class="mx-2">Delete Account</v-btn>
+          <v-btn @click="deleteAccount" class="mx-2">Delete Account</v-btn>
         </div>
         
       </div>
@@ -689,7 +696,7 @@ async function deleteAccount() {
             <RouterLink to="/" style="flex: 1; text-align: center;">You have {{ numberOfBookings }} booking(s)</RouterLink>
             </div>
             
-            <div style="flex: 1; display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 5px;">
+            <div class="mt-10 mb-10" style="flex: 1; display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 5px;">
             <RouterLink to="/createListingForm" style="text-decoration: none;">
                 <Button text="Create Listings" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
             </RouterLink>

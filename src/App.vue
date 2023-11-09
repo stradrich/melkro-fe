@@ -5,12 +5,28 @@ import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <v-app>
-    <v-content class="mx-4 mb-5">
+  <v-app class="full-screen">
+    <v-container class="ml-0">
       <RouterView/>
-    </v-content>
+    </v-container>
   </v-app>
 </template>
+
+<!-- <v-content>
+</v-content> -->
+
+<style scoped>
+.full-screen {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+</style>
+
+
+
+
 
 
 

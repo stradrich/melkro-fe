@@ -117,8 +117,8 @@ onMounted(async () => {
         bookingID: booking.booking_id,
         listingID: booking.listing_id,
         listing: listing ? listing.name : 'N/A',
-        check_in: booking.check_in,
-        check_out: booking.check_out,
+        check_in: new Date(booking.check_in).toLocaleString(),
+        check_out: new Date(booking.check_out).toLocaleString(),
         ownerID: listing.user_id,
         owner: providerName || 'N/A',
         bookingStatus: booking.status,
@@ -518,6 +518,32 @@ function deleteMe() {
   console.log('Deleting account...');
   router.push('/thankyouPage')
 }
+
+async function deleteAccount() {
+  console.log('Deleting account...');
+  const currentUser = await authStore.getCurrentUser()
+  const userID = currentUser.id
+  
+  try {
+    // Get the access token from localStorage
+    const accessToken = localStorage.getItem('access_token');
+    
+    // Make an API call with the authorization header
+    await axios.delete(`http://localhost:8080/users/${userID}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    // Update the local data or perform other necessary actions
+    console.log('Account deleted successfully.');
+    authStore.logout()
+    router.push('/thankyouPage');
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    // Handle error appropriately, show a message, etc.
+  }
+}
 </script>
 
 <!-- ProviderDashboard.vue -->
@@ -552,7 +578,7 @@ function deleteMe() {
 
         <div class="mt-10 mb-5 ml-5">
           <v-btn to='/updateProfile' class="mx-2">Edit Profile</v-btn>
-          <v-btn @click="deleteMe" class="mx-2">Delete Account</v-btn>
+          <v-btn @click="deleteAccount" class="mx-2">Delete Account</v-btn>
         </div>
 
         </div>
@@ -575,7 +601,7 @@ function deleteMe() {
           </RouterLink>
             </div>
             
-            <div style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
+            <div class="mt-10 mb-10" style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
             <RouterLink to="listingCard" style="text-decoration: none;">
                 <Button text="Get a room, now!" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" />
             </RouterLink>
