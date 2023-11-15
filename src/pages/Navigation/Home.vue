@@ -127,5 +127,12 @@ const goToSignUp = () => {
   display: flex;
 }
 
+/* Mobile responsiveness */
+@media only screen and (max-width: 600px) {
+  .custom-flex-container {
+   overflow-x: scroll;
+  }
+}
+
 </style>
 

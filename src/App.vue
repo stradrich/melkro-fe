@@ -1,7 +1,5 @@
 <script setup>
 import { RouterView } from 'vue-router';
-
-
 </script>
 
 <template>
@@ -12,9 +10,6 @@ import { RouterView } from 'vue-router';
   </v-app>
 </template>
 
-<!-- <v-content>
-</v-content> -->
-
 <style scoped>
 .full-screen {
   height: 100vh;
@@ -22,12 +17,12 @@ import { RouterView } from 'vue-router';
   margin: 0;
   padding: 0;
 }
+
+/* Mobile responsiveness */
+@media only screen and (max-width: 600px) {
+  .full-screen {
+    width: auto;
+    overflow-x: hidden;
+  }
+}
 </style>
-
-
-
-
-
-
-
-

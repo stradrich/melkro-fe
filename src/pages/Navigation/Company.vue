@@ -1,12 +1,14 @@
 <script setup>
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
+import DropdownMenu2 from '../../components/DropdownMenu2.vue';
 import SvgIcon from '@jamescoyle/vue-icon';
 import { mdiMusicRestSixteenth } from '@mdi/js';
 </script>
 
 <template>
     <Navbar/>
+    <DropdownMenu2/>
      <div class="flex justify-center mt-10 mb-10">
         <img src="../../assets/jaconda-music-book.gif" alt="" loading="lazy" class="mx-auto">
     </div>
@@ -15,7 +17,7 @@ import { mdiMusicRestSixteenth } from '@mdi/js';
     <p>The Melkro's is a platform that connects musicians from different level (amateurs, music major, music teachers, concert performers, recording artists), allowing them to share and discover practice, rehearsal, recording space in different cities. The app aims to foster collaboration, creativity, and community among musicians, making it easier for local and travelling musicians to find suitable space for rehearsals and collaborations.</p>
     <br>
     <!-- <svg-icon type="mdi" :path="mdiMusicRestSixteenth"></svg-icon> -->
-    <p>Founded by <a href="https://www.youtube.com/watch?v=exdROUlv3fo">Aldrich Pinso</a>, a professional musician behind this e-commerce website as a Full Stack Developer. The conception of this app aims to address shared experiences amongst musicians, by transforming inconveniences into opportunities, Melkro's empowers musicians to effortlessly share and discover the right space in different cities. </p>
+    <p>Founded by <a href="https://www.youtube.com/watch?v=exdROUlv3fo">Aldrich</a>, a musician behind this e-commerce website as a Full Stack Developer. The conception of this app aims to address shared experiences amongst musicians, by transforming inconveniences into opportunities, Melkro's empowers musicians to effortlessly share and discover the right space in different cities. </p>
     <!-- <svg-icon type="mdi" :path="mdiMusicRestSixteenth"></svg-icon> -->
     <br>
     <p> At the same time, local music centres or studios or conservatory can maximize their profit by renting out their unused space through the Melkro's App. By listing their available rooms, studios or performance spaces on the platform, these establishments can tap into a broader network of musicians and music enthusiasts, effectively turning their under-utilised areas into profitable assets. </p>

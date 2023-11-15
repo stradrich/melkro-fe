@@ -588,7 +588,7 @@ const totalCost = computed(() => {
              <img src="../../assets/abstract-902.gif" alt="">
     </div> -->
 
-    <div style="display: flex; justify-content: center; margin-bottom: 3rem;">
+    <div class="mb-10" style="display: flex; justify-content: center; margin-bottom: 3rem;">
         <p>Please complete payment to secure your booking timeslot </p> 
     </div>
 
