@@ -24,6 +24,7 @@ const { accessToken, logout } = useAuthStores();
 const handleClick = () => {
   if (accessToken) {
     handleLogout();
+   
   } else {
     router.push('/login');
   }
@@ -47,8 +48,8 @@ router.push('/login');
     <!-- TEMPLATE 0: before login -->
     <!-- :user="getUserData()" -->
     <template>
-            <v-toolbar class=" bg-black justify-between"  id="v-toolbar__content"> 
-            <div class="mx-8">
+            <v-toolbar fluid style="overflow-x: auto;" class=" bg-black justify-between"  id="v-toolbar__content"> 
+            <div style="margin-left: 4px;" class="mx-8">
                 <Logo/>
             </div>
             
@@ -67,8 +68,10 @@ router.push('/login');
                     <p >About</p>
                 </v-btn>
 
+                
+
                 <v-btn
-                    class="bg-white text-black mr-5"
+                    class="bg-white text-black mr-16"
                     variant="outlined"
                     @click="handleClick"
                 >
@@ -166,8 +169,22 @@ router.push('/login');
        <!-- <DropdownMenu/> -->
     <!-- </template> -->
     
-<style>
-    .v-toolbar__content {
-      padding-left: 0px;
+<style scoped>
+ .v-toolbar__content {
+  height: auto;
+  }
+
+    v-app {
+    overflow-x: hidden;
+  }
+
+  /* Mobile responsiveness */
+  @media only screen and (max-width: 600px) {
+    .v-btn {
+      font-size: 12px;
+      padding: 4px 8px;
     }
+
+  
+  }
 </style>

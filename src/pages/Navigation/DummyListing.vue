@@ -14,8 +14,8 @@ const images = ref([
 <template>
   <Navbar />
 
-  <div class="mt-16" style="display: flex; justify-content: center; margin-bottom: 0; margin-top: 5rem;">
-    <div class="mr-5" v-for="(image, index) in images" :key="index" style="width: 200px; height: 200px; overflow: hidden; margin: 10px;">
+  <div class="mt-16" style="display: flex; justify-content: center; margin-bottom: 0; margin-top: 5rem; flex-wrap: wrap; ">
+    <div class="mr-5 mt-10" v-for="(image, index) in images" :key="index" style="width: 200px; height: 200px; overflow: hidden; margin: 10px;">
       <div>
         <h4 style="display: flex; align-items: center;">
           <a class="mr-10" :href="image.locationLink" style="margin-right: 4px;">
@@ -35,7 +35,7 @@ const images = ref([
     </div>
   </div>
 
-  <div style="display: flex; justify-content: center; margin-top: 0;">
+  <div class="map" style="display: flex; justify-content: center; margin-top: 0;">
     <div class="mr-5 mt-5" v-for="(image, index) in images" :key="index" style="width: 200px; height: 200px; overflow: hidden; margin: 10px;">
       <div>
         <img :src="image.map" alt="map" style="width: 100%; height: 100%; object-fit: cover;">
@@ -49,3 +49,19 @@ const images = ref([
 
   <Footer />
 </template>
+
+<style scoped>
+@media only screen and (min-width: 600px) {
+  .map {
+    display: none;
+  }
+ 
+}
+</style>
+
+
+
+
+
+
+

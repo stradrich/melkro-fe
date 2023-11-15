@@ -53,8 +53,8 @@ const submitForm = async () => {
 
 <template>
   <Navbar/>
-     <div style="display: flex; justify-content: center; margin: 5rem;">
-    <img src="/src/assets/IMG_0918.JPG" alt="" style="width: 500px; height: 300px;">
+     <div class="mt-10 mb-10" style="display: flex; justify-content: center; margin: 5rem;">
+    <img class="welcome" src="/src/assets/IMG_0918.JPG" alt="" style="width: 500px; height: 300px;">
     </div>
 
     <v-card class="mx-auto" style="max-width: 500px;">
@@ -125,3 +125,11 @@ const submitForm = async () => {
     <Footer/>
   </template>
   
+  <style scoped>
+  @media only screen and (min-width: 600px) {
+    .welcome {
+      display: none;
+    }
+   
+  }
+  </style>
