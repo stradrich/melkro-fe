@@ -49,7 +49,7 @@ import Footer from '../../components/Footer.vue';
     </div>
 
     <div style="display: flex; justify-content: center; margin-top: 5rem;">
-        <img src="src/assets/app-store_google-play.jpeg" alt="">
+        <img width="300" height="300" src="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-original-577x577/s3/022020/app-store_google-play.jpg?HvAOEBkEHTCWi4PDSyOblNwGFvGM2PDo&itok=2osJYdLC" alt="">
     </div>
 
     <Footer/>
