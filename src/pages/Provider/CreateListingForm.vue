@@ -246,7 +246,7 @@ const resetForm = () => {
       class="mx-auto mt-10 mb-10"
       width="100"
       height="100"
-      src="/src/assets/IMG_0912.JPG"
+      src="../../assets/IMG_0912.JPG"
       alt="space"
       loading="lazy"
     />
