@@ -44,7 +44,7 @@ import Footer from '../../components/Footer.vue';
 import { useListingStores } from '../../stores/listing';
 import { useAuthStores } from '../../stores/auth';
 import { useBookingStores } from '../../stores/booking';
-import UpdateDeleteListing from '../../../../music-space-frontend/music-space-frontend/src/views/UpdateDeleteListing.vue';
+// import UpdateDeleteListing from '../../../../music-space-frontend/music-space-frontend/src/views/UpdateDeleteListing.vue';
 
 
 import { useRoute, useRouter } from 'vue-router';
