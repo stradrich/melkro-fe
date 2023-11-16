@@ -3,9 +3,9 @@ import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../../../music-space-frontend/music-space-frontend/src/stores/auth';
+import { useAuthStores } from '../../stores/auth';
 
-const authStore = useAuthStore();
+const authStore = useAuthStores();
 
 const router = useRouter();
 
