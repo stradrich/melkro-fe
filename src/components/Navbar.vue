@@ -21,6 +21,27 @@ const useAuthStore = useAuthStores();
 // Check if there is an access token on mount
 const { accessToken, logout } = useAuthStores();
 
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+
+const screenWidth = ref(window.innerWidth);
+// const accessToken = ref(/* your access token logic */);
+
+const updateScreenWidth = () => {
+  screenWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateScreenWidth);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateScreenWidth);
+});
+
+const buttonText = computed(() => {
+  return screenWidth.value < 600 ? "Melkro's" : "Company";
+});
+
 const handleClick = () => {
   if (accessToken) {
     handleLogout();
@@ -49,19 +70,22 @@ router.push('/login');
     <!-- :user="getUserData()" -->
     <template>
             <v-toolbar fluid style="overflow-x: auto;" class=" bg-black justify-between"  id="v-toolbar__content"> 
-            <div style="margin-left: 4px;" class="mx-8">
+            <div style="margin-left: 4px; height: 64px" class="mx-8 mt-2 logo-container">
                 <Logo/>
             </div>
             
         
             <v-toolbar-title>
-             <v-btn style="font-size: 20px;" class="font-weight-light ml-2 mr-10" :to="'/'">
+             <v-btn style="font-size: 20px;" class="font-weight-light ml-2 mr-10 name-container" :to="'/'">
                   Melkro's
              </v-btn>
             </v-toolbar-title>
 
-                <v-btn class="mx-5 ml-15" to="/company">
+                <!-- <v-btn class="mx-5 ml-15" to="/company">
                     <p >Company</p>
+                </v-btn> -->
+                <v-btn class="mx-5 ml-15" :to="accessToken ? '/' : '/company'">
+                  <p class="button-text">{{ buttonText }}</p>
                 </v-btn>
 
                 <v-btn class="mx-10" to="/about">
@@ -170,21 +194,31 @@ router.push('/login');
     <!-- </template> -->
     
 <style scoped>
- .v-toolbar__content {
-  height: auto;
+ .logo-container {
+    flex-shrink: 0;  /* Prevent the logo from shrinking */
   }
 
-    v-app {
-    overflow-x: hidden;
+  .name-container {
+    flex-shrink: 0;
   }
 
-  /* Mobile responsiveness */
   @media only screen and (max-width: 600px) {
-    .v-btn {
-      font-size: 12px;
-      padding: 4px 8px;
+    .mx-8 {
+      margin-left: 0;  /* Adjust the left margin for smaller screens */
     }
 
-  
+    .v-btn {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+
+    .v-toolbar-title {
+      font-size: 16px;
+    }
+
+    img {
+      max-width: 100%;  /* Make sure the image doesn't overflow on smaller screens */
+      height: auto;  /* Maintain the aspect ratio */
+    }
   }
 </style>
