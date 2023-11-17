@@ -19,4 +19,7 @@ export default {
       '@mdi/font/css/materialdesignicons.css': path.resolve(fileURLToPath(new URL('node_modules/@mdi/font/css/materialdesignicons.css', import.meta.url))),
     },
   },
+  optimizeDeps: {
+    exclude: ['src/assets/IMG_0912.JPG'],
+  },
 };
