@@ -586,7 +586,7 @@ async function deleteAccount() {
       <div class="mt-10">
          
         <div style="flex: 1; display: flex; justify-content: center; margin-top: 10px;">
-            <img :src="'/src/assets/IMG_1277.jpg'" alt="">
+            <img :src="'https://live.staticflickr.com/8653/28605337445_ffac139894_b.jpg'" alt="">
         </div>
         
         <div>
