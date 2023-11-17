@@ -246,7 +246,7 @@ const resetForm = () => {
       class="mx-auto mt-10 mb-10"
       width="100"
       height="100"
-      src="../../assets/IMG_0912.JPG"
+      src="https://lottiefolder.com/wp-content/uploads/2022/11/cube_dots_fill-1.gif"
       alt="space"
       loading="lazy"
     />
