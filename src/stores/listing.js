@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
-import { useAuthStore } from "../../../music-space-frontend/music-space-frontend/src/stores/auth";
+import { useAuthStores } from '../stores/auth';
 
 
 
 
-const authStore = useAuthStore();
+const authStore = useAuthStores();
 
 export const useListingStores = defineStore({
     id: 'listings',
