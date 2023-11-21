@@ -136,7 +136,9 @@ const updateData = async () => {
   console.log(accessToken, 'by Update Data Function');
 
   // Get MUSICIAN's data (target: username) prep for update
-  const userMusicianResponse = await axios.get(`http://localhost:8080/users/${userMusicianID}`, {
+  
+  // const userMusicianResponse = await axios.get(`http://localhost:8080/users/${userMusicianID}`, {
+    const userMusicianResponse = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/${userMusicianID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -146,7 +148,9 @@ const updateData = async () => {
 
 
   // Get PROVIDER's data (target: username) prep for update
-  const userProviderResponse = await axios.get(`http://localhost:8080/users/${userProviderID}`, {
+  
+  // const userProviderResponse = await axios.get(`http://localhost:8080/users/${userProviderID}`, {
+    const userProviderResponse = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/${userProviderID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -156,20 +160,26 @@ const updateData = async () => {
 
 
   // Get LISTING's data (target: name) prep for update
-  const listingResponse = await axios.get(`http://localhost:8080/listings/listing/${currentListingID}`);
+  
+  // const listingResponse = await axios.get(`http://localhost:8080/listings/listing/${currentListingID}`);
+  const listingResponse = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/listing/${currentListingID}`);
   // Listing data, used for auto filling up listing_id, user_id, price_per_hour, address_link, pictures, availability, description, capacity, stripeProductId field, only then we match the JSON payload
   const listingDatabyID = listingResponse.data
   console.log(`Listing Data from DB`,listingDatabyID);
 
   
   // Get PAYMENT's data (target: status) prep for update
-  const paymentResponse = await axios.get(`http://localhost:8080/payment/payment/${currentPaymentID}`)
+  
+  // const paymentResponse = await axios.get(`http://localhost:8080/payment/payment/${currentPaymentID}`)
+  const paymentResponse = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/payment/payment/${currentPaymentID}`)
   // Payment data, used for auto filling up listing_id, user_id, price_per_hour, address_link, pictures, availability, description, capacity, stripeProductId field, only then we match the JSON payload
   const paymentDatabyID = paymentResponse.data
   console.log(`Payment Data from DB`, paymentDatabyID);
 
   // Get BOOKING's data (target: status) prep for update
-  const bookingResponse = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+  
+  // const bookingResponse = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+  const bookingResponse = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${currentBookingID}`)
   // Booking data, used for auto filling up email and password field, only then we match the JSON payload
   const bookingDatabyID = bookingResponse.data
   console.log(`Booking Data from DB`, bookingDatabyID);
@@ -243,27 +253,37 @@ const updateData = async () => {
 
 
    // Make PUT request to update the musician username
-    const responseMusician = await axios.put(`http://localhost:8080/users/${userMusicianID}`, userDataMusician, {
+   
+    // const responseMusician = await axios.put(`http://localhost:8080/users/${userMusicianID}`, userDataMusician, {
+      const responseMusician = await axios.put(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/${userMusicianID}`, userDataMusician, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
      // Make PUT request to update the provider username
-     const responseProvider = await axios.put(`http://localhost:8080/users/${userProviderID}`, userDataProvider, {
+     
+    //  const responseProvider = await axios.put(`http://localhost:8080/users/${userProviderID}`, userDataProvider, {
+      const responseProvider = await axios.put(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/${userProviderID}`, userDataProvider, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
     // Make PUT request to update lising's name
-    const responseListing = await axios.put(`http://localhost:8080/listings/listing/${currentListingID}`, newlistingData);
+    
+    // const responseListing = await axios.put(`http://localhost:8080/listings/listing/${currentListingID}`, newlistingData);
+    const responseListing = await axios.put(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/listing/${currentListingID}`, newlistingData);
 
     // Make PUT request to update payment's status
-    const responsePayment = await axios.put(`http://localhost:8080/payment/payment/${currentPaymentID}`, newPaymentData);
+    
+    // const responsePayment = await axios.put(`http://localhost:8080/payment/payment/${currentPaymentID}`, newPaymentData);
+    const responsePayment = await axios.put(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/payment/payment/${currentPaymentID}`, newPaymentData);
 
     // Make PUT request to update booking's status
-    const responseBooking = await axios.put(`http://localhost:8080/bookings/bookings/${currentBookingID}`, newBookingData);
+    
+    // const responseBooking = await axios.put(`http://localhost:8080/bookings/bookings/${currentBookingID}`, newBookingData);
+    const responseBooking = await axios.put(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${currentBookingID}`, newBookingData);
     
       // Check if the update was successful
     if (responseMusician.status === 200 && responseProvider.status === 200 && responseListing.status === 200 && responsePayment.status === 200 && responseBooking.status === 200) { 

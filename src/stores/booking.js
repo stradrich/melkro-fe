@@ -34,7 +34,8 @@ export const useBookingStores = defineStore({
                 }
     
                // const response = await fetch('actual cloud hosting platform', options)
-               const response = await fetch('http://localhost:8080/bookings/bookings', options)
+               // const response = await fetch('http://localhost:8080/bookings/bookings', options)
+               const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings', options)
                 const data = await response.json()
     
                 console.log(data)
@@ -138,7 +139,8 @@ export const useBookingStores = defineStore({
                 }
 
                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/bookings/bookings', options)
+                // const response = await fetch('http://localhost:8080/bookings/bookings', options)
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings', options)
                 const data = await response.json()
 
                 // Set check_in and check_out in the store
@@ -182,7 +184,8 @@ export const useBookingStores = defineStore({
                 }
 
                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/bookings/bookings/${bookingID}', options)
+                // const response = await fetch('http://localhost:8080/bookings/bookings/${bookingID}', options)
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/${bookingID}', options)
                 const data = await response.json()
 
                 console.log(data)
@@ -203,8 +206,10 @@ export const useBookingStores = defineStore({
                     }
                 }
 
-               // const response = await fetch('actual cloud hosting platform', options)
-               const response = await fetch('http://localhost:8080/bookings/bookings/${bookingID}', options)
+            // const response = await fetch('actual cloud hosting platform', options)
+              
+            // const response = await fetch('http://localhost:8080/bookings/bookings/${bookingID}', options)
+            const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${bookingID}', options)
                 const data = response.json()
 
                 console.log(data)

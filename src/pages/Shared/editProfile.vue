@@ -66,7 +66,9 @@ const updateProfile = async () => {
     console.log('Updating Profile');
 
     const response = await axios.put(
-      `http://localhost:8080/users/${currentUser.value.id}`,
+     
+      // `http://localhost:8080/users/${currentUser.value.id}`,
+      `https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/${currentUser.value.id}`,
       {
         user_id: currentUser.value.id,
         username: currentUser.value.username,
