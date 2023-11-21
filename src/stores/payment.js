@@ -50,7 +50,8 @@ export const usePaymentStores = defineStore({
                 }
 
                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/payment/payment', options)
+                // const response = await fetch('http://localhost:8080/payment/payment', options)
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/payment/payment', options)
                 const data = await response.json()
 
                 console.log(data)
@@ -67,7 +68,9 @@ export const usePaymentStores = defineStore({
                 }
     
                // const response = await fetch('actual cloud hosting platform', options)
-               const response = await fetch('http://localhost:8080/payment/payment/', options)
+               
+            // const response = await fetch('http://localhost:8080/payment/payment/', options)
+            const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/payment/payment/', options)
                 const data = await response.json()
     
                 console.log(data)

@@ -64,7 +64,7 @@ export const useAuthStores = defineStore({
                 body: JSON.stringify({ username, email, password, role }),
               };
       
-              const response = await fetch('http://localhost:8080/auth/register', options);
+              const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/auth/register', options);
       
               if (response.ok) {
                 const user = await response.json();
@@ -98,7 +98,7 @@ export const useAuthStores = defineStore({
               };
           
               // const response = await fetch('actual cloud hosting platform', options)
-              const response = await fetch('http://localhost:8080/auth/login', options);
+              const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/auth/login', options);
           
               if (response.ok) {
                 const data = await response.json();
@@ -140,7 +140,7 @@ export const useAuthStores = defineStore({
                 }
 
                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/auth/forgotPwd', options)
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/auth/forgotPwd', options)
                 const data = await response.json()
 
                 console.log(data)
@@ -159,7 +159,7 @@ export const useAuthStores = defineStore({
                 }
 
                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/auth/resetPwd', options)
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/auth/resetPwd', options)
                 const data = await response.json()
 
                 console.log(data)
@@ -183,7 +183,7 @@ export const useAuthStores = defineStore({
 
 
                 // const response = await fetch('actual cloud hosting platform', options)
-                const response = await fetch('http://localhost:8080/auth/changePwd', options)
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/auth/changePwd', options)
                 const data = await response.json()
 
                 console.log(data)

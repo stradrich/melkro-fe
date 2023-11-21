@@ -77,7 +77,9 @@ const datetimeRef = ref(null);
 //   }
 // });
 onMounted(async () => {
-  const getAllTimeslot = await axios.get(`http://localhost:8080/timeslot/timeslot`);
+  
+  // const getAllTimeslot = await axios.get(`http://localhost:8080/timeslot/timeslot`);
+  const getAllTimeslot = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/timeslot/timeslot`);
         const timeslotData = getAllTimeslot.data
         console.log(`Timeslot Data`, timeslotData);
 

@@ -51,12 +51,19 @@ const generalData = ref([]);
 
 const fetchData = async () => {
   const [userDataResponse, listingsDataResponse, bookingDataResponse, timeslotDataResponse, paymentDataResponse] = await Promise.all([
-    axios.get('http://localhost:8080/users/users'),
-    axios.get('http://localhost:8080/listings/'),
-    axios.get('http://localhost:8080/bookings/bookings'),
-    axios.get('http://localhost:8080/timeslot/timeslot'),
-    axios.get('http://localhost:8080/timeslot/timeslot'),
-    axios.get('http://localhost:8080/payment/payment/'),
+  
+    // axios.get('http://localhost:8080/users/users'),
+    // axios.get('http://localhost:8080/listings/'),
+    // axios.get('http://localhost:8080/bookings/bookings'),
+    // axios.get('http://localhost:8080/timeslot/timeslot'),
+    // axios.get('http://localhost:8080/timeslot/timeslot'),
+    // axios.get('http://localhost:8080/payment/payment/'),
+    axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/users'),
+    axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/'),
+    axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings'),
+    axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/timeslot/timeslot'),
+    axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/timeslot/timeslot'),
+    axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/payment/payment/'),
   ]);
 
   userData.value = userDataResponse.data;
@@ -380,7 +387,9 @@ const dummyData = [
 
  const getAllUsers = async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/users/users`);
+    
+    // const response = await axios.get(`http://localhost:8080/users/users`);
+    const response = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/users`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -390,7 +399,9 @@ const dummyData = [
 
 const getAllListings = async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/listings/`);
+    
+    // const response = await axios.get(`http://localhost:8080/listings/`);
+    const response = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -400,7 +411,9 @@ const getAllListings = async () => {
 
 const getAllBookings = async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/bookings/bookings`);
+   
+    // const response = await axios.get(`http://localhost:8080/bookings/bookings`);
+    const response = await axios.get(` https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -410,7 +423,9 @@ const getAllBookings = async () => {
 
 const getAllTimeslots = async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/timeslot/timeslot`);
+   
+    // const response = await axios.get(`http://localhost:8080/timeslot/timeslot`);
+    const response = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/timeslot/timeslot`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -420,7 +435,9 @@ const getAllTimeslots = async () => {
 
 const getAllPayments = async () => {
   try {
-    const response = await axios.get(`http://localhost:8080/payment/payment/`);
+    
+    // const response = await axios.get(`http://localhost:8080/payment/payment/`);
+    const response = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/payment/payment/`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -506,7 +523,9 @@ function editItem(item) {
 async function deleteItem(item) {
   try {
     const bookingID = item.bookingID;
-    const response = await axios.delete(`http://localhost:8080/bookings/bookings/${bookingID}`);
+   
+    // const response = await axios.delete(`http://localhost:8080/bookings/bookings/${bookingID}`);
+    const response = await axios.delete(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${bookingID}`);
     
     if (response.status === 204) {
       console.log('Booking deleted successfully.');
@@ -542,7 +561,9 @@ const getBookingStatus = (bookingStatus) => {
 
 async function countProviders() {
   try {
-    const response = await axios.get('http://localhost:8080/users/users');
+    
+    // const response = await axios.get('http://localhost:8080/users/users');
+    const response = await axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/users');
     const providerCount = response.data.filter(user => user.role === 'provider').length;
     return providerCount;
   } catch (error) {
@@ -553,7 +574,9 @@ async function countProviders() {
 
 async function countMusicians() {
   try {
-    const response = await axios.get('http://localhost:8080/users/users');
+    
+    // const response = await axios.get('http://localhost:8080/users/users');
+    const response = await axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/users');
     const musicianCount = response.data.filter(user => user.role === 'musician').length;
     return musicianCount;
   } catch (error) {
@@ -564,7 +587,9 @@ async function countMusicians() {
 
 async function countListings() {
   try {
-    const response = await axios.get('http://localhost:8080/listings/');
+    
+    // const response = await axios.get('http://localhost:8080/listings/');
+    const response = await axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/');
     return response.data.length;
   } catch (error) {
     console.error(error);
@@ -574,7 +599,9 @@ async function countListings() {
 
 async function countBookings() {
   try {
-    const response = await axios.get('http://localhost:8080/bookings/bookings');
+    
+    // const response = await axios.get('http://localhost:8080/bookings/bookings');
+    const response = await axios.get('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings');
     return response.data.length;
   } catch (error) {
     console.error(error);
@@ -598,7 +625,9 @@ async function deleteAccount() {
     console.log(accessToken);
     
     // Make an API call with the authorization header
-    await axios.delete(`http://localhost:8080/users/${userID}`, {
+    
+    // await axios.delete(`http://localhost:8080/users/${userID}`, {
+      await axios.delete(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/users/${userID}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -606,6 +635,7 @@ async function deleteAccount() {
 
     // Update the local data or perform other necessary actions
     console.log('Account deleted successfully.');
+    authStore.logout()
     router.push('/thankyouPage');
   } catch (error) {
     console.error('Error deleting account:', error);

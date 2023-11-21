@@ -338,7 +338,9 @@ async function createPayment() {
             addons: addons,
         };
 
-        const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+        
+        // const response = await fetch('http://localhost:8080/stripe/create-checkout-session/', {
+            const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/stripe/create-checkout-session/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -351,7 +353,9 @@ async function createPayment() {
 
         const currentBookingID =  bookingStore.booking_id
         console.log(currentBookingID);
-        const getBookingByID = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+        
+        // const getBookingByID = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+        const getBookingByID = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${currentBookingID}`)
         const bookingDataById = getBookingByID.data
         console.log(bookingDataById);
         console.log(`Prep for sync for booking and timeslot`,bookingDataById.check_in);
@@ -487,7 +491,9 @@ onMounted(async () => {
         
         const currentBookingID =  bookingStore.booking_id
         console.log(currentBookingID);
-        const getBookingByID = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+        
+        // const getBookingByID = await axios.get(`http://localhost:8080/bookings/bookings/${currentBookingID}`)
+        const getBookingByID = await axios.get(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${currentBookingID}`)
         const bookingDataById = getBookingByID.data
         console.log(bookingDataById);
         console.log(`Prep for sync for booking and timeslot`,bookingDataById.check_in);

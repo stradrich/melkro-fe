@@ -97,7 +97,9 @@ export const useListingStores = defineStore({
         
                 console.log('Request Headers:', options.headers); // Log headers
         
-                const response = await fetch('http://localhost:8080/listings/', options);
+                
+                // const response = await fetch('http://localhost:8080/listings/', options);
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/', options);
                 console.log('Response Status:', response.status);
                 
                 const data = await response.json();
@@ -145,7 +147,9 @@ export const useListingStores = defineStore({
 
       
             //   http://localhost:8080/listings/users/4/listings
-              const response = await fetch(`http://localhost:8080/listings/users/${userId}/listings`, options);
+            
+            //   const response = await fetch(`http://localhost:8080/listings/users/${userId}/listings`, options);
+              const response = await fetch(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/users/${userId}/listings`, options);
             //   const response = await fetch(`http://localhost:8080/listings/user/${userId}`, options);
               const data = await response.json();
       
@@ -195,7 +199,9 @@ export const useListingStores = defineStore({
                     method: 'GET'
                 }
         
-                const response = await fetch(`http://localhost:8080/listings/listing/${listingID}`, options)
+               
+                // const response = await fetch(`http://localhost:8080/listings/listing/${listingID}`, options)
+                const response = await fetch(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/listing/${listingID}`, options)
                 const data = await response.json()
         
                 this.currentListings = data; // Assign the entire data object
@@ -254,7 +260,9 @@ export const useListingStores = defineStore({
 
                 }
         
-                const response = await fetch('http://localhost:8080/listings/', options)
+                
+                // const response = await fetch('http://localhost:8080/listings/', options)
+                const response = await fetch('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/', options)
                 const data = await response.json()
         
                 console.log(data)
@@ -360,8 +368,10 @@ export const useListingStores = defineStore({
                         capacity: formData.capacity,
                     })
                 };
-        
-                const response = await fetch(`http://localhost:8080/listings/listing/${this.clickedListingId}`, options);
+
+                
+                // const response = await fetch(`http://localhost:8080/listings/listing/${this.clickedListingId}`, options);
+                const response = await fetch(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/listing/${this.clickedListingId}`, options);
                 const data = await response.json();
         
                 console.log(data);
@@ -394,7 +404,8 @@ export const useListingStores = defineStore({
                 // const listingId = this.clickedListingId;
 
                 // const response = await fetch(`http://localhost:8080/listings/listing/${listingId}`, options)
-                const response = await fetch(`http://localhost:8080/listings/listing/${clickedListingId}`, options)
+                // const response = await fetch(`http://localhost:8080/listings/listing/${clickedListingId}`, options)
+                const response = await fetch(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/listings/listing/${clickedListingId}`, options)
                 const data = await response.json()
 
                 console.log(data)

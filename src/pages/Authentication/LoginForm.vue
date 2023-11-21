@@ -66,7 +66,9 @@ const forgotPassword = async () => {
     console.log('Forgot Password? Clicked');
 
     // Send a POST request to the forgot password endpoint with the user's email
-    const response = await axios.post('http://localhost:8080/auth/forgotPwd', {
+    
+    // const response = await axios.post('http://localhost:8080/auth/forgotPwd', {
+      const response = await axios.post('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/auth/forgotPwd', {
       email: userEmail,
     });
 
@@ -85,7 +87,9 @@ const forgotPassword = async () => {
         const resetToken = response.data.resetToken;
 
         // Send a POST request to reset the password with the new password and reset token
-        await axios.post('http://localhost:8080/auth/resetPwd', {
+        
+        // await axios.post('http://localhost:8080/auth/resetPwd', {
+          await axios.post('https://melkro-api-dev-pbcxdasz4q-as.a.run.app/auth/resetPwd', {
           newPassword,
           resetToken,
         });
