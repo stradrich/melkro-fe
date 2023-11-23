@@ -1,5 +1,7 @@
 # music-space-frontend
 
+https://www.loom.com/share/df338631d58d42dcb61266cfcf5b2fc4
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
