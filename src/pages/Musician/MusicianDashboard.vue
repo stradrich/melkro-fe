@@ -1,5 +1,14 @@
 <script setup>
-import { VDataTable } from 'vuetify/labs/VDataTable';
+// import { VDataTable } from 'vuetify/labs/VDataTable';
+import { VDataTable } from 'vuetify/lib/components/VDataTable/VDataTable';
+// import { VDataTable } from 'vuetify'
+// import { VDataTable } from 'vuetify/labs';
+// import { VDataTable } from '../../vuetify'
+// import { VDataTable } from 'vuetify/lib';
+// import { VDataTable } from 'vuetify';
+
+
+// import { VDataTable } from 'vuetify';
 import '@mdi/font/css/materialdesignicons.css'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiPencil, mdiDelete, mdiAccount} from '@mdi/js';
@@ -600,7 +609,8 @@ async function deleteAccount() {
       <div class="mt-10">
          
         <div style="flex: 1; display: flex; justify-content: center; margin-top: 10px;">
-            <img :src="'https://live.staticflickr.com/8653/28605337445_ffac139894_b.jpg'" alt="">
+            <!-- <img :src="'https://live.staticflickr.com/8653/28605337445_ffac139894_b.jpg'" alt=""> -->
+            <img :src="'https://thedepartmentofdance.com/wp-content/uploads/2017/01/SoundtrackAndVideoGames_CharlotteBracho-01.png'" alt="">
         </div>
         
         <div>

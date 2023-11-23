@@ -298,11 +298,11 @@ const resetForm = () => {
 <template>
   <Navbar />
 
-  <div> {{  authStore.currentUser.id }}</div>
+  <!-- <div> {{  authStore.currentUser.id }}</div>
   <div>{{ userId }}</div>
-  <div>{{ listingStore.clickedListingId }}</div>
+  <div>{{ listingStore.clickedListingId }}</div> -->
 
-  <v-sheet class="mt-2" width="300" style="margin: auto; margin-top: auto; margin-bottom: auto;">
+  <v-sheet width="300" style="margin: auto; display: flex; align-items: center; justify-content: center;">
     <img
       class="mx-auto mt-10 mb-10"
       width="100"
