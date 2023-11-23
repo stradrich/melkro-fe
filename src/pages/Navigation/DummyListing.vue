@@ -3,10 +3,17 @@ import { ref } from 'vue';
 import Navbar from '../../components/Navbar.vue';
 import Footer from '../../components/Footer.vue';
 
+// const images = ref([
+//   { src: '/src/assets/IMG_0911.jpg', alt: 'dfp', name: 'Petronas Hall', description: 'Concert Hall', price: '$$$$$', locationLink: '', map: "/src/assets/IMG_1388.JPG" },
+//   { src: '/src/assets/IMG_0934.JPG', alt: 'recital hall', name: 'Orang Utan Studio', description: 'Recital Hall', price: '$$$', locationLink: '', map: "/src/assets/IMG_1389.JPG" },
+//   { src: '/src/assets/20181212_122908-1-900x506.jpeg', alt: 'recital hall', name: 'Nabalu Studio', description: 'Band Room', price: '$$', locationLink: '', map: "/src/assets/IMG_1390.JPG" },
+//   // Add more images as needed
+// ]);
+
 const images = ref([
-  { src: '/src/assets/IMG_0911.jpg', alt: 'dfp', name: 'Petronas Hall', description: 'Concert Hall', price: '$$$$$', locationLink: '', map: "/src/assets/IMG_1388.JPG" },
-  { src: '/src/assets/IMG_0934.JPG', alt: 'recital hall', name: 'Orang Utan Studio', description: 'Recital Hall', price: '$$$', locationLink: '', map: "/src/assets/IMG_1389.JPG" },
-  { src: '/src/assets/20181212_122908-1-900x506.jpeg', alt: 'recital hall', name: 'Nabalu Studio', description: 'Band Room', price: '$$', locationLink: '', map: "/src/assets/IMG_1390.JPG" },
+  { src: 'https://static.wixstatic.com/media/991fe6_f58b63eced314b938b79b6c74c2491f3~mv2.jpg/v1/fit/w_2500,h_1330,al_c/991fe6_f58b63eced314b938b79b6c74c2491f3~mv2.jpg', alt: 'dfp', name: 'Petronas Hall', description: 'Concert Hall', price: '$$$$$', locationLink: '', map: "https://www.google.com/maps/d/thumbnail?mid=1-cFXHYx1Qae6lJow33h1Omioe3s" },
+  { src: 'https://media.timeout.com/images/105451894/750/562/image.jpg', alt: 'recital hall', name: 'Orang Utan Studio', description: 'Recital Hall', price: '$$$', locationLink: '', map: "https://www.google.com/maps/d/thumbnail?mid=1gKHN2IoGr-NlYo_OHjzQbYXoirg&hl=en_US" },
+  { src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8I9SuMudwspFLXhkjHl392FzsZvAnaO5wUQ&usqp=CAU', alt: 'recital hall', name: 'Nabalu Studio', description: 'Band Room', price: '$$', locationLink: '', map: "https://www.google.com/maps/d/thumbnail?mid=1worpv9hoyotyGGc1qscUikPrmzA&hl=en_US" },
   // Add more images as needed
 ]);
 </script>

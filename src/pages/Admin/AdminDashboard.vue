@@ -1,5 +1,14 @@
 <script setup>
-import { VDataTable } from 'vuetify/labs/VDataTable';
+// import { VDataTable } from 'vuetify/lib/components/VDataTable';
+import { VDataTable } from 'vuetify/lib/components/VDataTable/VDataTable';
+// import { VDataTable } from 'vuetify/labs/VDataTable';
+// import { VDataTable } from 'vuetify'
+// import { VDataTable } from 'vuetify/labs';
+// import { VDataTable } from '../../vuetify'
+// import { VDataTable } from 'vuetify/lib';
+// import { VDataTable } from 'vuetify';
+
+
 import '@mdi/font/css/materialdesignicons.css'
 import SvgIcon from '@jamescoyle/vue-icon'
 import { mdiPencil, mdiDelete, mdiAccount} from '@mdi/js';

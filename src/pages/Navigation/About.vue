@@ -16,6 +16,7 @@ import Footer from '../../components/Footer.vue';
     
     <div class="mx-10 mb-10" style="display: flex; flex-direction: column; align-items: center; margin-right: 20px;">
         <img style="margin-bottom: 2px;" width="60" height="60"  src="https://img.freepik.com/premium-vector/violin-logo-icon-design_586739-5455.jpg?w=2000" alt="instruments" loading="lazy">
+        <!-- <img style="margin-bottom: 2px;" width="60" height="60"  src="../../assets/IMG_0915.JPG" alt="instruments" loading="lazy"> -->
         <a href="/underconstruction" class="mt-5" style="margin-top: 2px;margin-right: 5px;"><span class="mr-1">Musical instruments</span><span>and equipments</span></a>
     </div>
 
