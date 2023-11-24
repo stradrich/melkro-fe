@@ -48,7 +48,15 @@ const routes = [
         meta: {
             title: 'Thank You Page',
         },
-        component: () => import('../pages/Shared/thankyouPage.vue')
+        component: () => import('../pages/Shared/success.vue')
+    },
+    {
+        path: '/success',
+        name: 'Success Page',
+        meta: {
+            title: 'Success Page',
+        },
+        component: () => import('../pages/Shared/success.vue')
     },
     {
         path: '/dummyListing',

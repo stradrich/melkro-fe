@@ -147,8 +147,8 @@ async function createBooking() {
   console.log('Check Out:', formData.check_out);
 
 
-  if (!formData.check_in && !formData.check_out) {
-        console.error('Check in and Check out, date and time required!');
+  if (!formData.check_in || !formData.check_out) {
+        alert('Check in and Check out, date and time required!');
         return;
         }
 
@@ -207,7 +207,8 @@ const resetForm = () => {
       loading="lazy"
     />
 
-    <div class="mb-10">CREATE BOOKING PAGE (for musician)</div>
+    <!-- <div class="mb-10">CREATE BOOKING PAGE (for musician)</div> -->
+    <div class="mb-10" style="font-size: 17px;">Please choose your available time slot!</div>
      
     <!-- Test -->
     <!-- <p>ClickedListingId: {{ bookingStore.clickedListingId }}</p> -->
@@ -218,11 +219,11 @@ const resetForm = () => {
 
       <v-form>
         <!-- Listing ID -->
-        <v-text-field  @input="logFormData" v-model="bookingStore.clickedListingId" label="Listing ID"></v-text-field>
+        <v-text-field style="display:none" @input="logFormData" v-model="bookingStore.clickedListingId" label="Listing ID"></v-text-field>
         <!-- Provider ID -->
-        <v-text-field @input="logFormData" v-model="bookingStore.ownerId" label="Provider ID"></v-text-field>
+        <v-text-field style="display:none" @input="logFormData" v-model="bookingStore.ownerId" label="Provider ID"></v-text-field>
         <!-- Musician ID -->
-        <v-text-field @input="logFormData" v-model="bookingStore.musicianId" label="Musician or Admin ID"></v-text-field>
+        <v-text-field style="display:none" @input="logFormData" v-model="bookingStore.musicianId" label="Musician or Admin ID"></v-text-field>
         <!-- Listing ID -->
         <!-- <p>{{bookingStore.clickedListingId}}</p> -->
         <!-- <v-text-field  v-model="formData.listingId" label="Listing ID"></v-text-field> -->
@@ -250,7 +251,7 @@ const resetForm = () => {
             <div class="form-group">
               <div>
                 <label for="date" class="mr-5">Check in:</label>
-                <input v-model="formData.check_in" ref="datetime" type="text" class="form-control flatpickr" id="start-datetime"/>
+                <input v-model="formData.check_in" ref="datetime" type="text" class="form-control flatpickr" id="start-datetime" required/>
                 
                 <!-- <input type="date" class="form-control flatpickr" id="date"/> -->
               </div>
@@ -262,7 +263,7 @@ const resetForm = () => {
             <div class="form-group">
               <div>
                 <label for="time" class="mr-3">Check out:</label>
-                <input v-model="formData.check_out" type="text" class="form-control flatpickr" id="end-datetime" />
+                <input v-model="formData.check_out" type="text" class="form-control flatpickr" id="end-datetime" required/>
                 <!-- <input type="time" class="form-control flatpickr" id="time" /> -->
               </div> 
             </div>  
@@ -275,7 +276,7 @@ const resetForm = () => {
 
         <div class="d-flex flex-column">
           <!-- <v-btn color="success" class="mt-4" block > -->
-          <v-btn color="success" class="mt-4" block @click="createBooking">
+          <v-btn color="success" class="mt-10" block @click="createBooking">
             Create Booking
           </v-btn>
 

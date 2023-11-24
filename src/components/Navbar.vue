@@ -52,8 +52,13 @@ const handleClick = () => {
 };
 
 const handleLogout = () => {
-router.push('/login');
+  router.push('/login');
   logout();
+
+    // Reload the page after 5 seconds
+    setTimeout(() => {
+    location.reload();
+  }, 10);
 };
 
 

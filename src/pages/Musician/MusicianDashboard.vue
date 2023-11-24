@@ -576,8 +576,54 @@ async function deleteAccount() {
       <DropdownMenu2/>
 
       <!-- {{ generalData }} -->
+
+      <div class="mt-10">
+         
+         <div style="flex: 1; display: flex; justify-content: center; margin-top: 10px;">
+             <!-- <img :src="'https://live.staticflickr.com/8653/28605337445_ffac139894_b.jpg'" alt=""> -->
+             <!-- <img :src="'https://thedepartmentofdance.com/wp-content/uploads/2017/01/SoundtrackAndVideoGames_CharlotteBracho-01.png'" alt=""> -->
+         </div>
+         
+         <div>
+             <div>
+             <!-- <div style="display: flex; justify-content: center;">
+             <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 listing</RouterLink>
+             </div> -->
+             
+             <div style="display: flex; justify-content: center;">
+                  <span class="mr-1" style="font-size: 3rem;">Welcome to Melkro's,</span>
+             </div>
+
+             <div class="mt-5" style="display: flex; justify-content: center;">
+                  <span style="font-size: 3rem;">{{  authStore.currentUser?.username}}</span>
+             </div>
+
+             <div class="mt-10" style="display: flex; justify-content: center;">
+             <RouterLink to="#" style="flex: 1; text-align: center;">
+             You have {{ numberOfBookings }} booking(s)
+           </RouterLink>
+             </div>
+             
+             <div class="mt-10 mb-10" style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
+             <RouterLink to="listingCard" style="text-decoration: none;">
+                 <Button text="Get a room, now!" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" />
+             </RouterLink>
+ 
+       
+             </div>
+             
+            
+ 
+             <!-- <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
+             <RouterLink  to="#" style="text-decoration: none;">
+                 <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
+             </RouterLink>
+             </div> -->
+           </div>
+         </div>
+       </div>
     
-      <div class="mt-10 flex border">
+      <div class="mt-16 flex border">
          <!-- <UserIcon/> -->
         <div class="mt-5 ml-5">
           <svg-icon class="custom-icon mb-5" type="mdi" :path="mdiAccount"></svg-icon>
@@ -604,48 +650,12 @@ async function deleteAccount() {
           <v-btn @click="deleteAccount" class="mx-2">Delete Account</v-btn>
         </div>
 
-        </div>
-      
-      <div class="mt-10">
-         
-        <div style="flex: 1; display: flex; justify-content: center; margin-top: 10px;">
-            <!-- <img :src="'https://live.staticflickr.com/8653/28605337445_ffac139894_b.jpg'" alt=""> -->
-            <img :src="'https://thedepartmentofdance.com/wp-content/uploads/2017/01/SoundtrackAndVideoGames_CharlotteBracho-01.png'" alt="">
-        </div>
-        
-        <div>
-            <div>
-            <!-- <div style="display: flex; justify-content: center;">
-            <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 listing</RouterLink>
-            </div> -->
-            
-            <div style="display: flex; justify-content: center;">
-            <RouterLink to="#" style="flex: 1; text-align: center;">
-            You have {{ numberOfBookings }} booking(s)
-          </RouterLink>
-            </div>
-            
-            <div class="mt-10 mb-10" style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
-            <RouterLink to="listingCard" style="text-decoration: none;">
-                <Button text="Get a room, now!" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" />
-            </RouterLink>
-
-      
-            </div>
-            
-            <div style="flex: 1; display: flex; justify-content: center; margin-top: 20px;">
-              <img :src="'/src/assets/atomic-music.png'" alt="">
-            </div>
-
-            <!-- <div style="flex: 1; display: flex; justify-content: center; margin-top: 5rem; margin-bottom: 5px;">
-            <RouterLink  to="#" style="text-decoration: none;">
-                <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
-            </RouterLink>
-            </div> -->
-          </div>
-        </div>
       </div>
       
+
+      <div class="mt-5 mb-5" style="flex: 1; display: flex; justify-content: center; margin-top: 20px;">
+               <img :src="'/src/assets/atomic-music.png'" alt="">
+      </div>
     
      
     <!-- <v-data-table :headers="headers" :items="bookingData" class="elevation-1 mt-10"> -->
