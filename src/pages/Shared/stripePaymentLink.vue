@@ -387,7 +387,7 @@ async function createPayment() {
         window.open(checkoutSessionUrl, '_blank');
 
         // ... (remaining logic)
-        router.push('/')
+        router.push('/success')
 
     } catch (error) {
         console.error('Error creating payment:', error);
@@ -632,7 +632,7 @@ const totalCost = computed(() => {
                 "payment_method": "Credit Card",
                 "payment_method_types": ["card"],
                 "status": "incomplete" -->
-            <v-text-field v-model=" bookingStore.booking_id" label="Booking ID"></v-text-field>
+            <v-text-field text-field style="display:none"  v-model=" bookingStore.booking_id" label="Booking ID"></v-text-field>
             <v-text-field v-model=" listingStore.currentListings.price_per_hour" label="Hourly Rate"></v-text-field>
             <v-text-field v-model="totalCost " label="Total Cost"></v-text-field>
             <!-- <v-text-field label="Payment Method"></v-text-field> -->

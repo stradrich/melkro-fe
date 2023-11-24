@@ -10,8 +10,9 @@ import Footer from '../../components/Footer.vue';
     <!-- If logged in, direct to listing page. If not logged in, go to log in page + sign up. -->
     <div class="box mt-10 mb-10" style="display: flex; background-color: white; padding: 50px; margin-top: 20px; justify-content: center; border: 1px solid #ccc;">
     <div class="mx-10 mb-10" style="display: flex; flex-direction: column; align-items: center; margin-right: 20px;">
-        <img style="margin-bottom: 2px;" width="60" height="60" src="https://lottiefolder.com/wp-content/uploads/2022/11/cube_dots_fill-1.gif" alt="space" loading="lazy">
-        <a href="/dummyListing" class="mt-5" style="margin-top: 2px;margin-right: 5px;">Space for ART</a>
+        <!-- <img style="margin-bottom: 2px;" width="60" height="60" src="https://media3.giphy.com/media/l2SpL9S67gJRKe7Ze/giphy.gif?cid=790b76112muuxwe6kled87y6xcdl2xbrj9meawma0jhk6trm&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="space" loading="lazy"> -->
+        <img style="margin-bottom: 2px;" width="80" height="80" src="https://cdn.dribbble.com/users/2538166/screenshots/5412483/dribbbbble.gif" alt="space" loading="lazy">
+        <a href="/dummyListing" class="mt-5" style="margin-top: 2px;margin-right: 5px;"><span>Space for ART</span></a>
     </div>
     
     <div class="mx-10 mb-10" style="display: flex; flex-direction: column; align-items: center; margin-right: 20px;">
@@ -63,8 +64,13 @@ import Footer from '../../components/Footer.vue';
   .box {
     flex-direction: column;
     align-items: center;
-    height: 40rem;
+    height: 30rem;
+    font-size: 5px;
   }
 
 }
+
+/* .box span {
+    font-size: 5px;
+  } */
 </style>
