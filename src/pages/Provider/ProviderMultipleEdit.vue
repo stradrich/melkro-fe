@@ -283,7 +283,8 @@ const updateData = async () => {
     // Make PUT request to update booking's status
     
     // const responseBooking = await axios.put(`http://localhost:8080/bookings/bookings/${currentBookingID}`, newBookingData);
-    const responseBooking = await axios.put(`https://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${currentBookingID}`, newBookingData);
+    const responseBooking = await axios.put(`
+    location.reload();s://melkro-api-dev-pbcxdasz4q-as.a.run.app/bookings/bookings/${currentBookingID}`, newBookingData);
     
       // Check if the update was successful
     if (responseMusician.status === 200 && responseProvider.status === 200 && responseListing.status === 200 && responsePayment.status === 200 && responseBooking.status === 200) { 

@@ -93,14 +93,14 @@ const handleLogout = () => {
                   <p class="button-text">{{ buttonText }}</p>
                 </v-btn>
 
-                <v-btn class="mx-10" to="/about">
+                <v-btn  class="mx-10" to="/about">
                     <p >About</p>
                 </v-btn>
 
                 
 
                 <v-btn
-                    class="bg-white text-black mr-16"
+                    class="bg-white text-black mr-5"
                     variant="outlined"
                     @click="handleClick"
                 >
@@ -208,12 +208,12 @@ const handleLogout = () => {
   }
 
   @media only screen and (max-width: 600px) {
-    .mx-8 {
-      margin-left: 0;  /* Adjust the left margin for smaller screens */
-    }
+    /* .mx-8 {
+      margin-left: 0; 
+    } */
 
     .v-btn {
-      font-size: 14px;
+      font-size: 15px;
       padding: 8px 16px;
     }
 

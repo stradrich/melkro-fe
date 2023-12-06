@@ -489,12 +489,13 @@ const getUsernameById = (userId) => {
       <div class="mx-2">  
 
         <div class="mx-2">
-          <div class="mt-2" v-if="currentUser && currentUser.role === 'musician' || currentUser.role === 'admin' "  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;">
+          <div class="mt-5" v-if="currentUser && currentUser.role === 'musician' || currentUser.role === 'admin' "  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;">
           <!-- <div v-if="currentUser && currentUser.role !== 'provider'"  style="flex: 1; display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 3px;"> -->
            
             <!-- <RouterLink to="" style="text-decoration: none;"  @click="createBooking(listing.listing_id, listing.user_id)"> -->
             <RouterLink to="/createBookingForm" style="text-decoration: none;  padding: 20px"  @click="createBooking(listing.listing_id, listing.user_id)">
-              <Button text="Book now" style="font-size: 25px; margin: 5px; width: 100px; background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer;" />
+              <!-- <Button text="Book now" style="font-size: 25px; margin: 5px; width: 100px; background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer;" /> -->
+              <Button text="Book now" style="font-size: 25px; margin: 5px; width: 200px; height: 50px; background-color: black; color: white; border-radius: 5px; cursor: pointer;" />
               <!-- <p>Musician User ID: {{ currentUser.id }}</p> -->
             </RouterLink>
           </div>
