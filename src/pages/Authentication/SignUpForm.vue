@@ -30,7 +30,8 @@ const rules = {
     v => (v || '').length <= 20 || 'Username must be at most 20 characters',
     v => !!v || 'This field is required',
   ],
-  email: v => !!(v || '').match(/@/) || 'Please enter a valid email',
+  // email: v => !!(v || '').match(/@/) || 'Please enter a valid email',
+  email: v => /^[^\s@]+@[^\s@]+\.[^\s@.]+$/.test(v) || 'Please enter a valid email',
   length: len => v => (v || '').length >= len || `Invalid character length, required ${len}`,
   password: v =>
     !!(v || '').match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/) ||

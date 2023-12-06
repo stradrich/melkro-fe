@@ -633,8 +633,8 @@ const totalCost = computed(() => {
                 "payment_method_types": ["card"],
                 "status": "incomplete" -->
             <v-text-field text-field style="display:none"  v-model=" bookingStore.booking_id" label="Booking ID"></v-text-field>
-            <v-text-field v-model=" listingStore.currentListings.price_per_hour" label="Hourly Rate"></v-text-field>
-            <v-text-field v-model="totalCost " label="Total Cost"></v-text-field>
+            <v-text-field v-model=" listingStore.currentListings.price_per_hour" label="Hourly Rate" :readonly="true"></v-text-field>
+            <v-text-field v-model="totalCost " label="Total Cost" :readonly="true"></v-text-field>
             <!-- <v-text-field label="Payment Method"></v-text-field> -->
             <!-- <v-text-field label="Payment Method Types?"></v-text-field> -->
             <!-- <v-text-field label="Status"></v-text-field> -->

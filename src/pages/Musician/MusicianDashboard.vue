@@ -249,14 +249,14 @@ onMounted(async () => {
 // });
 
 const headers = [
-  { title: 'Payment_ID', key: 'paymentID' },
+  // { title: 'Payment_ID', key: 'paymentID' },
   { title: 'Payment Status', key: 'paymentStatus'},
-  { title: 'Booking_ID', key: 'bookingID' },
-  { title: 'Listing_ID', key: 'listingID' },
+  // { title: 'Booking_ID', key: 'bookingID' },
+  // { title: 'Listing_ID', key: 'listingID' },
   { title: 'Listing Name', align: 'start', sortable: false, key: 'listing' },
   { title: 'check_in', key: 'check_in' },
   { title: 'check_out', key: 'check_out' },
-  { title: 'OwnerID', key: 'ownerID' },
+  // { title: 'OwnerID', key: 'ownerID' },
   { title: 'Owner', key: 'owner' },
   { title: 'Confirmation Status', key: 'bookingStatus' },
   { title: 'Edit', key: 'edit' },
@@ -577,40 +577,42 @@ async function deleteAccount() {
 
       <!-- {{ generalData }} -->
 
-      <div class="mt-10">
+      <!-- <div class="mt-10"> -->
          
-         <div style="flex: 1; display: flex; justify-content: center; margin-top: 10px;">
+         <!-- <div style="flex: 1; display: flex; justify-content: center; margin-top: 10px;"> -->
              <!-- <img :src="'https://live.staticflickr.com/8653/28605337445_ffac139894_b.jpg'" alt=""> -->
              <!-- <img :src="'https://thedepartmentofdance.com/wp-content/uploads/2017/01/SoundtrackAndVideoGames_CharlotteBracho-01.png'" alt=""> -->
-         </div>
+         <!-- </div> -->
          
-         <div>
-             <div>
+         <!-- <div> -->
+             <!-- <div> -->
              <!-- <div style="display: flex; justify-content: center;">
              <RouterLink to="/" style="flex: 1; text-align: center;">You have 0 listing</RouterLink>
              </div> -->
              
-             <div style="display: flex; justify-content: center;">
-                  <span class="mr-1" style="font-size: 3rem;">Welcome to Melkro's,</span>
-             </div>
+             <!-- <div style="display: flex; justify-content: center;"> -->
+                  <!-- <span class="mr-1" style="font-size: 3rem;">Welcome to Melkro's,</span> -->
+             <!-- </div> -->
 
-             <div class="mt-5" style="display: flex; justify-content: center;">
-                  <span style="font-size: 3rem;">{{  authStore.currentUser?.username}}</span>
-             </div>
+             <!-- <div class="mt-5" style="display: flex; justify-content: center;"> -->
+                  <!-- <span style="font-size: 3rem;">{{  authStore.currentUser?.username}}</span> -->
+             <!-- </div> -->
 
-             <div class="mt-10" style="display: flex; justify-content: center;">
-             <RouterLink to="#" style="flex: 1; text-align: center;">
-             You have {{ numberOfBookings }} booking(s)
-           </RouterLink>
-             </div>
+             <!-- <div class="mt-10" style="display: flex; justify-content: center;"> -->
+             <!-- <RouterLink to="#" style="flex: 1; text-align: center;"> -->
+             <!-- You have {{ numberOfBookings }} booking(s) -->
+           <!-- </RouterLink> -->
+             <!-- </div> -->
              
-             <div class="mt-10 mb-10" style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;">
-             <RouterLink to="listingCard" style="text-decoration: none;">
-                 <Button text="Get a room, now!" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" />
-             </RouterLink>
+             <!-- <div class="mt-10 mb-10" style="flex: 1; display: flex; justify-content: center; margin-top: 5px; margin-bottom: 5px;"> -->
+             <!-- <RouterLink to="listingCard" style="text-decoration: none;"> -->
+                 <!-- <Button text="Get a room, now!" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;" /> -->
+             <!-- </RouterLink> -->
  
        
-             </div>
+             <!-- </div> -->
+
+             
              
             
  
@@ -619,9 +621,36 @@ async function deleteAccount() {
                  <Button text="Edit booking" style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer;" />
              </RouterLink>
              </div> -->
-           </div>
-         </div>
-       </div>
+           <!-- </div> -->
+         <!-- </div> -->
+       <!-- </div> -->
+
+       <div class="center-container">
+    <div class="welcome-container">
+      <div class="welcome-text">
+        <span class="mr-1" style="font-size: 3rem;">Welcome to Melkro's,</span>
+      </div>
+
+      <div class="username-text mt-5">
+        <span style="font-size: 3rem;">{{ authStore.currentUser?.username }}</span>
+      </div>
+
+      <div class="booking-link mt-10">
+        <RouterLink to="#" style="text-align: center;">
+          You have {{ numberOfBookings }} booking(s)
+        </RouterLink>
+      </div>
+
+      <div class="room-link mt-10 mb-10">
+        <RouterLink to="listingCard" style="text-decoration: none;">
+          <Button
+            text="Get a room, now!"
+            style="margin: 5px; padding: 10px; background-color: black; color: #ffffff; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5rem;"
+          />
+        </RouterLink>
+      </div>
+    </div>
+  </div>
     
       <div class="mt-16 flex border">
          <!-- <UserIcon/> -->
@@ -702,6 +731,54 @@ async function deleteAccount() {
     </template>
   </v-data-table>
 
+  <div>
+    <div class="mt-8" style="font-weight: bold; font-size: x-large;">Current bookings</div>
+
+    <!-- Card-based display for each item in generalData -->
+    <div class="card-container">
+      <div
+        v-for="(item, index) in generalData"
+        :key="index"
+        class="border mb-16 mt-8"
+      >
+        <!-- Your card content here -->
+        <div class="mx-10 mt-5 mb-5">
+          <!-- Add your card content here based on the item properties -->
+          <div style="display: flex;">
+            <h4 style="font-weight: bold;">{{ item.listing }}</h4>
+            <div class="ml-3">by</div>
+            <p class="ml-2">{{ item.owner }}</p>
+          </div>
+          <div class="mt-5">check in:</div>
+          <div style="display: flex;">
+            <div>Date</div>
+            <div class="ml-12">Time</div>
+          </div>
+          <p>{{ item.check_in }}</p>
+
+          <div class="mt-5">check out:</div>
+          <div style="display: flex;">
+            <div>Date</div>
+            <div class="ml-12">Time</div>
+          </div>
+          <p>{{ item.check_out }}</p>
+          <p class="mt-5">payment status:</p>
+          <p>{{ item.paymentStatus }}</p>
+          <p class="mt-5">booking status:</p>
+          <p>{{ item.bookingStatus }}</p>
+          <!-- ... other details ... -->
+
+          <!-- Example: Button to edit item -->
+          <v-icon class="mt-5" @click="editItem(item)" style="color: black;">{{ mdiPencil }}</v-icon>
+          <!-- Example: Button to delete item -->
+          <v-icon class="mt-5 ml-16" @click="deleteItem(item)" style="color: black;">{{ mdiDelete }}</v-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
     <Footer/>
   </div>
 </template>
@@ -710,5 +787,40 @@ async function deleteAccount() {
 <style scoped>
 .custom-icon {
   color: black;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height of the viewport */
+}
+
+.welcome-container {
+  text-align: center;
+}
+
+/* Media query for mobile responsiveness */
+@media (max-width: 600px) {
+  .card-container {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Media query for tablet responsiveness */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* Default styles for larger screens */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 </style>

@@ -378,9 +378,10 @@ console.log(userResponse.data.role);
 
   <v-sheet class="mx-auto mt-2" width="350" style="margin: auto; margin-top: auto; margin-bottom: auto;">
     <div class="mx-16 mt-16 mb-5">
-        <div style="font-size: 20px">Edit Multiple DB Tables</div>
+        <div style="font-size: 20px; display: none;">Edit Multiple DB Tables</div>
     </div>
-    <div class="mx-auto mb-5">users, listings, bookings, timeslot, payment</div>
+    <!-- <div class="mx-auto mb-5">users, listings, bookings, timeslot, payment</div> -->
+    <div class="mx-10"  style="display: none;">listings, bookings, timeslot, payment</div>
     
     <img
       class="mx-auto mt-5 mb-16"
@@ -436,37 +437,41 @@ console.log(userResponse.data.role);
         : 
         2 -->
     <v-form>
-        <p class="mb-2 text-5xl" style="font-size: 20px;">Update Payment Table</p>
-        <v-text-field v-model="paymentID" label="Payment ID"></v-text-field>
+        <p class="mb-2 text-5xl" style="font-size: 20px; display: none;">Update Payment Table</p>
+        <v-text-field style="display: none;" v-model="paymentID" label="Payment ID"></v-text-field>
         <!-- <v-text-field v-model="paymentStatus" label="Payment Status"></v-text-field> -->
         <v-select
+        style="display: none;"
         v-model="paymentStatus"
         :items="selectedPaymentStatus"
         label="Select Payment Status"
         :rules="[rules.required]"
         variant="filled"
         color="deep-purple"
+        :readonly="true"
         ></v-select>
 
-        <p class="mb-2" style="font-size: 20px;">Update Booking Table</p>
-        <v-text-field v-model="bookingID" label="Booking ID"></v-text-field>
+        <p class="mb-2" style="font-size: 20px; display: none;">Update Booking Table</p>
+        <v-text-field style="display: none;" v-model="bookingID" label="Booking ID"></v-text-field>
         <!-- <v-text-field v-model="bookingStatus" label="Booking Status"></v-text-field> -->
         <v-select
+        style="display: none;"
         v-model="bookingStatus"
         :items="selectedBookingStatus"
         label="Select Booking Status"
         :rules="[rules.required]"
         variant="filled"
         color="deep-purple"
+        :readonly="true"
         ></v-select>
 
-        <p class="mb-2" style="font-size: 20px;">Update Listing Table</p>
-        <v-text-field v-model="listing" label="Listing Name"></v-text-field>
-        <v-text-field v-model="listingID" label="Listing ID"></v-text-field>
+        <p class="mb-2" style="font-size: 20px; display: none;">Update Listing Table</p>
+        <v-text-field  style="display: none;" v-model="listing" label="Listing Name" :readonly="true"></v-text-field>
+        <v-text-field style="display: none;" v-model="listingID" label="Listing ID"></v-text-field>
 
         <p class="mb-2" style="font-size: 20px;">Update Booking & Timeslot Table</p>
-        <v-text-field v-model="check_in" label="Check In from record" :readonly="true"></v-text-field>
-        <v-text-field v-model="check_out"  label="Check Out from record" :readonly="true"></v-text-field>
+        <v-text-field v-model="check_in" label="previous check in selection" :readonly="true"></v-text-field>
+        <v-text-field v-model="check_out"  label="previous check out selection" :readonly="true"></v-text-field>
 
         <div ref="startDateContainer" class="row border-b mb-10">
           <div class="col-md-6">
@@ -492,11 +497,11 @@ console.log(userResponse.data.role);
           </div>
         </div>
 
-        <p class="mb-2" style="font-size: 20px;">Update User Table</p>
-        <v-text-field v-model="provider" label="Provider Name"></v-text-field>
-        <v-text-field v-model="providerID" label="Provider ID"></v-text-field>
-        <v-text-field v-model="musician" label="Musician Name"></v-text-field>
-        <v-text-field v-model="musicianID" label="Musician ID"></v-text-field>
+        <p class="mb-2" style="display: none; font-size: 20px;">Update User Table</p>
+        <v-text-field style="display: none;" v-model="provider" label="Provider Name"></v-text-field>
+        <v-text-field style="display: none;" v-model="providerID" label="Provider ID"></v-text-field>
+        <v-text-field style="display: none;" v-model="musician" label="Musician Name"></v-text-field>
+        <v-text-field style="display: none;" v-model="musicianID" label="Musician ID"></v-text-field>
   
 
         <div class="d-flex flex-column">
