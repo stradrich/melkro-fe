@@ -124,7 +124,8 @@ onMounted(async () => {
 <template>
   <Navbar/>
   <div class="mt-10" style="display: flex; justify-content: center;">
-    <img style="width: 500px; height: 300px" src="https://www.oldphotosjapan.com/images/ls-1024/663.png" alt="">
+    <!-- <img style="width: 500px; height: 300px" src="https://www.oldphotosjapan.com/images/ls-1024/663.png" alt=""> -->
+    <img style="max-width: 100%; height: auto; max-height: 300px;" src="https://www.oldphotosjapan.com/images/ls-1024/663.png" alt="">
   </div>
   <v-row align="center" justify="center">
     <v-col cols="12" sm="8" md="10">

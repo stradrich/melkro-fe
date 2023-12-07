@@ -1,5 +1,5 @@
 <script setup>
-import Logo from './Logo.vue'
+import Logo from '../../src/components/logo.vue';
 // import UserIcon from '../components/icons/UserIcon'
 import { ref, onMounted, computed} from 'vue';
 import { useAuthStores } from '../stores/auth';
@@ -20,21 +20,30 @@ const logout = () => {
     authStore.logout(); // Call the logout action from your authentication store
    // Optionally, you can also perform a route change or any other logic here
    router.push('/about'); // Redirect to the home page
+
+     // Reload the page after 10 milliseconds (you can adjust this timeout as needed)
+  setTimeout(() => {
+    location.reload();
+  }, 100);
 };
 
 
 const isDropdownHidden = ref(true);
 
-const toggleDropdown = async () => {
-  try {
-    await authStore.getCurrentUser();
-    console.log('CurrentUser:', authStore.currentUser);
-    isDropdownHidden.value = !isDropdownHidden.value;
-  } catch (error) {
-    // Handle the error, e.g., show an error message to the user
-    console.error('Login error in component:', error);
-  }
-};
+// const toggleDropdown = async () => {
+//   try {
+//     isDropdownHidden.value = !isDropdownHidden.value;
+//     await authStore.getCurrentUser();
+//     console.log('CurrentUser:', authStore.currentUser);
+//   } catch (error) {
+//     // Handle the error, e.g., show an error message to the user
+//     console.error('Login error in component:', error);
+//   }
+// };
+
+function toggleDropdown()  {
+  isDropdownHidden.value = !isDropdownHidden.value;
+}
 
 
 
@@ -126,24 +135,30 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- Style the button with CSS -->
-  <button
-  id="dropdownDefaultButton"
-  class="mx-5"
-  @click="toggleDropdown"
-  style="width: 40px; height: 40px; padding: 0; border: none; background: none; cursor: pointer;"
-  >
-  
-    <!-- <img
-      width="30"
-      height="30"
-      src="/src/assets/bars-solid.svg"
-      alt="hamburger dropdown"
-    /> -->
-    <!-- <img width="80" height="80" src="https://img.icons8.com/pastel-glyph/64/planet-on-the-dark-side.png" alt="planet-on-the-dark-side"/> -->
-  </button>
+<v-app-bar :elevation="2" style="background-color: black;">
+  <div class="mx-5">
+    <Logo/>
+  </div>
 
-  <br>
+  <v-toolbar-title class="mx-5">
+    <v-btn style="font-size: 20px; color: white" class="font-weight-light ml-2 mr-10" :to="'/'">
+      Melkro's
+          </v-btn>
+    </v-toolbar-title>
+
+  
+  <v-app-bar-nav-icon
+      id="dropdownDefaultButton"
+      class="mx-5 ml-10"
+      @click="toggleDropdown"
+      style="width: 40px; height: 40px; padding: 0; border: none; background: none; cursor: pointer; color: white"
+  >
+    </v-app-bar-nav-icon>
+
+  
+</v-app-bar>
+
+<br>
   <!-- Dropdown menu -->
   <div
     v-if="!isDropdownHidden"
@@ -152,14 +167,36 @@ onMounted(async () => {
     <!-- USER ICON -->
     <!-- <UserIcon/> -->
 
+      <!-- Debugging Info -->
+      <!-- <li>Access Token: {{ authStore.accessToken }}</li>
+      <li>Is Logged In: {{ authStore.userLoggedIn }}</li>
+      <li>Current User: {{ authStore.currentUser }}</li> -->
+
     <ul
       class="py-2 text-sm text-gray-700 dark:text-gray-200 mb-5"
       aria-labelledby="dropdownDefaultButton"
     >
        <!-- REDIRECT TO OWN PAGE BASED ON ROLE -->
-       <li class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-        <RouterLink :to="profileLink" @click="goToProfile">Profile</RouterLink>
-      </li>
+          <!-- Check if the user is logged in before displaying the profile link -->
+    <li>
+        <div>
+          <RouterLink to="/about"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">About </RouterLink>
+        </div>
+    </li>
+    
+    <li>
+        <div>
+          <RouterLink to="/company"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Company</RouterLink>
+        </div>
+    </li>
+
+
+   
+    <!-- Conditionally render the Profile link if the user is logged in -->
+    <li v-if="authStore.userLoggedIn" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+    <RouterLink :to="profileLink" @click="goToProfile">Profile</RouterLink>
+  </li>
+ 
       <!-- Add debugging info -->
       <!-- <div v-else>
         User Logged In: {{ userLoggedIn }}
@@ -175,37 +212,36 @@ onMounted(async () => {
       </li> -->
       
         <!-- If logged in, direct to booking page. If not logged in, go to log in page + sign up. -->
-      <li>
+      <!-- <li>
         <a
           href="#"
           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
         >
         <RouterLink to="/">Booking</RouterLink>
         </a>
-      </li>
+      </li> -->
         <!-- If logged in, direct to listing page. If not logged in, go to log in page + sign up. -->
       <li>
         <a
           href="#"
           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
         >
-        <RouterLink to="/dummyListing">Listing</RouterLink>
+        <RouterLink v-if="authStore.accessToken" to="/listingCard">Listing</RouterLink>
         </a>
       </li>
-      <li>
-        <div>
-          <RouterLink to="/login"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Log In </RouterLink>
-        </div>
-       </li>
+
+      <!-- Always display the Log In link if the user is not logged in -->
+      <li v-if="!authStore.userLoggedIn"><div><a href="/login" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Log In </a></div></li>
+    
         <!-- If not logged, disable this link with #  -->
-        <li>
-         <button
-          @click="logout"
-          >
-          <RouterLink to="/"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Log Out </RouterLink>
-           </button>
-       </li>
+     <!-- Always display the Log Out button if the user is logged in -->
+      <li v-if="authStore.userLoggedIn">
+        <button @click="logout" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+          Log Out
+        </button>
+      </li>
       <!-- Add more list items here -->
     </ul>
   </div>
 </template>
+

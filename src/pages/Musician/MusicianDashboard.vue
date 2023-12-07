@@ -680,10 +680,57 @@ async function deleteAccount() {
         </div>
 
       </div>
+
+      <div>
+    <div class="mt-8" style="font-weight: bold; font-size: x-large;">Current bookings</div>
+
+    <!-- Card-based display for each item in generalData -->
+    <div class="card-container">
+      <div
+        v-for="(item, index) in generalData"
+        :key="index"
+        class="border mb-16 mt-8"
+      >
+        <!-- Your card content here -->
+        <div class="mx-10 mt-5 mb-5">
+          <!-- Add your card content here based on the item properties -->
+          <div style="display: flex;">
+            <h4 style="font-weight: bold;">{{ item.listing }}</h4>
+            <div class="ml-3">by</div>
+            <p class="ml-2">{{ item.owner }}</p>
+          </div>
+          <div class="mt-5">check in:</div>
+          <div style="display: flex;">
+            <div>Date</div>
+            <div class="ml-12">Time</div>
+          </div>
+          <p>{{ item.check_in }}</p>
+
+          <div class="mt-5">check out:</div>
+          <div style="display: flex;">
+            <div>Date</div>
+            <div class="ml-12">Time</div>
+          </div>
+          <p>{{ item.check_out }}</p>
+          <p class="mt-5">payment status:</p>
+          <p>{{ item.paymentStatus }}</p>
+          <p class="mt-5">booking status:</p>
+          <p>{{ item.bookingStatus }}</p>
+          <!-- ... other details ... -->
+
+          <!-- Example: Button to edit item -->
+          <v-icon class="mt-5" @click="editItem(item)" style="color: black;">{{ mdiPencil }}</v-icon>
+          <!-- Example: Button to delete item -->
+          <v-icon class="mt-5 ml-16" @click="deleteItem(item)" style="color: black;">{{ mdiDelete }}</v-icon>
+        </div>
+      </div>
+    </div>
+  </div>
       
 
       <div class="mt-5 mb-5" style="flex: 1; display: flex; justify-content: center; margin-top: 20px;">
-               <img :src="'/src/assets/atomic-music.png'" alt="">
+               <!-- <img :src="'/src/assets/atomic-music.png'" alt=""> -->
+               <img src="../../assets/atomic-music.png" alt="">
       </div>
     
      
@@ -731,51 +778,7 @@ async function deleteAccount() {
     </template>
   </v-data-table>
 
-  <div>
-    <div class="mt-8" style="font-weight: bold; font-size: x-large;">Current bookings</div>
 
-    <!-- Card-based display for each item in generalData -->
-    <div class="card-container">
-      <div
-        v-for="(item, index) in generalData"
-        :key="index"
-        class="border mb-16 mt-8"
-      >
-        <!-- Your card content here -->
-        <div class="mx-10 mt-5 mb-5">
-          <!-- Add your card content here based on the item properties -->
-          <div style="display: flex;">
-            <h4 style="font-weight: bold;">{{ item.listing }}</h4>
-            <div class="ml-3">by</div>
-            <p class="ml-2">{{ item.owner }}</p>
-          </div>
-          <div class="mt-5">check in:</div>
-          <div style="display: flex;">
-            <div>Date</div>
-            <div class="ml-12">Time</div>
-          </div>
-          <p>{{ item.check_in }}</p>
-
-          <div class="mt-5">check out:</div>
-          <div style="display: flex;">
-            <div>Date</div>
-            <div class="ml-12">Time</div>
-          </div>
-          <p>{{ item.check_out }}</p>
-          <p class="mt-5">payment status:</p>
-          <p>{{ item.paymentStatus }}</p>
-          <p class="mt-5">booking status:</p>
-          <p>{{ item.bookingStatus }}</p>
-          <!-- ... other details ... -->
-
-          <!-- Example: Button to edit item -->
-          <v-icon class="mt-5" @click="editItem(item)" style="color: black;">{{ mdiPencil }}</v-icon>
-          <!-- Example: Button to delete item -->
-          <v-icon class="mt-5 ml-16" @click="deleteItem(item)" style="color: black;">{{ mdiDelete }}</v-icon>
-        </div>
-      </div>
-    </div>
-  </div>
 
   
 

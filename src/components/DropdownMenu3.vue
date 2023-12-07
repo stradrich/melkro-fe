@@ -1,5 +1,4 @@
 <script setup>
-import Logo from './Logo.vue'
 // import UserIcon from '../components/icons/UserIcon'
 import { ref, onMounted, computed} from 'vue';
 import { useAuthStores } from '../stores/auth';
@@ -127,13 +126,13 @@ onMounted(async () => {
 
 <template>
   <!-- Style the button with CSS -->
-  <button
-  id="dropdownDefaultButton"
-  class="mx-5"
-  @click="toggleDropdown"
-  style="width: 40px; height: 40px; padding: 0; border: none; background: none; cursor: pointer;"
-  >
-  
+  <Logo/>
+   <v-app-bar-nav-icon
+   id="dropdownDefaultButton"
+    class="mx-5"
+    @click="toggleDropdown"
+    style="width: 40px; height: 40px; padding: 0; border: none; background: none; cursor: pointer;">
+    </v-app-bar-nav-icon>
     <!-- <img
       width="30"
       height="30"
@@ -141,7 +140,7 @@ onMounted(async () => {
       alt="hamburger dropdown"
     /> -->
     <!-- <img width="80" height="80" src="https://img.icons8.com/pastel-glyph/64/planet-on-the-dark-side.png" alt="planet-on-the-dark-side"/> -->
-  </button>
+
 
   <br>
   <!-- Dropdown menu -->
